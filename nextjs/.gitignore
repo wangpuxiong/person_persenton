@@ -1,0 +1,6 @@
+.next-build
+.vscode
+.env
+README.md
+node_modules
+public/loading.gif
