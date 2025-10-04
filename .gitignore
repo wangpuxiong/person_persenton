@@ -1,2 +1,4 @@
-/app_data/
-/.idea/
+app_data/
+fastapi/chroma/
+fastapi/presenton_backend.egg-info/*
+.idea/*

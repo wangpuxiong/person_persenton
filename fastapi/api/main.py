@@ -16,6 +16,11 @@ app = FastAPI(lifespan=app_lifespan)
 static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
+# 挂载app_data/images目录，用于前端访问生成的图片
+app_data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "app_data")
+if os.path.exists(app_data_dir):
+    app.mount("/app_data", StaticFiles(directory=app_data_dir), name="app_data")
+
 # Routers
 app.include_router(API_V1_PPT_ROUTER)
 app.include_router(API_V1_WEBHOOK_ROUTER)

@@ -19,15 +19,15 @@ Presenton是一个演示文稿生成和管理系统，包含前端Next.js应用�
 
 2. 进入fastapi目录：
    ```bash
-   cd servers/fastapi
+   cd fastapi
    ```
 
 3. 创建虚拟环境并激活：
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # Linux/Mac
+   python -m venv myenv
+   source myenv/bin/activate  # Linux/Mac
    # 或在Windows上：
-   # venv\Scripts\activate
+   # myenv\Scripts\activate
    ```
 
 4. 安装依赖：
@@ -51,7 +51,7 @@ Presenton是一个演示文稿生成和管理系统，包含前端Next.js应用�
 
 2. 进入nextjs目录：
    ```bash
-   cd servers/nextjs
+   cd nextjs
    ```
 
 3. 安装依赖：

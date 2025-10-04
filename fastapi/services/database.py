@@ -29,7 +29,6 @@ app_data_dir = get_app_data_directory_env() or os.getcwd()
 container_db_url = f"sqlite+aiosqlite:///{os.path.join(app_data_dir, 'container.db')}"
 
 database_url, connect_args = get_database_url_and_connect_args()
-database_url = 'sqlite+aiosqlite:////home/gxl77/presenton/app_data/fastapi.db'
 
 sql_engine: AsyncEngine = create_async_engine(database_url, connect_args=connect_args)
 async_session_maker = async_sessionmaker(sql_engine, expire_on_commit=False)

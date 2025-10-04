@@ -62,8 +62,7 @@ export default function AuthPage() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Authenticating...</h2>
-          <LoadingSpinner size={64} />
-          <p className="mt-4 text-gray-600">Please wait while we verify your session</p>
+          <LoadingSpinner message="Please wait while we verify your session" />
         </div>
       </div>
     );

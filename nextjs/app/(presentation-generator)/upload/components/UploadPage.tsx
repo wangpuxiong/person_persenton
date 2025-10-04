@@ -124,7 +124,12 @@ const UploadPage = () => {
 
     if (files.length > 0) {
       trackEvent(MixpanelEvent.Upload_Upload_Documents_API_Call);
-      const uploadResponse = await PresentationGenerationApi.uploadDoc(files);
+      // Convert File[] to FormData
+      const formData = new FormData();
+      files.forEach((file, index) => {
+        formData.append(`file${index}`, file);
+      });
+      const uploadResponse = await PresentationGenerationApi.uploadDoc(formData);
       documents = uploadResponse;
     }
 

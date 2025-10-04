@@ -27,6 +27,10 @@ const nextConfig = {
         source: '/static/:path*',
         destination: 'http://localhost:9202/static/:path*',
       },
+      {
+        source: '/app_data/:path*',
+        destination: 'http://localhost:9202/app_data/:path*',
+      }
     ];
   },
 
