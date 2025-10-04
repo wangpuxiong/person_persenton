@@ -1,0 +1,72 @@
+{
+  "name": "@paciolan/remote-module-loader",
+  "version": "3.0.3",
+  "description": "",
+  "main": "dist/index.js",
+  "author": "Paciolan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Paciolan/remote-module-loader.git"
+  },
+  "release": {
+    "branch": "master",
+    "tagFormat": "${version}",
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/exec",
+        {
+          "publishCmd": "./scripts/publish.sh ${nextRelease.version}"
+        }
+      ]
+    ]
+  },
+  "scripts": {
+    "prebuild": "npm run clean",
+    "build": "tsc --declaration",
+    "watch": "npm run build -- --watch",
+    "clean": "rimraf dist",
+    "cz": "git-cz",
+    "test": "cross-env NODE_ENV=test jest",
+    "test:changed": "npm run test -- --changedSince HEAD",
+    "test:coverage": "npm run test -- --coverage",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
+    "@babel/preset-typescript": "^7.12.7",
+    "@commitlint/cli": "^14.1.0",
+    "@commitlint/config-conventional": "^14.1.0",
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.11.7",
+    "babel-loader": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "git-cz": "^4.7.5",
+    "husky": "^4.3.0",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "regenerator-runtime": "^0.13.7",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.2"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "npm run lint && npm run build && npm run test:changed",
+      "pre-push": "npm run test:coverage"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/git-cz"
+    }
+  }
+}
