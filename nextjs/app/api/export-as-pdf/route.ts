@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import puppeteer from "puppeteer";
-
+import { v4 as uuidv4 } from 'uuid';
 import { sanitizeFilename } from "@/app/(presentation-generator)/utils/others";
 import { NextResponse, NextRequest } from "next/server";
 
@@ -91,11 +91,12 @@ export async function POST(req: NextRequest) {
 
   browser.close();
 
-  const sanitizedTitle = sanitizeFilename(title ?? "presentation");
+  const pdfFileName = `${uuidv4()}.pdf`;
+  // const sanitizedTitle = sanitizeFilename(title ?? "presentation");
   const destinationPath = path.join(
     process.env.APP_DATA_DIRECTORY!,
     "exports",
-    `${sanitizedTitle}.pdf`
+    pdfFileName
   );
   await fs.promises.mkdir(path.dirname(destinationPath), { recursive: true });
   await fs.promises.writeFile(destinationPath, pdfBuffer);

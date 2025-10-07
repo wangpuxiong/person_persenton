@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'; // 明确标记为动态路由
 import { ApiError } from "@/models/errors";
 import { NextRequest, NextResponse } from "next/server";
 import puppeteer, { Browser, ElementHandle, Page } from "puppeteer";

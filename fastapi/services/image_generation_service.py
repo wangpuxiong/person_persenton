@@ -5,6 +5,7 @@ from openai import api_key
 from models.image_prompt import ImagePrompt
 from models.sql.image_asset import ImageAsset
 from utils.download_helpers import download_file
+from utils.get_env import get_comparegpt_api_url_env
 import uuid
 import base64
 
@@ -19,6 +20,7 @@ class ImageGenerationService:
         """
         self.output_directory = output_directory
         self.api_key = api_key
+        self.api_url = get_comparegpt_api_url_env()
 
     # TODO:适配Compare GPT生成图片
     async def generate_image(self, prompt: ImagePrompt) -> str | ImageAsset:
@@ -43,7 +45,7 @@ class ImageGenerationService:
 
         try:
             image_path = await self._generate_image_google(image_prompt, self.output_directory)
-            
+            print(f"Generated Image Path: {image_path}")
             if image_path:
                 if image_path.startswith("http"):
                     return image_path
@@ -82,13 +84,13 @@ class ImageGenerationService:
             }
             try:
                 async with session.post(
-                    "http://34.58.43.123:9103/api/images/completions",
+                    f"{self.api_url}/images/generations",
                     json=payload,
                     headers=headers,
                 ) as response:
-                    image_path = "/static/images/placeholder.jpg"
+                    print(f"Response Status: {response.status}")
                     if response.status != 200:
-                        return image_path
+                        return "/static/images/placeholder.jpg"
                     result = await response.json()
                     for idx, choice in enumerate(result["choices"]):
                         contents = choice["message"]["content"]
