@@ -49,7 +49,14 @@ async def process_slide_and_fetch_assets(
         result = results.pop()
         if isinstance(result, ImageAsset):
             return_assets.append(result)
-            image_dict["__image_url__"] = result.path
+            # 修复：将绝对路径转换为URL路径
+            if result.path.startswith(get_images_directory()):
+                # 从绝对路径中提取相对路径
+                relative_path = result.path[len(get_images_directory()):].lstrip('/')
+                # 构建可通过FastAPI访问的URL
+                image_dict["__image_url__"] = f"/app_data/images/{relative_path}"
+            else:
+                image_dict["__image_url__"] = result.path
         else:
             image_dict["__image_url__"] = result
         set_dict_at_path(slide.content, image_path, image_dict)
@@ -157,7 +164,14 @@ async def process_old_and_new_slides_and_fetch_assets(
             fetched_image = new_images[i]
             if isinstance(fetched_image, ImageAsset):
                 new_assets.append(fetched_image)
-                image_url = fetched_image.path
+                # 修复：将绝对路径转换为URL路径
+                if fetched_image.path.startswith(get_images_directory()):
+                    # 从绝对路径中提取相对路径
+                    relative_path = fetched_image.path[len(get_images_directory()):].lstrip('/')
+                    # 构建可通过FastAPI访问的URL
+                    image_url = f"/app_data/images/{relative_path}"
+                else:
+                    image_url = fetched_image.path
             else:
                 image_url = fetched_image
             new_image_dicts[i]["__image_url__"] = image_url
