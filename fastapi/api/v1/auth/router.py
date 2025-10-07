@@ -9,11 +9,13 @@ from datetime import datetime, timedelta
 # 导入用户配置相关的模块
 from utils.user_config import get_user_config, update_env_with_user_config
 
+from utils.get_env import get_jwt_token_secret_key_env
+
 # 创建认证路由器
 AUTH_ROUTER = APIRouter(prefix="/auth", tags=["Auth"])
 
 # 获取JWT密钥
-JWT_SECRET = os.environ.get("GENSPARK_SECRET", "vgb0tnl9d58+6n-6h-ea&u^1#s0ccp!794=kbvqacjq75vzps$")
+JWT_SECRET = get_jwt_token_secret_key_env()
 JWT_ALGORITHM = "HS256"
 
 # 支持的用户角色

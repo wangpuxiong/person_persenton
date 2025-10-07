@@ -77,6 +77,8 @@ def get_comparegpt_api_model_env():
         return "gpt-5-mini"
     return compare_gpt_api_model
 
+def get_jwt_token_secret_key_env():
+    return os.getenv("JWT_TOKEN_SECRET_KEY")
 
 def get_openai_api_key_env():
     return os.getenv("OPENAI_API_KEY")
