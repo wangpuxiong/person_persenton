@@ -39,11 +39,6 @@ Presenton是一个演示文稿生成和管理系统，包含前端Next.js应用�
    ```bash
    python server.py --port 9202
    ```
-   或使用提供的启动脚本：
-   ```bash
-   chmod +x start.sh
-   ./start.sh
-   ```
 
 ### 前端部署 (Next.js - 9201端口)
 
@@ -68,6 +63,10 @@ Presenton是一个演示文稿生成和管理系统，包含前端Next.js应用�
    ```bash
    PORT=9201 npm start
    ```
+6. 第一次启动项目时，需要在本地首先下载chrome：
+   ```bash
+   npx puppeteer browsers install chrome
+   ```
 
 ## 环境变量配置
 
@@ -75,18 +74,18 @@ Presenton是一个演示文稿生成和管理系统，包含前端Next.js应用�
 
 后端支持以下环境变量配置（可通过.env文件或系统环境变量设置）：
 
+- `CAN_CHANGE_KEYS` - 默认为False
+- `DISABLE_ANONYMOUS_TRACKING` - 默认为False
 - `APP_DATA_DIRECTORY` - 应用数据存储目录（默认在servers/app_data）
 - `USER_CONFIG_PATH` - 用户配置文件路径
-- `LLM` - 默认LLM提供商（如'openai'）
-- `OPENAI_API_KEY` - OpenAI API密钥
-- `OPENAI_MODEL` - OpenAI模型名称
-- `ANTHROPIC_API_KEY` - Anthropic API密钥
-- `ANTHROPIC_MODEL` - Anthropic模型名称
-- `OLLAMA_URL` - Ollama服务URL
-- `OLLAMA_MODEL` - Ollama模型名称
-- `CUSTOM_LLM_URL` - 自定义LLM服务URL
-- `CUSTOM_LLM_API_KEY` - 自定义LLM API密钥
-- `IMAGE_PROVIDER` - 图像提供商
+- `DATABASE_URL` - SQLite数据库地址
+- `TEMP_DIRECTORY` - 临时目录
+- `COMPAREGPT_API_URL` - 使用compare GPT的API接口地址
+- `COMPAREGPT_API_MODEL` - 使用compare GPT生成PPT内容的大模型
+- `IMAGE_PROVIDER` - 图像提供商（实际无意义，项目未使用，但是需要填，否则项目启动不了）
+- `LLM` - 默认LLM提供商（实际无意义，项目未使用，但是需要填，否则项目启动不了）
+- `OPENAI_API_KEY` - OpenAI API密钥（实际无意义，项目未使用，但是需要填，否则项目启动不了）
+- `OPENAI_MODEL` - OpenAI模型名称（实际无意义，项目未使用，但是需要填，否则项目启动不了）
 
 ### 前端环境变量
 
