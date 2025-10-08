@@ -67,8 +67,7 @@ export const useAuth = (): AuthState => {
   const handleAuthError = (): void => {
     setIsAuthenticated(false);
     setError('Authentication error occurred');
-    // 重定向到认证页面
-    // TODO: 未经验证的用户，不可用系统
+    // 未经验证的用户，不可用系统
     router.push('/auth');
   };
 

@@ -62,8 +62,7 @@ export function ConfigurationInitializer({ children }: { children: React.ReactNo
       if (!isAuthenticated) {
         const authResult = await checkAuthentication();
         if (!authResult) {
-          // 如果未经过身份验证且未导航到身份验证页面，则重定向到身份验证页面
-          // TODO: 未经验证的用户，不可用系统
+          // 未经验证的用户，不可用系统
           if (route !== '/auth') {
             router.push('/auth');
             setIsLoading(false);

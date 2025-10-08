@@ -3,3 +3,4 @@
 .vscode
 chroma
 /server.log
+/logs

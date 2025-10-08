@@ -84,7 +84,7 @@ class ImageGenerationService:
             }
             try:
                 async with session.post(
-                    f"{self.api_url}/images/generations",
+                    f"{self.api_url}/images/completions",
                     json=payload,
                     headers=headers,
                 ) as response:

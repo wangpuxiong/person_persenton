@@ -168,8 +168,7 @@ const Header = ({
         <Image src={PDFIMAGE} alt="pdf export" width={30} height={30} />
         Export as PDF
       </Button>
-      {/* TODO: 导出为PPTX，无法导出图片，暂时屏蔽 */}
-      {/* <Button
+      <Button
         onClick={() => {
           trackEvent(MixpanelEvent.Header_Export_PPTX_Button_Clicked, { pathname });
           handleExportPptx();
@@ -179,7 +178,7 @@ const Header = ({
       >
         <Image src={PPTXIMAGE} alt="pptx export" width={30} height={30} />
         Export as PPTX
-      </Button> */}
+      </Button>
 
 
     </div>
