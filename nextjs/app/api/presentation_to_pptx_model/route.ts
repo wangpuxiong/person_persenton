@@ -424,7 +424,8 @@ async function getAllChildElementsAttributes({
     allResults.push({ attributes, depth });
 
     // If the element is a canvas, or table, we don't need to go deeper
-    if (attributes.should_screenshot && attributes.tagName !== "svg") {
+    // change: svg元素也不需要再递归处理子元素
+    if (attributes.should_screenshot) {
       continue;
     }
 
