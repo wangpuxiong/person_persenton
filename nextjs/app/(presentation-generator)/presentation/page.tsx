@@ -13,7 +13,7 @@ const page = () => {
       <div className="flex flex-col items-center justify-center h-screen">
         <h1 className="text-2xl font-bold">No presentation id found</h1>
         <p className="text-gray-500 pb-4">Please try again</p>
-        <Button onClick={() => router.push("/dashboard")}>Go to home</Button>
+        <Button onClick={() => router.push("/dashboard")} className="bg-indigo-600 text-white hover:bg-indigo-500">Go to home</Button>
       </div>
     );
   }

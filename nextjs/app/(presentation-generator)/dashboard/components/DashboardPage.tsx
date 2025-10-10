@@ -49,7 +49,7 @@ const DashboardPage: React.FC = () => {
     <div className="min-h-screen bg-[#E9E8F8]">
       <Header />
       <Wrapper>
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto py-4 md:py-8">
           <section>
             <h2 className="text-2xl font-roboto font-medium mb-6">
               Slide Presentation
