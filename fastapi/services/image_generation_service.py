@@ -5,13 +5,13 @@ from openai import api_key
 from models.image_prompt import ImagePrompt
 from models.sql.image_asset import ImageAsset
 from utils.download_helpers import download_file
-from utils.get_env import get_comparegpt_api_url_env
+from utils.get_env import get_comparegpt_api_url_env, get_comparegpt_image_api_model_env
 import uuid
 import base64
 
 class ImageGenerationService:
     
-    def __init__(self, output_directory: str, api_key: str):
+    def __init__(self, output_directory: str, api_key: str, model: dict):
         """初始化图像生成服务
         
         Args:
@@ -20,6 +20,9 @@ class ImageGenerationService:
         """
         self.output_directory = output_directory
         self.api_key = api_key
+        if model is None or "name" not in model or not model["name"]:
+            model = {"name": get_comparegpt_image_api_model_env()}
+        self.model = model
         self.api_url = get_comparegpt_api_url_env()
 
     # TODO:适配Compare GPT生成图片
@@ -79,12 +82,12 @@ class ImageGenerationService:
                 "Authorization": f"Bearer {self.api_key}",
             }
             payload = {
-                "model": "gemini-2.5-flash-image-preview",
+                "model": self.model["name"],
                 "prompt": prompt,
             }
             try:
                 async with session.post(
-                    f"{self.api_url}/images/completions",
+                    f"{self.api_url}/images/generations",
                     json=payload,
                     headers=headers,
                 ) as response:

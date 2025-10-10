@@ -92,6 +92,7 @@ async def stream_outlines(
             presentation.instructions,  # 额外指令
             presentation.include_title_slide,  # 是否包含标题幻灯片
             presentation.web_search,  # 是否启用网络搜索
+            presentation.outline_model,  # 使用的模型
         ):
             # 让出控制权给事件循环，确保其他任务可以执行
             await asyncio.sleep(0)

@@ -61,15 +61,19 @@ async def edit_slide(
     presentation_layout = presentation.get_layout()
     # 大模型根据编辑提示生成新的幻灯片布局
     slide_layout = await get_slide_layout_from_prompt(
-        prompt, presentation_layout, slide, api_key=api_key
+        prompt, presentation_layout, slide, api_key=api_key, model=presentation.presentation_model
     )
 
     # 大模型根据编辑提示生成新的幻灯片内容
     edited_slide_content = await get_edited_slide_content(
-        prompt, slide, presentation.language, slide_layout, api_key=api_key
+        prompt, slide, presentation.language, slide_layout, api_key=api_key, model=presentation.presentation_model
     )
 
-    image_generation_service = ImageGenerationService(output_directory=get_images_directory(), api_key=api_key)
+    image_generation_service = ImageGenerationService(
+        output_directory=get_images_directory(), 
+        api_key=api_key,
+        model=presentation.image_model,
+    )
 
     # 处理旧幻灯片内容和新幻灯片内容，生成新的资产
     new_assets = await process_old_and_new_slides_and_fetch_assets(

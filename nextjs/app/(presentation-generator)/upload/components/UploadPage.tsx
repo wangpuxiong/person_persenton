@@ -44,7 +44,7 @@ const UploadPage = () => {
   // State management
   const [files, setFiles] = useState<File[]>([]);
   const [config, setConfig] = useState<PresentationConfig>({
-    slides: "8",
+    slides: "1", // TODO: Default to 1 slide for test
     language: LanguageType.English,
     prompt: "",
     tone: ToneType.Default,
@@ -53,6 +53,7 @@ const UploadPage = () => {
     includeTableOfContents: false,
     includeTitleSlide: false,
     webSearch: false,
+    model: { name: "gpt-4.1", provider: "OpenAI" },
   });
 
   const [loadingState, setLoadingState] = useState<LoadingState>({
@@ -99,8 +100,10 @@ const UploadPage = () => {
       const hasUploadedAssets = files.length > 0;
 
       if (hasUploadedAssets) {
+        // Process documents first
         await handleDocumentProcessing();
       } else {
+        // Direct generation without documents
         await handleDirectPresentationGeneration();
       }
     } catch (error) {
@@ -163,17 +166,18 @@ const UploadPage = () => {
     // Use the first available layout group for direct generation
     trackEvent(MixpanelEvent.Upload_Create_Presentation_API_Call);
     const createResponse = await PresentationGenerationApi.createPresentation({
-      content: config?.prompt ?? "",
-      n_slides: config?.slides ? parseInt(config.slides) : null,
-      file_paths: [],
-      language: config?.language ?? "",
-      tone: config?.tone,
-      verbosity: config?.verbosity,
-      instructions: config?.instructions || null,
-      include_table_of_contents: !!config?.includeTableOfContents,
-      include_title_slide: !!config?.includeTitleSlide,
-      web_search: !!config?.webSearch,
-    });
+        content: config?.prompt ?? "",
+        n_slides: config?.slides ? parseInt(config.slides) : null,
+        file_paths: [],
+        language: config?.language ?? "",
+        tone: config?.tone,
+        verbosity: config?.verbosity,
+        instructions: config?.instructions || null,
+        include_table_of_contents: !!config?.includeTableOfContents,
+        include_title_slide: !!config?.includeTitleSlide,
+        web_search: !!config?.webSearch,
+        model: config?.model,
+      });
 
 
     dispatch(setPresentationId(createResponse.id));

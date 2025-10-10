@@ -104,6 +104,7 @@ async def get_slide_content_from_type_and_outline(
     outline: SlideOutlineModel,
     language: str,
     api_key: str,
+    model: Optional[dict] = None,
     tone: Optional[str] = None,
     verbosity: Optional[str] = None,
     instructions: Optional[str] = None,
@@ -118,7 +119,6 @@ async def get_slide_content_from_type_and_outline(
     :param instructions: 用户指令
     :return: 幻灯片内容
     """
-    model = get_comparegpt_api_model_env()
     client = LLMClient(api_key=api_key)
 
     response_schema = remove_fields_from_schema(

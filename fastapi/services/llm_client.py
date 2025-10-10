@@ -43,7 +43,7 @@ from services.llm_tool_calls_handler import LLMToolCallsHandler
 from utils.async_iterator import iterator_to_async
 from utils.dummy_functions import do_nothing_async
 from utils.get_env import (
-    get_anthropic_api_key_env,
+    get_comparegpt_api_model_env,
     get_custom_llm_api_key_env,
     get_custom_llm_url_env,
     get_disable_thinking_env,
@@ -72,14 +72,6 @@ class LLMClient:
     # ? Use tool calls
     def use_tool_calls_for_structured_output(self) -> bool:
         return parse_bool_or_none(get_tool_calls_env()) or False
-
-    # ? Web Grounding
-    def enable_web_grounding(self) -> bool:
-        return parse_bool_or_none(get_web_grounding_env()) or False
-
-    # ? Disable thinking
-    def disable_thinking(self) -> bool:
-        return parse_bool_or_none(get_disable_thinking_env()) or False
 
     # Compare GPT Client
     def _get_client(self, api_key: str):
@@ -149,48 +141,6 @@ class LLMClient:
             )
 
         return response.choices[0].message.content
-    
-    # abandoned
-    async def _generate_google(
-        self,
-        model: str,
-        messages: List[LLMMessage],
-        tools: Optional[List[dict]] = None,
-        max_tokens: Optional[int] = None,
-        depth: int = 0,
-    ) -> str | None:
-        return 
-
-    # abandoned
-    async def _generate_anthropic(
-        self,
-        model: str,
-        messages: List[LLMMessage],
-        max_tokens: Optional[int] = None,
-        tools: Optional[List[dict]] = None,
-        depth: int = 0,
-    ) -> str | None:
-        return
-
-    # abandoned
-    async def _generate_ollama(
-        self,
-        model: str,
-        messages: List[LLMMessage],
-        max_tokens: Optional[int] = None,
-        depth: int = 0,
-    ):
-        return
-
-    # abandoned
-    async def _generate_custom(
-        self,
-        model: str,
-        messages: List[LLMMessage],
-        max_tokens: Optional[int] = None,
-        depth: int = 0,
-    ):
-        return 
 
     # abandoned
     # /slide/edit-html接口使用，实际不需要
@@ -256,23 +206,15 @@ class LLMClient:
                 )
             )
 
+        extra_body = extra_body or {}
+        extra_body["is_from_ppt_agent"] = True
+        if not use_tool_calls_for_structured_output:
+            extra_body["strict"] = strict
+            extra_body["response_schema"] = response_schema
+
         response = await client.chat.completions.create(
             model=model,
             messages=[message.model_dump() for message in messages],
-            response_format=(
-                {
-                    "type": "json_schema",
-                    "json_schema": (
-                        {
-                            "name": "ResponseSchema",
-                            "strict": strict,
-                            "schema": response_schema,
-                        }
-                    ),
-                }
-                if not use_tool_calls_for_structured_output
-                else None
-            ),
             max_completion_tokens=max_tokens,
             tools=all_tools,
             extra_body=extra_body,
@@ -334,21 +276,23 @@ class LLMClient:
             return content
         return None
 
-    # Structured Content
+    # Structured Content 对外入口
     async def generate_structured(
         self,
-        model: str,
+        model: Optional[dict],
         messages: List[LLMMessage],
         response_format: dict,
         strict: bool = False,
         tools: Optional[List[type[LLMTool] | LLMDynamicTool]] = None,
         max_tokens: Optional[int] = None,
     ) -> dict:
+        if model is None or "name" not in model or not model["name"]:
+            model = {"name": get_comparegpt_api_model_env()}
         parsed_tools = self.tool_calls_handler.parse_tools(tools)
 
         # 统一使用comparegpt客户端（兼容OpenAI SDK）
         content = await self._generate_openai_structured(
-            model=model,
+            model=model["name"],
             messages=messages,
             response_format=response_format,
             strict=strict,
@@ -462,48 +406,6 @@ class LLMClient:
                 yield event
 
     # abandoned
-    async def _stream_google(
-        self,
-        model: str,
-        messages: List[LLMMessage],
-        tools: Optional[List[dict]] = None,
-        max_tokens: Optional[int] = None,
-        depth: int = 0,
-    ) -> AsyncGenerator[str, None]:
-        yield ""
-
-    # abandoned
-    async def _stream_anthropic(
-        self,
-        model: str,
-        messages: List[LLMMessage],
-        max_tokens: Optional[int] = None,
-        tools: Optional[List[dict]] = None,
-        depth: int = 0,
-    ):
-        yield ""
-
-    # abandoned
-    def _stream_ollama(
-        self,
-        model: str,
-        messages: List[LLMMessage],
-        max_tokens: Optional[int] = None,
-        depth: int = 0,
-    ):
-        yield ""
-
-    # abandoned
-    def _stream_custom(
-        self,
-        model: str,
-        messages: List[LLMMessage],
-        max_tokens: Optional[int] = None,
-        depth: int = 0,
-    ):
-        yield ""
-
-    # abandoned
     # 无使用
     def stream(
         self,
@@ -570,25 +472,16 @@ class LLMClient:
         current_arguments = None
 
         has_response_schema_tool_call = False
+        extra_body = extra_body or {}
+        extra_body["is_from_ppt_agent"] = True,
+        extra_body["strict"] = strict
+        extra_body["response_schema"] = response_schema
+        
         async for event in await client.chat.completions.create(
             model=model,
             messages=[message.model_dump() for message in messages],
             max_completion_tokens=max_tokens,
             tools=all_tools,
-            response_format=(
-                {
-                    "type": "json_schema",
-                    "json_schema": (
-                        {
-                            "name": "ResponseSchema",
-                            "strict": strict,
-                            "schema": response_schema,
-                        }
-                    ),
-                }
-                if not use_tool_calls_for_structured_output
-                else None
-            ),
             extra_body=extra_body,
             stream=True,
         ):
@@ -672,10 +565,10 @@ class LLMClient:
             ):
                 yield event
 
-    # Stream Structured Content
+    # Stream Structured Content 对外入口
     def stream_structured(
         self,
-        model: str,
+        model: Optional[dict],
         messages: List[LLMMessage],
         response_format: dict,
         strict: bool = False,
@@ -683,10 +576,12 @@ class LLMClient:
         max_tokens: Optional[int] = None,
     ):
         parsed_tools = self.tool_calls_handler.parse_tools(tools)
+        if model is None or "name" not in model or not model["name"]:
+            model = {"name": get_comparegpt_api_model_env()}
 
         # 统一使用comparegpt客户端（兼容OpenAI SDK）
         return self._stream_openai_structured(
-            model=model,
+            model=model['name'],
             messages=messages,
             response_format=response_format,
             strict=strict,

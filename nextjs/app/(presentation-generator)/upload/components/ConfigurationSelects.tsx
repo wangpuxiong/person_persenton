@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {  LanguageType, PresentationConfig, ToneType, VerbosityType } from "../type";
+import {  LanguageType, ModelOption, MODEL_OPTIONS, PresentationConfig, ToneType, VerbosityType } from "../type";
 import { useState } from "react";
 import { Check, ChevronsUpDown, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -131,6 +131,68 @@ const SlideCountSelect: React.FC<{
 };
 
 /**
+ * Renders a model selection component with search functionality
+ */
+const ModelSelect: React.FC<{
+  value: ModelOption | null;
+  onValueChange: (value: ModelOption) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}> = ({ value, onValueChange, open, onOpenChange }) => (
+  <Popover open={open} onOpenChange={onOpenChange}>
+    <PopoverTrigger asChild>
+      <Button
+        variant="outline"
+        role="combobox"
+        name="model"
+        data-testid="model-select"
+        aria-expanded={open}
+        className="w-[200px] justify-between font-instrument_sans font-semibold overflow-hidden bg-blue-100 hover:bg-blue-100 border-blue-200 focus-visible:ring-blue-300 border-none"
+      >
+        <p className="text-sm font-medium truncate">
+          {value ? `${value.name} (${value.provider})` : "Select model"}
+        </p>
+        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent className="w-[300px] p-0" align="end">
+      <Command>
+        <CommandInput
+          placeholder="Search model..."
+          className="font-instrument_sans"
+        />
+        <CommandList>
+          <CommandEmpty>No model found.</CommandEmpty>
+          <CommandGroup>
+            {MODEL_OPTIONS.map((model) => (
+              <CommandItem
+                key={`${model.provider}-${model.name}`}
+                value={JSON.stringify(model)}
+                role="option"
+                onSelect={(currentValue) => {
+                  onValueChange(JSON.parse(currentValue));
+                  onOpenChange(false);
+                }}
+                className="font-instrument_sans"
+              >
+                <Check
+                  className={cn(
+                    "mr-2 h-4 w-4",
+                    value && value.name === model.name && value.provider === model.provider ? "opacity-100" : "opacity-0"
+                  )}
+                />
+                {model.name}
+                <span className="ml-2 text-xs text-gray-500">({model.provider})</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    </PopoverContent>
+  </Popover>
+);
+
+/**
  * Renders a language selection component with search functionality
  */
 const LanguageSelect: React.FC<{
@@ -197,6 +259,7 @@ export function ConfigurationSelects({
 }: ConfigurationSelectsProps) {
   const [openLanguage, setOpenLanguage] = useState(false);
   const [openAdvanced, setOpenAdvanced] = useState(false);
+  const [openModel, setOpenModel] = useState(false);
 
   const [advancedDraft, setAdvancedDraft] = useState({
     tone: config.tone,
@@ -242,6 +305,12 @@ export function ConfigurationSelects({
         onValueChange={(value) => onConfigChange("language", value)}
         open={openLanguage}
         onOpenChange={setOpenLanguage}
+      />
+      <ModelSelect
+        value={config.model}
+        onValueChange={(value) => onConfigChange("model", value)}
+        open={openModel}
+        onOpenChange={setOpenModel}
       />
       <ToolTip content="Advanced settings">
 

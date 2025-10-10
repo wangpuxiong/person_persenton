@@ -83,6 +83,7 @@ async def get_edited_slide_content(
     language: str,
     slide_layout: SlideLayoutModel,
     api_key: str,
+    model: Optional[dict] = None,
     tone: Optional[str] = None,
     verbosity: Optional[str] = None,
     instructions: Optional[str] = None,
@@ -99,7 +100,6 @@ async def get_edited_slide_content(
     :param instructions: 用户指令
     :return: 编辑后的幻灯片内容
     """
-    model = get_comparegpt_api_model_env()
     client = LLMClient(api_key=api_key)
 
     response_schema = remove_fields_from_schema(

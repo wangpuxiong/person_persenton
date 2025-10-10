@@ -37,7 +37,10 @@ async def generate_image(
     images_directory = get_images_directory()
     image_prompt = ImagePrompt(prompt=prompt)
 
-    image_generation_service = ImageGenerationService(output_directory=images_directory, api_key=api_key)
+    image_generation_service = ImageGenerationService(
+        output_directory=images_directory, 
+        api_key=api_key
+    )
     image = await image_generation_service.generate_image(image_prompt)
 
     # 检查生成的图像是否为 ImageAsset 实例

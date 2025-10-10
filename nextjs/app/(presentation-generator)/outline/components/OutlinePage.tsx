@@ -11,10 +11,13 @@ import EmptyStateView from "./EmptyStateView";
 import GenerateButton from "./GenerateButton";
 
 import { TABS, Template } from "../types/index";
+import { ModelOption } from "../../upload/type";
 import { useOutlineStreaming } from "../hooks/useOutlineStreaming";
 import { useOutlineManagement } from "../hooks/useOutlineManagement";
 import { usePresentationGeneration } from "../hooks/usePresentationGeneration";
 import TemplateSelection from "./TemplateSelection";
+import ModelSelection from "./ModelSelection";
+import { ImageModelType } from "./ModelSelection";
 
 const OutlinePage: React.FC = () => {
   const { presentation_id, outlines } = useSelector(
@@ -23,6 +26,8 @@ const OutlinePage: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<string>(TABS.OUTLINE);
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+  const [selectedPptModel, setSelectedPptModel] = useState<ModelOption | null>(null);
+  const [selectedImageModel, setSelectedImageModel] = useState<ImageModelType | null>(null);
   // Custom hooks
   const streamState = useOutlineStreaming(presentation_id);
   const { handleDragEnd, handleAddSlide } = useOutlineManagement(outlines);
@@ -30,6 +35,8 @@ const OutlinePage: React.FC = () => {
     presentation_id,
     outlines,
     selectedTemplate,
+    selectedPptModel,
+    selectedImageModel,
     setActiveTab
   );
   if (!presentation_id) {
@@ -49,9 +56,10 @@ const OutlinePage: React.FC = () => {
       <Wrapper className="h-full flex flex-col w-full">
         <div className="flex-grow overflow-y-hidden w-[1200px] mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-            <TabsList className="grid w-[50%] mx-auto my-4 grid-cols-2">
+            <TabsList className="grid w-[75%] mx-auto my-4 grid-cols-3">
               <TabsTrigger value={TABS.OUTLINE}>Outline & Content</TabsTrigger>
               <TabsTrigger value={TABS.LAYOUTS}>Select Template</TabsTrigger>
+              <TabsTrigger value={TABS.MODELS}>Select Models</TabsTrigger>
             </TabsList>
 
             <div className="flex-grow w-full mx-auto">
@@ -78,6 +86,17 @@ const OutlinePage: React.FC = () => {
                   />
                 </div>
               </TabsContent>
+              
+              <TabsContent value={TABS.MODELS} className="h-[calc(100vh-16rem)] overflow-y-auto custom_scrollbar">
+                <div>
+                  <ModelSelection
+                    selectedPptModel={selectedPptModel}
+                    onSelectPptModel={setSelectedPptModel}
+                    selectedImageModel={selectedImageModel}
+                    onSelectImageModel={setSelectedImageModel}
+                  />
+                </div>
+              </TabsContent>
             </div>
           </Tabs>
         </div>
@@ -90,6 +109,8 @@ const OutlinePage: React.FC = () => {
               loadingState={loadingState}
               streamState={streamState}
               selectedTemplate={selectedTemplate}
+              selectedPptModel={selectedPptModel}
+              selectedImageModel={selectedImageModel}
               onSubmit={handleSubmit}
             />
           </div>

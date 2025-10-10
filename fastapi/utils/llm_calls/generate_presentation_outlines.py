@@ -94,6 +94,7 @@ async def generate_ppt_outline(
     instructions: Optional[str] = None,
     include_title_slide: bool = True,
     web_search: bool = False,
+    model: Optional[dict] = None,
 ):
     """
     生成演示文稿的大纲
@@ -109,7 +110,6 @@ async def generate_ppt_outline(
     :param web_search: 是否启用网络搜索
     :return: 演示文稿的大纲
     """
-    model = get_comparegpt_api_model_env()
     response_model = get_presentation_outline_model_with_n_slides(n_slides)
 
     client = LLMClient(api_key=api_key)

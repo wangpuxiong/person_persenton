@@ -1,14 +1,18 @@
 import React from "react";
 import { usePathname } from "next/navigation";
-import { trackEvent, MixpanelEvent } from "@/utils/mixpanel";
+import { MixpanelEvent, trackEvent } from "@/utils/mixpanel";
 import { Button } from "@/components/ui/button";
 import { LoadingState, Template } from "../types/index";
+import { ModelOption } from "../../upload/type";
+import { ImageModelType } from "./ModelSelection";
 
 interface GenerateButtonProps {
     loadingState: LoadingState;
     streamState: { isStreaming: boolean, isLoading: boolean };
     selectedTemplate: Template | null;
-    onSubmit: () => void;
+    selectedPptModel: ModelOption | null;
+    selectedImageModel: ImageModelType | null;
+    onSubmit: () => Promise<void>;
     outlineCount: number;
 }
 
@@ -16,6 +20,8 @@ const GenerateButton: React.FC<GenerateButtonProps> = ({
     loadingState,
     streamState,
     selectedTemplate,
+    selectedPptModel,
+    selectedImageModel,
     outlineCount,
     onSubmit
 }) => {
@@ -28,9 +34,10 @@ const GenerateButton: React.FC<GenerateButtonProps> = ({
 
     const getButtonText = () => {
         if (loadingState.isLoading) return loadingState.message;
-        if (streamState.isLoading || streamState.isStreaming) return "Loading...";
+        if (streamState.isLoading || streamState.isStreaming) return "Generating Outline...";
         if (!selectedTemplate) return "Select a Template";
-        return `Generate Presentation (About ${outlineCount * 1} credits - 1 credits per slide)`;
+        if (!selectedPptModel || !selectedImageModel) return "Select the Model to be used";
+        return "Generate Presentation";
     };
 
     return (
@@ -39,8 +46,16 @@ const GenerateButton: React.FC<GenerateButtonProps> = ({
             onClick={() => {
                 if (!streamState.isLoading && !streamState.isStreaming) {
                     if (!selectedTemplate) {
+                        console.log(1)
+                        console.log("pathname>>", pathname)
                         trackEvent(MixpanelEvent.Outline_Select_Template_Button_Clicked, { pathname });
+                    } else if (!selectedPptModel || !selectedImageModel) {
+                        console.log(2)
+                        console.log("pathname>>", pathname)
+                        trackEvent(MixpanelEvent.Outline_Select_Model_Button_Clicked, { pathname });
                     } else {
+                        console.log(3)
+                        console.log("pathname>>", pathname)
                         trackEvent(MixpanelEvent.Outline_Generate_Presentation_Button_Clicked, { pathname });
                     }
                 }
@@ -79,4 +94,4 @@ const GenerateButton: React.FC<GenerateButtonProps> = ({
     );
 };
 
-export default GenerateButton; 
+export default GenerateButton;

@@ -101,6 +101,7 @@ async def generate_presentation_structure(
     presentation_layout: PresentationLayoutModel,
     instructions: Optional[str] = None,
     api_key: Optional[str] = None,
+    model: Optional[dict] = None,
     using_slides_markdown: bool = False,
 ) -> PresentationStructureModel:
     """
@@ -108,11 +109,12 @@ async def generate_presentation_structure(
     :param presentation_outline: 演示文稿的大纲
     :param presentation_layout: 演示文稿的布局
     :param instructions: 用户指令
+    :param api_key: CompareGPT API密钥
+    :param model: 生成演示文稿的模型配置
     :param using_slides_markdown: 是否使用幻灯片Markdown
     :return: 演示文稿的结构
     """
     client = LLMClient(api_key=api_key)
-    model = get_comparegpt_api_model_env()
     response_model = get_presentation_structure_model_with_n_slides(
         len(presentation_outline.slides)
     )

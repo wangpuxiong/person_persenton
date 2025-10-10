@@ -118,6 +118,25 @@ export enum LanguageType {
   Samoan = "Samoan (Gagana Samoa)",
 }
 
+// Model types with provider information
+export interface ModelOption {
+  name: string;
+  provider: string;
+}
+
+export const MODEL_OPTIONS: ModelOption[] = [
+  { name: "gpt-4.1", provider: "OpenAI" },
+  { name: "gpt-4.1-mini", provider: "OpenAI" },
+  { name: "gpt-4o", provider: "OpenAI" },
+  { name: "gpt-4o-mini", provider: "OpenAI" },
+  { name: "gpt-5", provider: "OpenAI" },
+  { name: "gpt-5-nano", provider: "OpenAI" },
+  { name: "gpt-5-mini", provider: "OpenAI" },
+  // { name: "gemini-2.5-pro", provider: "Google" },
+  // { name: "gemini-2.5-flash", provider: "Google" },
+  // { name: "gemini-2.5-flash-lite", provider: "Google" }
+];
+
 export interface PresentationConfig {
   slides: string | null;
   language: LanguageType | null;
@@ -128,6 +147,7 @@ export interface PresentationConfig {
   includeTableOfContents: boolean;
   includeTitleSlide: boolean;
   webSearch: boolean;
+  model: ModelOption | null;
 }
 
 export enum ToneType {

@@ -5,7 +5,9 @@ import { toast } from "sonner";
 import { clearPresentationData } from "@/store/slices/presentationGeneration";
 import { PresentationGenerationApi } from "../../services/api/presentation-generation";
 import { Template, LoadingState, TABS } from "../types/index";
+import { ModelOption } from "../../upload/type";
 import { MixpanelEvent, trackEvent } from "@/utils/mixpanel";
+import { ImageModelType } from "../components/ModelSelection";
 
 const DEFAULT_LOADING_STATE: LoadingState = {
   message: "",
@@ -18,6 +20,8 @@ export const usePresentationGeneration = (
   presentationId: string | null,
   outlines: { content: string }[] | null,
   selectedTemplate: Template | null,
+  selectedPptModel: ModelOption | null,
+  selectedImageModel: ImageModelType | null,
   setActiveTab: (tab: string) => void
 ) => {
   const dispatch = useDispatch();
@@ -45,8 +49,22 @@ export const usePresentationGeneration = (
       return false;
     }
 
+    if (!selectedPptModel) {
+      toast.error("Select AI Model", {
+        description: "Please select a presentation generation model before generating presentation",
+      });
+      return false;
+    }
+
+    if (!selectedImageModel) {
+      toast.error("Select Image Model", {
+        description: "Please select an image generation model before generating presentation",
+      });
+      return false;
+    }
+
     return true;
-  }, [outlines, selectedTemplate]);
+  }, [outlines, selectedTemplate, selectedPptModel, selectedImageModel]);
 
   const prepareLayoutData = useCallback(() => {
     if (!selectedTemplate) return null;
@@ -60,6 +78,10 @@ export const usePresentationGeneration = (
   const handleSubmit = useCallback(async () => {
     if (!selectedTemplate) {
       setActiveTab(TABS.LAYOUTS);
+      return;
+    }
+    if (!selectedPptModel || !selectedImageModel) {
+      setActiveTab(TABS.MODELS);
       return;
     }
     if (!validateInputs()) return;
@@ -82,7 +104,9 @@ export const usePresentationGeneration = (
         presentation_id: presentationId,
         outlines: outlines,
         layout: layoutData,
-        title: undefined 
+        title: undefined,
+        model: selectedPptModel,
+        image_model: selectedImageModel
       });
 
       if (response) {
@@ -97,7 +121,7 @@ export const usePresentationGeneration = (
     } finally {
       setLoadingState(DEFAULT_LOADING_STATE);
     }
-  }, [validateInputs, prepareLayoutData, presentationId, outlines, dispatch, router, selectedTemplate]);
+  }, [validateInputs, prepareLayoutData, presentationId, outlines, dispatch, router, selectedTemplate, selectedPptModel, selectedImageModel]);
 
   return { loadingState, handleSubmit };
-}; 
+};

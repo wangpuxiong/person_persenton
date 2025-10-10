@@ -1,3 +1,4 @@
+from typing import Optional
 from models.llm_message import LLMSystemMessage, LLMUserMessage
 from models.presentation_layout import PresentationLayoutModel, SlideLayoutModel
 from models.slide_layout_index import SlideLayoutIndex
@@ -42,6 +43,7 @@ async def get_slide_layout_from_prompt(
     layout: PresentationLayoutModel,
     slide: SlideModel,
     api_key: str,
+    model: Optional[dict] = None,
 ) -> SlideLayoutModel:
     """
     根据提示选择幻灯片布局
@@ -50,7 +52,6 @@ async def get_slide_layout_from_prompt(
     :param slide: 幻灯片模型
     :return: 选择的幻灯片布局模型
     """
-    model = get_comparegpt_api_model_env()
     client = LLMClient(api_key=api_key)
 
     slide_layout_index = layout.get_slide_layout_index(slide.layout)

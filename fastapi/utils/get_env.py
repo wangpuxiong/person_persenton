@@ -74,8 +74,17 @@ def get_comparegpt_api_model_env():
     """
     compare_gpt_api_model = os.getenv("COMPAREGPT_API_MODEL")
     if not compare_gpt_api_model:
-        return "gpt-5-mini"
+        return "gpt-4.1"
     return compare_gpt_api_model
+
+def get_comparegpt_image_api_model_env():
+    """
+    获取Compare GPT图像生成API模型环境变量
+    """
+    compare_gpt_image_api_model = os.getenv("COMPAREGPT_IMAGE_API_MODEL")
+    if not compare_gpt_image_api_model:
+        return "gemini-2.5-flash-image-preview"
+    return compare_gpt_image_api_model
 
 def get_jwt_token_secret_key_env():
     return os.getenv("JWT_TOKEN_SECRET_KEY")

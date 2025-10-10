@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect } from "react";
 import { useLayout } from "../../context/LayoutContext";
 import TemplateLayouts from "./TemplateLayouts";

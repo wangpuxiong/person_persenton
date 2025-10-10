@@ -18,7 +18,8 @@ export interface LoadingState {
 
 export const TABS = {
   OUTLINE: 'outline',
-  LAYOUTS: 'layouts'
+  LAYOUTS: 'layouts',
+  MODELS: 'models'
 } as const;
 
-export type TabType = typeof TABS[keyof typeof TABS]; 
+export type TabType = typeof TABS[keyof typeof TABS];

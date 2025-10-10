@@ -201,6 +201,7 @@ async def create_presentation(
     include_table_of_contents: Annotated[bool, Body()] = False,
     include_title_slide: Annotated[bool, Body()] = True,
     web_search: Annotated[bool, Body()] = False,
+    model: Annotated[Optional[dict], Body()] = {"name": "gpt-4.1"},
     sql_session: AsyncSession = Depends(get_async_session),
     current_user: Optional[str] = Depends(get_current_user),
 ):
@@ -218,6 +219,7 @@ async def create_presentation(
         include_table_of_contents: 是否包含目录（默认：False）
         include_title_slide: 是否包含标题幻灯片（默认：True）
         web_search: 是否启用网络搜索（默认：False）
+        model: 生成PPT大纲的模型配置（默认：{"name": "gpt-4.1"}）
         sql_session: 异步数据库会话
         current_user: 当前登录用户ID（可选）
     
@@ -249,6 +251,7 @@ async def create_presentation(
         include_table_of_contents=include_table_of_contents,
         include_title_slide=include_title_slide,
         web_search=web_search,
+        outline_model=model,
     )
 
     sql_session.add(presentation)
@@ -262,6 +265,8 @@ async def prepare_presentation(
     presentation_id: Annotated[uuid.UUID, Body()],
     outlines: Annotated[List[SlideOutlineModel], Body()],
     layout: Annotated[PresentationLayoutModel, Body()],
+    model: Annotated[Optional[dict], Body()] = {"name": "gpt-4.1"},
+    image_model: Annotated[Optional[dict], Body()] = {"name": "gemini-2.5-flash-image-preview"},
     title: Annotated[Optional[str], Body()] = None,
     sql_session: AsyncSession = Depends(get_async_session),
     current_user: Optional[str] = Depends(get_current_user),
@@ -274,6 +279,8 @@ async def prepare_presentation(
         presentation_id: 演示文稿唯一标识符
         outlines: 幻灯片大纲列表
         layout: 演示文稿布局
+        model: 生成演示文稿的模型配置（默认：{"name": "gpt-4.1"}）
+        image_model: 生成演示文稿图片的模型配置（默认：{"name": "gemini-2.5-flash-image-preview"}）
         title: 演示文稿标题（可选）
         sql_session: 异步数据库会话
         current_user: 当前登录用户ID（可选）
@@ -313,6 +320,7 @@ async def prepare_presentation(
                 presentation_layout=layout,
                 instructions=presentation.instructions,
                 api_key=api_key,
+                model=model,
             )
         )
 
@@ -362,6 +370,8 @@ async def prepare_presentation(
                 )
 
     sql_session.add(presentation)
+    presentation.presentation_model = model
+    presentation.image_model = image_model
     presentation.outlines = presentation_outline_model.model_dump(mode="json")
     presentation.title = title or presentation.title
     presentation.set_layout(layout)
@@ -416,7 +426,11 @@ async def stream_presentation(
         )
 
     # 图片生成服务
-    image_generation_service = ImageGenerationService(output_directory=get_images_directory(), api_key=api_key)
+    image_generation_service = ImageGenerationService(
+        output_directory=get_images_directory(), 
+        api_key=api_key, 
+        model=presentation.image_model,
+    )
 
     async def inner():
         structure = presentation.get_structure()
@@ -435,13 +449,14 @@ async def stream_presentation(
 
             try:
                 slide_content = await get_slide_content_from_type_and_outline(
-                    slide_layout,
-                    outline.slides[i],
-                    presentation.language,
-                    api_key,
-                    presentation.tone,
-                    presentation.verbosity,
-                    presentation.instructions,
+                    slide_layout=slide_layout,
+                    outline=outline.slides[i],
+                    language=presentation.language,
+                    api_key=api_key,
+                    model=presentation.presentation_model,
+                    tone=presentation.tone,
+                    verbosity=presentation.verbosity,
+                    instructions=presentation.instructions,
                 )
             except HTTPException as e:
                 yield SSEErrorResponse(detail=e.detail).to_string()
@@ -764,6 +779,7 @@ async def generate_presentation_handler(
             async for chunk in generate_ppt_outline(
                 request.content,
                 n_slides_to_generate,
+                '', # api key
                 request.language,
                 additional_context,
                 request.tone.value,
@@ -823,10 +839,12 @@ async def generate_presentation_handler(
         else:
             presentation_structure: PresentationStructureModel = (
                 await generate_presentation_structure(
-                    presentation_outlines,
-                    layout_model,
-                    request.instructions,
-                    using_slides_markdown,
+                    presentation_outlines=presentation_outlines,
+                    presentation_layout=layout_model,
+                    instructions=request.instructions,
+                    api_key="",
+                    model={"name": "gpt-4.1"},
+                    using_slides_markdown=using_slides_markdown,
                 )
             )
 
@@ -899,7 +917,11 @@ async def generate_presentation_handler(
             sql_session.add(async_status)
             await sql_session.commit()
 
-        image_generation_service = ImageGenerationService(output_directory=get_images_directory(), api_key=api_key)
+        image_generation_service = ImageGenerationService(
+            output_directory=get_images_directory(), 
+            api_key=api_key,
+            model=presentation.image_model,
+        )
         async_assets_generation_tasks = []
 
         # 7. Generate slide content concurrently (batched), then build slides and fetch assets
@@ -921,9 +943,11 @@ async def generate_presentation_handler(
                     slide_layouts[i],
                     presentation_outlines.slides[i],
                     request.language,
-                    request.tone.value,
-                    request.verbosity.value,
-                    request.instructions,
+                    api_key="",
+                    model={"name": "gpt-4.1"},
+                    tone=request.tone.value,
+                    verbosity=request.verbosity.value,
+                    instructions=request.instructions,
                 )
                 for i in range(start, end)
             ]
