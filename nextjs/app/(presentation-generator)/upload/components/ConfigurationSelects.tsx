@@ -299,12 +299,12 @@ export function ConfigurationSelects({
 			</ToolTip>
 
 			<Dialog open={openAdvanced} onOpenChange={handleOpenAdvancedChange}>
-				<DialogContent className="max-w-2xl font-instrument_sans">
+				<DialogContent className="max-w-2xl font-instrument_sans flex flex-col max-h-full px-2 py-4 md:p-6">
 					<DialogHeader>
 						<DialogTitle>Advanced settings</DialogTitle>
 					</DialogHeader>
 
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+					<div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 overflow-auto">
 						{/* Tone */}
 						<div className="w-full flex flex-col gap-2">
 							<label className="text-sm font-semibold text-gray-700">
@@ -448,7 +448,7 @@ export function ConfigurationSelects({
 						</div>
 					</div>
 
-					<DialogFooter>
+					<DialogFooter className="flex justify-end gap-2 !flex-row ">
 						<Button
 							variant="outline"
 							onClick={() => handleOpenAdvancedChange(false)}
