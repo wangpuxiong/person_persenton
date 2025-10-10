@@ -1,37 +1,60 @@
+const localhost = 'https://slides.comparegpt.io'
+
+console.log('trigger', localhost)
 
 const nextConfig = {
+  allowedDevOrigins: ['local-origin.dev', '*.local-origin.dev'],
   reactStrictMode: false,
   distDir: ".next-build",
-  
+
 
   // Rewrites for development - proxy API and font requests to FastAPI backend
-  async rewrites() {
+  async rewrites () {
     return [
       {
         source: '/api/v1/auth',
-        destination: 'http://localhost:9202/auth/',
+        destination: `${localhost}/api/v1/auth`,
       },
       {
         source: '/api/v1/ppt/:path*',
-        destination: 'http://localhost:9202/api/v1/ppt/:path*',
+        destination: `${localhost}/api/v1/ppt/:path*`,
       },
       {
         source: '/api/v1/auth/:path*',
-        destination: 'http://localhost:9202/auth/:path*',
+        destination: `${localhost}/api/v1/auth/:path*`,
       },
       {
         source: '/app_data/fonts/:path*',
-        destination: 'http://localhost:9202/app_data/fonts/:path*',
+        destination: `${localhost}/app_data/fonts/:path*`,
       },
       {
         source: '/static/:path*',
-        destination: 'http://localhost:9202/static/:path*',
+        destination: `${localhost}/static/:path*`,
       },
       {
         source: '/app_data/:path*',
-        destination: 'http://localhost:9202/app_data/:path*',
+        destination: `${localhost}/app_data/:path*`,
       }
-    ];
+    ]
+  },
+
+  async headers () {
+    return [
+      {
+        source: '/api/v1/:path*',
+        headers: [
+          {
+            key: 'Cookie',
+            value: ':path*', // 保留原始请求的 Cookie
+          },
+          // 允许跨域请求携带凭证（关键！）
+          {
+            key: 'Access-Control-Allow-Credentials',
+            value: 'true',
+          },
+        ],
+      },
+    ]
   },
 
   images: {
@@ -74,7 +97,6 @@ const nextConfig = {
       },
     ],
   },
-  
-};
+}
 
-export default nextConfig;
+export default nextConfig
