@@ -45,7 +45,7 @@ const OutlinePage: React.FC = () => {
 
 
   return (
-    <div className="h-[calc(100vh-72px)]">
+    <div className="h-[calc(100vh-46px)]">
       <OverlayLoader
         show={loadingState.isLoading}
         text={loadingState.message}
@@ -54,18 +54,18 @@ const OutlinePage: React.FC = () => {
       />
 
       <Wrapper className="h-full flex flex-col w-full">
-        <div className="flex-grow overflow-y-hidden w-[1200px] mx-auto">
+        <div className="flex-grow overflow-y-hidden w-full max-w-[1200px] mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-            <TabsList className="grid w-[75%] mx-auto my-4 grid-cols-3">
+            <TabsList className="grid w-fit md:w-[75%] mx-auto my-4 grid-cols-2">
               <TabsTrigger value={TABS.OUTLINE}>Outline & Content</TabsTrigger>
               <TabsTrigger value={TABS.LAYOUTS}>Select Template</TabsTrigger>
               <TabsTrigger value={TABS.MODELS}>Select Models</TabsTrigger>
             </TabsList>
 
-            <div className="flex-grow w-full mx-auto">
-              <TabsContent value={TABS.OUTLINE} className="h-[calc(100vh-16rem)] overflow-y-auto custom_scrollbar"
+            <div className="flex-grow w-full mx-auto flex flex-col overflow-y-hidden">
+              <TabsContent value={TABS.OUTLINE} className="flex-grow h-full overflow-y-auto custom_scrollbar"
               >
-                <div>
+                <div className="px-2 md:px-4">
                   <OutlineContent
                     outlines={outlines}
                     isLoading={streamState.isLoading}
@@ -78,15 +78,15 @@ const OutlinePage: React.FC = () => {
                 </div>
               </TabsContent>
 
-              <TabsContent value={TABS.LAYOUTS} className="h-[calc(100vh-16rem)] overflow-y-auto custom_scrollbar">
-                <div>
+              <TabsContent value={TABS.LAYOUTS} className="flex-grow h-full overflow-y-auto custom_scrollbar">
+                <div className="px-2 md:px-4">
                   <TemplateSelection
                     selectedTemplate={selectedTemplate}
                     onSelectTemplate={setSelectedTemplate}
                   />
                 </div>
               </TabsContent>
-              
+
               <TabsContent value={TABS.MODELS} className="h-[calc(100vh-16rem)] overflow-y-auto custom_scrollbar">
                 <div>
                   <ModelSelection
@@ -102,7 +102,7 @@ const OutlinePage: React.FC = () => {
         </div>
 
         {/* Fixed Button */}
-        <div className="py-4 border-t border-gray-200">
+        <div className="px-2 md:px-4 py-4 border-t border-gray-200">
           <div className="max-w-[1200px] mx-auto">
             <GenerateButton
               outlineCount={outlines.length}

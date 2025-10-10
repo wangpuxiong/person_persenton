@@ -106,7 +106,7 @@ const PresentationPage: React.FC<PresentationPageProps> = ({
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-100 px-2 md:px-4">
         <div
           className="bg-white border border-red-300 text-red-700 px-6 py-8 rounded-lg shadow-lg flex flex-col items-center"
           role="alert"
@@ -116,7 +116,7 @@ const PresentationPage: React.FC<PresentationPageProps> = ({
           <p className="text-center mb-4">
             We couldn't load your presentation. Please try again.
           </p>
-          <Button onClick={() => { trackEvent(MixpanelEvent.PresentationPage_Refresh_Page_Button_Clicked, { pathname }); window.location.reload(); }}>Refresh Page</Button>
+          <Button className="bg-indigo-600 text-white hover:bg-indigo-500" onClick={() => { trackEvent(MixpanelEvent.PresentationPage_Refresh_Page_Button_Clicked, { pathname }); window.location.reload(); }}>Refresh Page</Button>
         </div>
       </div>
     );
@@ -148,7 +148,7 @@ const PresentationPage: React.FC<PresentationPageProps> = ({
         <div className="flex-1 h-[calc(100vh-100px)] overflow-y-auto">
           <div
             id="presentation-slides-wrapper"
-            className="mx-auto flex flex-col items-center overflow-hidden justify-center p-2 sm:p-6 pt-0"
+            className="mx-auto flex flex-col items-center overflow-hidden justify-center p-2 md:p-6 pt-0"
           >
             {!presentationData ||
             loading ||

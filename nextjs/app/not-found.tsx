@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 
 const NotFound = () => {
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-center p-6">
-            <div className="max-w-lg mx-auto bg-white shadow-md rounded-lg p-8">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-center p-2 md:p-6">
+            <div className="w-full max-w-lg mx-auto bg-white shadow-md rounded-lg p-8">
                 <img
                     src="/404.svg"
                     alt="Page not found"
@@ -24,11 +24,11 @@ const NotFound = () => {
                             Go to Homepage
                         </Button>
                     </Link>
-                    <Link href="/contact">
+                    {/* <Link href="/contact">
                         <Button className="bg-gray-600 text-white px-6 py-2 rounded-md hover:bg-gray-700">
                             Contact Support
                         </Button>
-                    </Link>
+                    </Link> */}
                 </div>
 
             </div>
