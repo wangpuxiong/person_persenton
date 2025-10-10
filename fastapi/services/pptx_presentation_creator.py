@@ -186,8 +186,9 @@ class PptxPresentationCreator:
             or picture_model.shape
         ):
             try:
-                root_path = os.path.dirname(os.getcwd())
-                image = Image.open(root_path + image_path)
+                if "app_data" in image_path:
+                    image_path = os.path.dirname(os.getcwd()) + image_path
+                image = Image.open(image_path)
             except:
                 print(f"Could not open image: {image_path}")
                 return

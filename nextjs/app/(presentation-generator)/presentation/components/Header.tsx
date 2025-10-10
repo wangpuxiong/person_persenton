@@ -143,19 +143,56 @@ const Header = ({
     trackEvent(MixpanelEvent.Header_ReGenerate_Button_Clicked, { pathname });
     router.push(`/presentation?id=${presentation_id}&stream=true`);
   };
+  // const downloadLink = (path: string) => {
+  //   // if we have popup access give direct download if not redirect to the path
+  //   if (window.opener) {
+  //     window.open(path, '_blank');
+  //   } else {
+  //     const link = document.createElement('a');
+  //     link.href = path;
+  //     link.download = path.split('/').pop() || 'download';
+  //     document.body.appendChild(link);
+  //     link.click();
+  //   }
+  // };
+
   const downloadLink = (path: string) => {
-    // if we have popup access give direct download if not redirect to the path
-    if (window.opener) {
-      window.open(path, '_blank');
-    } else {
+    try {
+      // 完全避免使用window.open，统一使用a标签下载
       const link = document.createElement('a');
+      
+      // 设置下载属性和文件名
+      const fileName = path.split('/').pop() || 'download';
       link.href = path;
-      link.download = path.split('/').pop() || 'download';
+      link.download = fileName;
+      
+      // 确保链接在用户交互上下文中触发
+      link.style.display = 'none';
+      
+      // 添加到DOM
       document.body.appendChild(link);
-      link.click();
+      
+      // 使用requestAnimationFrame确保在UI线程中执行
+      requestAnimationFrame(() => {
+        // 触发点击
+        link.click();
+        
+        // 移除链接元素
+        setTimeout(() => {
+          document.body.removeChild(link);
+        }, 100);
+      });
+    } catch (error) {
+      console.error('Download failed:', error);
+      // 作为最后的备选方案，在出现问题时通知用户
+      toast.info('Please click the download link in the new tab', {
+        description: 'Your file is ready for download'
+      });
+      // 在新标签页打开，但添加noopener noreferrer以提高安全性
+      window.open(path, '_blank', 'noopener,noreferrer');
     }
   };
-
+  
   const ExportOptions = ({ mobile }: { mobile: boolean }) => (
     <div className={`space-y-2 max-md:mt-4 ${mobile ? "" : "bg-white"} rounded-lg`}>
       <Button
