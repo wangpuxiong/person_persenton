@@ -19,10 +19,6 @@ const nextConfig = {
         destination: 'http://localhost:9202/auth/:path*',
       },
       {
-        source: '/app_data/fonts/:path*',
-        destination: 'http://localhost:9202/app_data/fonts/:path*',
-      },
-      {
         source: '/static/:path*',
         destination: 'http://localhost:9202/static/:path*',
       },

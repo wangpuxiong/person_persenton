@@ -30,6 +30,56 @@ interface GetAllChildElementsAttributesArgs {
   screenshotsDir: string;
 }
 
+async function getFontsToEmbed(page: Page): Promise<{name: string, path: string}[]> {
+  try {
+    // 获取所有字体名称
+    const fontNames = await page.evaluate(() => {
+      const fontFaces = Array.from(document.fonts);
+      return fontFaces.map(font => font.family).filter(family => 
+        !family.toLowerCase().includes('system') &&
+        !family.toLowerCase().includes('serif') &&
+        !family.toLowerCase().includes('sans-serif') &&
+        !family.toLowerCase().includes('monospace')
+      );
+    });
+    // 查找字体文件路径
+    const fontsToEmbed: {name: string, path: string}[] = [];
+    const fontExtensions = [".ttf", ".otf", '.woff', '.woff2'];
+    const fontsDir = path.join(process.cwd(), 'app', 'fonts');
+
+    for (const fontName of fontNames) {
+      const fontNameVariants = [
+        fontName,
+        fontName.replace(/\s+/g, ''),  // 移除空格
+        fontName.replace(/\s+/g, '-'), // 空格替换为连字符
+        fontName.replace(/\s+/g, '_')  // 空格替换为下划线
+      ];
+      for (const variant of fontNameVariants) {
+        for (const ext of fontExtensions) {
+          // 尝试原始大小写和全小写
+          const pathsToTry = [
+            path.join(fontsDir, `${variant}${ext}`),
+            path.join(fontsDir, `${variant.toLowerCase()}${ext}`)
+          ];
+          
+          for (const fontPath of pathsToTry) {
+            if (fs.existsSync(fontPath)) {
+              fontsToEmbed.push({name: fontName, path: fontPath});
+              break;
+            }
+          }
+          if (fontsToEmbed.some(f => f.name === fontName)) break;
+        }
+        if (fontsToEmbed.some(f => f.name === fontName)) break;
+      }
+    }
+    return fontsToEmbed;
+  } catch (error) {
+    console.error('Error collecting fonts to embed:', error);
+    return [];
+  }
+}
+
 export async function GET(request: NextRequest) {
   let browser: Browser | null = null;
   let page: Page | null = null;
@@ -49,8 +99,11 @@ export async function GET(request: NextRequest) {
     );
     const slides_pptx_models =
       convertElementAttributesToPptxSlides(slides_attributes);
+    // 获取需要嵌入的字体
+    const fontsToEmbed = await getFontsToEmbed(page);
     const presentation_pptx_model: PptxPresentationModel = {
       slides: slides_pptx_models,
+      fonts: fontsToEmbed // 添加字体信息到模型中
     };
 
     await closeBrowserAndPage(browser, page);

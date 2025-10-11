@@ -334,6 +334,13 @@ export interface PptxPresentationModel {
   name?: string;
   shapes?: PptxShapeModel[];
   slides: PptxSlideModel[];
+  fonts?: PptxFontEmbedModel[]; // 添加字体嵌入支持
+}
+
+// 添加字体嵌入模型接口
+export interface PptxFontEmbedModel {
+  name: string;
+  path: string;
 }
 
 export const createPptxSpacingAll = (num: number): PptxSpacingModel => ({

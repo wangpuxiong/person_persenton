@@ -5,26 +5,26 @@ import { TemplateSetting } from '@/app/(presentation-generator)/template-preview
 
 export async function GET() {
     try {
-        // Get the path to the presentation-templates directory
+        // 获取演示文稿模板目录的路径
         const templatesDirectory = path.join(process.cwd(), 'presentation-templates')
         
-        // Read all directories in the presentation-templates directory
+        // 读取演示文稿模板目录下的所有子目录（布局模板目录）
         const items = await fs.readdir(templatesDirectory, { withFileTypes: true })
         
-        // Filter for directories (layout templates) and exclude files
+        // 过滤出布局模板目录（排除文件）
         const templateDirectories = items
             .filter(item => item.isDirectory())
             .map(dir => dir.name)
         
         const allLayouts: {templateName: string, templateID: string; files: string[]; settings: TemplateSetting | null }[] = []
         
-        // Scan each template directory for layout files and settings
+        // 遍历每个布局模板目录
         for (const templateName of templateDirectories) {
             try {
                 const templatePath = path.join(templatesDirectory, templateName)
                 const templateFiles = await fs.readdir(templatePath)
                 
-                // Filter for .tsx files and exclude any non-layout files
+                // 过滤出布局文件（排除测试文件、规范文件、设置文件）
                 const layoutFiles = templateFiles.filter(file => 
                     file.endsWith('.tsx') && 
                     !file.startsWith('.') && 
@@ -33,7 +33,7 @@ export async function GET() {
                     file !== 'settings.json'
                 )
                 
-                // Read settings.json if it exists
+                // 读取布局模板目录下的settings.json文件（如果存在）
                 let settings: TemplateSetting | null = null
                 const settingsPath = path.join(templatePath, 'settings.json')
                 try {
@@ -42,7 +42,7 @@ export async function GET() {
                 } catch (settingsError) {
                     
                     console.warn(`No settings.json found for template ${templateName} or invalid JSON`)
-                    // Provide default settings if settings.json is missing or invalid
+                    // 如果settings.json不存在或无效，提供默认设置
                     settings = {
                         description: `${templateName} presentation layouts`,
                         ordered: false,
@@ -61,7 +61,7 @@ export async function GET() {
                 }
             } catch (error) {
                 console.error(`Error reading template directory ${templateName}:`, error)
-                // Continue with other templates even if one fails
+                // 继续处理其他模板，即使当前模板失败
             }
         }
       
