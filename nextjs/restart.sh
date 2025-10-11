@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 设置脚本在执行过程中若有任何错误立即退出
-set -e
+export -e
 
 # 打印当前目录，用于调试
 echo "当前目录: $(pwd)"
@@ -25,9 +25,24 @@ then
     fi
 fi
 
+# 停止已经运行的项目
+echo "停止当前运行的项目"
+pm2 stop slides-frontend
+
+# 构建项目
+echo "正在构建项目..."
+npm run build
+
+# 检查构建是否成功
+if [ $? -ne 0 ]
+then
+    echo "错误: 项目构建失败，请检查错误信息"
+    exit 1
+fi
+
 # 使用pm2启动项目，指定端口为9201，名称为slides-frontend
 echo "正在使用pm2启动项目..."
-pm2 start slides-frontend
+pm2 start "PORT=9201 npm start" --name slides-frontend
 
 # 检查启动是否成功
 if [ $? -eq 0 ]

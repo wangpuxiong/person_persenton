@@ -25,23 +25,15 @@ then
     fi
 fi
 
-# 使用pm2启动项目，指定端口为9201，名称为slides-frontend
-echo "正在使用pm2启动项目..."
-pm2 start slides-frontend
+# 构建项目
+echo "正在构建项目..."
+npm run build
 
-# 检查启动是否成功
-if [ $? -eq 0 ]
+# 检查构建是否成功
+if [ $? -ne 0 ]
 then
-    echo "项目启动成功！以下是当前pm2管理的应用列表："
-pm2 list
-    echo "
-使用以下命令管理项目：
-- 查看日志: pm2 logs slides-frontend
-- 停止项目: pm2 stop slides-frontend
-- 重启项目: pm2 restart slides-frontend
-- 查看详情: pm2 show slides-frontend
-"
-else
-    echo "错误: 项目启动失败，请检查错误信息"
+    echo "错误: 项目构建失败，请检查错误信息"
     exit 1
 fi
+
+echo "成功：项目构建完成，请运行启动"

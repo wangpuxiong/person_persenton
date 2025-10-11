@@ -132,9 +132,13 @@ export const MODEL_OPTIONS: ModelOption[] = [
   { name: "gpt-5", provider: "OpenAI" },
   { name: "gpt-5-nano", provider: "OpenAI" },
   { name: "gpt-5-mini", provider: "OpenAI" },
-  // { name: "gemini-2.5-pro", provider: "Google" },
-  // { name: "gemini-2.5-flash", provider: "Google" },
-  // { name: "gemini-2.5-flash-lite", provider: "Google" }
+  { name: "gemini-2.5-pro", provider: "Google" },
+  { name: "gemini-2.5-flash", provider: "Google" },
+  { name: "gemini-2.5-flash-lite", provider: "Google" },
+  { name: "grok-4", provider: "X-AI" },
+  { name: "grok-4-fast", provider: "X-AI" },
+  { name: "grok-3", provider: "X-AI" },
+  { name: "grok-3-mini", provider: "X-AI" },
 ];
 
 export interface PresentationConfig {
