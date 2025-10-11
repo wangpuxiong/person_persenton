@@ -17,6 +17,7 @@ class ImageGenerationService:
         Args:
             output_directory (str): 生成图像的输出目录
             api_key (str): API密钥
+            model (dict): 模型配置，包含模型名称
         """
         self.output_directory = output_directory
         self.api_key = api_key

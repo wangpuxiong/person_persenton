@@ -206,15 +206,23 @@ class LLMClient:
                 )
             )
 
-        extra_body = extra_body or {}
-        extra_body["is_from_ppt_agent"] = True
-        if not use_tool_calls_for_structured_output:
-            extra_body["strict"] = strict
-            extra_body["response_schema"] = response_schema
-
         response = await client.chat.completions.create(
             model=model,
             messages=[message.model_dump() for message in messages],
+            response_format=(
+                {
+                    "type": "json_schema",
+                    "json_schema": (
+                        {
+                            "name": "ResponseSchema",
+                            "strict": strict,
+                            "schema": response_schema,
+                        }
+                    ),
+                }
+                if not use_tool_calls_for_structured_output
+                else None
+            ),
             max_completion_tokens=max_tokens,
             tools=all_tools,
             extra_body=extra_body,
@@ -472,14 +480,24 @@ class LLMClient:
         current_arguments = None
 
         has_response_schema_tool_call = False
-        extra_body = extra_body or {}
-        extra_body["is_from_ppt_agent"] = True,
-        extra_body["strict"] = strict
-        extra_body["response_schema"] = response_schema
         
         async for event in await client.chat.completions.create(
             model=model,
             messages=[message.model_dump() for message in messages],
+            response_format=(
+                {
+                    "type": "json_schema",
+                    "json_schema": (
+                        {
+                            "name": "ResponseSchema",
+                            "strict": strict,
+                            "schema": response_schema,
+                        }
+                    ),
+                }
+                if not use_tool_calls_for_structured_output
+                else None
+            ),
             max_completion_tokens=max_tokens,
             tools=all_tools,
             extra_body=extra_body,

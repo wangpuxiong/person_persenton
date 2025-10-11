@@ -39,7 +39,8 @@ async def generate_image(
 
     image_generation_service = ImageGenerationService(
         output_directory=images_directory, 
-        api_key=api_key
+        api_key=api_key,
+        model=None
     )
     image = await image_generation_service.generate_image(image_prompt)
 
