@@ -139,7 +139,7 @@ const UploadPage = () => {
 			// Convert File[] to FormData
 			const formData = new FormData()
 			files.forEach((file, index) => {
-				formData.append(`file${index}`, file)
+				formData.append("files", file)
 			})
 			const uploadResponse = await PresentationGenerationApi.uploadDoc(formData)
 			documents = uploadResponse
@@ -238,11 +238,11 @@ const UploadPage = () => {
 					data-testid="prompt-input"
 				/>
 			</div>
-			{/* <SupportingDoc
-        files={[...files]}
-        onFilesChange={setFiles}
-        data-testid="file-upload-input"
-      /> */}
+			<SupportingDoc
+				files={[...files]}
+				onFilesChange={setFiles}
+				data-testid="file-upload-input"
+			/>
 			<Button
 				onClick={handleGeneratePresentation}
 				className="w-full rounded-[32px] flex items-center justify-center py-6 bg-indigo-600 text-white font-instrument_sans font-semibold text-xl hover:bg-indigo-500 transition-colors duration-300"

@@ -50,10 +50,7 @@ const page = () => {
 					Create Presentation{' '}
 				</h1>
 				<p className="text-base text-gray-500">
-					The current application is in beta version and only supports default
-					templates. During the generation process, gpt-5-mini and
-					gemini-2.5-flash-image preview models are used. More features will be
-					supported soon. Please stay tuned to us
+					当前应用程序为测试版，目前仅支持使用默认模板生成PPT。你可以选择你喜欢的模型来分别生成PPT大纲、PPT内容和PPT中的图片。更多功能将很快得到支持，请继续关注我们。
 				</p>
 			</div>
 

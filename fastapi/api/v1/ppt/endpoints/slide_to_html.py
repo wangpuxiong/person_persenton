@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import delete, func
 from sqlmodel import select
 from utils.asset_directory_utils import get_images_directory
-from utils.get_env import get_comparegpt_api_url_env, get_comparegpt_api_model_env
+from utils.get_env import get_comparegpt_api_url_env, get_comparegpt_api_model_env, get_responses_model_env
 from services.database import get_async_session
 from models.sql.presentation_layout_code import PresentationLayoutCodeModel
 from .prompts import (
@@ -31,6 +31,7 @@ LAYOUT_MANAGEMENT_ROUTER = APIRouter(
     prefix="/template-management", tags=["template-management"]
 )
 
+response_model = get_responses_model_env()
 
 # Request/Response models for slide-to-html endpoint
 class SlideToHtmlRequest(BaseModel):
@@ -154,7 +155,7 @@ async def generate_html_from_slide(
         HTTPException 500: 如果API调用失败或未生成内容
     """
     print(
-        f"Generating HTML from slide image and XML using OpenAI GPT-5 Responses API By Compare GPT..."
+        f"正在使用CompareGPT API从幻灯片图像和XML生成HTML内容..."
     )
     try:
         comparegpt_api_url = get_comparegpt_api_url_env()
@@ -185,7 +186,7 @@ async def generate_html_from_slide(
         print("Making Responses API request for HTML generation...")
         comparegpt_api_model = get_comparegpt_api_model_env()
         response = client.responses.create(
-            model=comparegpt_api_model,
+            model=response_model,
             input=input_payload,
             reasoning={"effort": "high"},
             text={"verbosity": "low"},
@@ -277,7 +278,7 @@ async def generate_react_component_from_html(
         
         comparegpt_api_model = get_comparegpt_api_model_env()
         response = client.responses.create(
-            model=comparegpt_api_model,
+            model=response_model,
             input=input_payload,
             reasoning={"effort": "minimal"},
             text={"verbosity": "low"},
@@ -404,7 +405,7 @@ async def edit_html_with_images(
 
         comparegpt_api_model = get_comparegpt_api_model_env()
         response = client.responses.create(
-            model=comparegpt_api_model,
+            model=response_model,
             input=input_payload,
             reasoning={"effort": "low"},
             text={"verbosity": "low"},

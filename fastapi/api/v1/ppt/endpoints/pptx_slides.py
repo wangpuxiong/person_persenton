@@ -310,7 +310,7 @@ async def process_pptx_slides(
     参数:
         pptx_file: 要处理的PPTX文件（必填）
         fonts: 可选的字体文件列表（每个文件为TTF或OTF格式）
-        current_user: 当前登录用户ID（可选）
+        current_user: 当前登录用户ID
     
     返回:
         PptxSlidesResponse包含每张幻灯片的截图URL和XML内容

@@ -9,7 +9,7 @@ export class PresentationGenerationApi {
   // UPLOAD DOCUMENTS
   static async uploadDoc(formData: FormData): Promise<any> {
     try {
-      const response = await fetch('/api/v1/ppt/doc/upload', getFetchOptions('POST', formData));
+      const response = await fetch('/api/v1/ppt/files/upload', getFetchOptions('POST', formData, true));
       return await ApiResponseHandler.handleResponse(response, 'Failed to upload document');
     } catch (error) {
       console.error('error in document upload', error);
@@ -20,7 +20,7 @@ export class PresentationGenerationApi {
   // DECOMPOSE DOCUMENTS
   static async decomposeDocuments(docIds: string[]): Promise<any> {
     try {
-      const response = await fetch('/api/v1/ppt/doc/decompose', getFetchOptions('POST', JSON.stringify({ doc_ids: docIds })));
+      const response = await fetch('/api/v1/ppt/files/decompose', getFetchOptions('POST', JSON.stringify({ file_paths: docIds })));
       return await ApiResponseHandler.handleResponse(response, 'Failed to decompose documents');
     } catch (error) {
       console.error('error in document decomposition', error);

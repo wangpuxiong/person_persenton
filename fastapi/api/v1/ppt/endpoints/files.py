@@ -1,7 +1,7 @@
 from http.client import HTTPException
 import os
 from typing import Annotated, List, Optional
-from fastapi import APIRouter, Body, File, UploadFile, Depends
+from fastapi import APIRouter, BackgroundTasks, Body, File, UploadFile, Depends, HTTPException  # 添加
 
 from constants.documents import UPLOAD_ACCEPTED_FILE_TYPES
 from models.decomposed_file_info import DecomposedFileInfo
@@ -16,7 +16,7 @@ FILES_ROUTER = APIRouter(prefix="/files", tags=["Files"])
 
 
 @FILES_ROUTER.post("/upload", response_model=List[str], responses={401: {"description": "Unauthorized"}, 403: {"description": "Forbidden"}})
-async def upload_files(files: Optional[List[UploadFile]], current_user: str = Depends(get_current_user)):
+async def upload_files(files: List[UploadFile] = File(...), current_user: str = Depends(get_current_user)):
     """上传文件接口
     
     接收用户上传的文件列表，验证文件合法性，保存到临时目录并返回文件路径列表。
@@ -54,7 +54,11 @@ async def upload_files(files: Optional[List[UploadFile]], current_user: str = De
 
 
 @FILES_ROUTER.post("/decompose", response_model=List[DecomposedFileInfo], responses={401: {"description": "Unauthorized"}, 403: {"description": "Forbidden"}})
-async def decompose_files(file_paths: Annotated[List[str], Body(embed=True)], current_user: str = Depends(get_current_user)):
+async def decompose_files(
+    file_paths: Annotated[List[str], Body(embed=True)], 
+    background_tasks: BackgroundTasks,
+    current_user: str = Depends(get_current_user)
+):
     """文件分解接口
     
     接收文件路径列表，将非文本文件解析为文本格式，并返回所有文件的分解信息。
@@ -78,9 +82,22 @@ async def decompose_files(file_paths: Annotated[List[str], Body(embed=True)], cu
             other_files.append(file_path)
 
     # 处理非文本文件
-    documents_loader = DocumentsLoader(file_paths=other_files)
-    await documents_loader.load_documents(temp_dir)
-    parsed_documents = documents_loader.documents
+    try:
+        documents_loader = DocumentsLoader(file_paths=other_files)
+        await documents_loader.load_documents(temp_dir)
+        parsed_documents = documents_loader.documents
+    except Exception as e:
+        # 清理临时目录
+        TEMP_FILE_SERVICE.cleanup_temp_dir(temp_dir)
+        # 添加详细的错误日志
+        logging.error(f"文件解析失败: {str(e)}")
+        logging.error(f"环境变量 HF_ENDPOINT: {os.environ.get('HF_ENDPOINT')}")
+        
+        # 根据不同的错误类型提供更具体的错误信息
+        if "Hub" in str(e) or "model" in str(e).lower():
+            raise HTTPException(500, "文件解析失败: 无法下载或加载所需的模型。请检查网络连接或配置Hugging Face镜像站。")
+        else:
+            raise HTTPException(500, f"文件解析失败: {str(e)}")
 
     response = []
     for index, parsed_doc in enumerate(parsed_documents):
@@ -101,6 +118,9 @@ async def decompose_files(file_paths: Annotated[List[str], Body(embed=True)], cu
         response.append(
             DecomposedFileInfo(name=os.path.basename(each_file), file_path=each_file)
         )
+
+    # 注册后台任务清理临时目录
+    background_tasks.add_task(TEMP_FILE_SERVICE.cleanup_temp_dir, temp_dir)
 
     return response
 

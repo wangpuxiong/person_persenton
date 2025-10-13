@@ -86,6 +86,15 @@ def get_comparegpt_image_api_model_env():
         return "gemini-2.5-flash-image-preview"
     return compare_gpt_image_api_model
 
+def get_responses_model_env():
+    """
+    获取Compare GPT responses接口模型
+    """
+    responses_model = os.getenv("COMPAREGPT_RESPONSES_MODEL")
+    if not responses_model:
+        return "gpt-5-mini"
+    return responses_model
+
 def get_jwt_token_secret_key_env():
     return os.getenv("JWT_TOKEN_SECRET_KEY")
 
