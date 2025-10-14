@@ -17,9 +17,9 @@ export async function POST(request: Request) {
       ];
       const resolvedPath = fs.realpathSync(path.resolve(normalizedPath));
       const isPathAllowed = allowedBaseDirs.some(baseDir => {
-      const resolvedBaseDir = fs.realpathSync(path.resolve(baseDir));
-      return resolvedPath.startsWith(resolvedBaseDir + path.sep) || resolvedPath === resolvedBaseDir;
-    });
+        const resolvedBaseDir = fs.realpathSync(path.resolve(baseDir));
+        return resolvedPath.startsWith(resolvedBaseDir + path.sep) || resolvedPath === resolvedBaseDir;
+      });
     if (!isPathAllowed) {
       console.error('Unauthorized file access attempt:', resolvedPath);
       return NextResponse.json(

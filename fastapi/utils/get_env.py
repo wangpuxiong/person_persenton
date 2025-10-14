@@ -10,7 +10,12 @@ def get_can_change_keys_env():
 
 
 def get_database_url_env():
-    # 使用相对路径，确保在任何环境下都能正确工作
+    # 优先使用环境变量中的DATABASE_URL
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        return database_url
+    
+    # 如果没有设置环境变量，回退到SQLite
     app_data_dir = get_app_data_directory_env()
     if app_data_dir:
         return f"sqlite:///{os.path.join(app_data_dir, 'fastapi.db')}"
