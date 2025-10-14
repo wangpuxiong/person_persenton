@@ -118,7 +118,7 @@ if __name__ == "__main__":
     SQLITE_DB_PATH = "app_data/fastapi.db"  # SQLite数据库文件路径
     MYSQL_CONFIG = {
         'user': 'root',     # MySQL用户名
-        'password': 'encryagent.321~', # MySQL密码
+        'password': '******', # MySQL密码
         'host': 'localhost',         # MySQL主机地址
         'database': 'compare-slides', # 目标MySQL数据库名
         'port': 3306                 # MySQL端口
