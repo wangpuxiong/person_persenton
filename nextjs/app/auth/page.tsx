@@ -31,7 +31,7 @@ export default function AuthPage() {
 
 				// Call the backend API to verify the token and create a session
 				const response = await fetch(
-					`/api/v1/auth/?token=${encodeURIComponent(token)}`,
+					`/api/v1/auth?token=${encodeURIComponent(token)}`,
 					{
 						method: 'GET',
 						credentials: 'include', // Include cookies to store session

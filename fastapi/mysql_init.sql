@@ -37,7 +37,7 @@ CREATE TABLE slides (
     `index` INT NOT NULL,
     content JSON NOT NULL,
     html_content TEXT NULL,
-    speaker_note TEXT NULL,
+    speaker_note LONGTEXT NULL,
     properties JSON NULL,
     INDEX idx_slides_user_id (user_id),
     INDEX idx_slides_presentation (presentation),
@@ -119,3 +119,6 @@ CREATE TABLE ollama_pull_status (
     last_updated DATETIME NOT NULL,
     status JSON NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE presentation_layout_codes
+MODIFY COLUMN id INT AUTO_INCREMENT PRIMARY KEY;

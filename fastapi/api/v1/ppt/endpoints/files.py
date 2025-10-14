@@ -10,6 +10,10 @@ from services.documents_loader import DocumentsLoader
 import uuid
 from utils.validators import validate_files
 from api.v1.auth.router import get_current_user
+from utils.get_env import get_temp_directory_env
+import logging
+
+logger = logging.getLogger(__name__)
 
 # 创建文件操作相关的API路由
 FILES_ROUTER = APIRouter(prefix="/files", tags=["Files"])
@@ -55,8 +59,7 @@ async def upload_files(files: List[UploadFile] = File(...), current_user: str = 
 
 @FILES_ROUTER.post("/decompose", response_model=List[DecomposedFileInfo], responses={401: {"description": "Unauthorized"}, 403: {"description": "Forbidden"}})
 async def decompose_files(
-    file_paths: Annotated[List[str], Body(embed=True)], 
-    background_tasks: BackgroundTasks,
+    file_paths: Annotated[List[str], Body(embed=True)],
     current_user: str = Depends(get_current_user)
 ):
     """文件分解接口
@@ -90,8 +93,8 @@ async def decompose_files(
         # 清理临时目录
         TEMP_FILE_SERVICE.cleanup_temp_dir(temp_dir)
         # 添加详细的错误日志
-        logging.error(f"文件解析失败: {str(e)}")
-        logging.error(f"环境变量 HF_ENDPOINT: {os.environ.get('HF_ENDPOINT')}")
+        logger.error(f"文件解析失败: {str(e)}")
+        logger.error(f"环境变量 HF_ENDPOINT: {os.environ.get('HF_ENDPOINT')}")
         
         # 根据不同的错误类型提供更具体的错误信息
         if "Hub" in str(e) or "model" in str(e).lower():
@@ -104,6 +107,7 @@ async def decompose_files(
         file_path = TEMP_FILE_SERVICE.create_temp_file_path(
             f"{uuid.uuid4()}.txt", temp_dir
         )
+        logger.info(f"文件解析成功: {file_path}")
         parsed_doc = parsed_doc.replace("<br>", "\n")
         with open(file_path, "w") as text_file:
             text_file.write(parsed_doc)
@@ -119,11 +123,7 @@ async def decompose_files(
             DecomposedFileInfo(name=os.path.basename(each_file), file_path=each_file)
         )
 
-    # 注册后台任务清理临时目录
-    background_tasks.add_task(TEMP_FILE_SERVICE.cleanup_temp_dir, temp_dir)
-
     return response
-
 
 @FILES_ROUTER.post("/update", responses={401: {"description": "Unauthorized"}, 403: {"description": "Forbidden"}})
 async def update_files(
