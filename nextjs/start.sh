@@ -25,7 +25,7 @@ then
     fi
 fi
 
-# 使用pm2启动项目，指定端口为9201，名称为slides-frontend
+# 使用pm2启动项目，指定端口为9203，名称为slides-frontend
 echo "正在使用pm2启动项目..."
 pm2 start slides-frontend
 

@@ -40,9 +40,9 @@ then
     exit 1
 fi
 
-# 使用pm2启动项目，指定端口为9201，名称为slides-frontend
+# 使用pm2启动项目，指定端口为9203，名称为slides-frontend
 echo "正在使用pm2启动项目..."
-pm2 start "PORT=9201 npm start" --name slides-frontend
+pm2 start "PORT=9203 npm start" --name slides-frontend
 
 # 检查启动是否成功
 if [ $? -eq 0 ]

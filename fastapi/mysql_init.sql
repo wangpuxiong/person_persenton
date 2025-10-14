@@ -5,7 +5,7 @@
 CREATE TABLE presentations (
     id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(255) NULL,
-    content TEXT NOT NULL,
+    content LONGTEXT NOT NULL,
     n_slides INT NOT NULL,
     language VARCHAR(100) NOT NULL,
     title VARCHAR(255) NULL,

@@ -40,7 +40,7 @@ def migrate_sqlite_to_mysql(sqlite_db_path, mysql_config):
                     col_name = f'`{col_name}`'
                 
                 # SQLite到MySQL类型映射 (指定VARCHAR长度)
-                if col_name == 'speaker_note':
+                if col_name == 'speaker_note' or col_name == 'content' or col_name == '`content`':
                     mysql_type = 'LONGTEXT'
                 elif col_type.startswith('INT'):
                     mysql_type = 'INT'
