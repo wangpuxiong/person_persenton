@@ -23,7 +23,7 @@ const Header = () => {
 				<div className="flex items-center justify-between py-1">
 					<div className="flex items-center gap-3">
 						{!hideBackBtn() && <BackBtn />}
-						<Link
+						{/* <Link
 							href="/dashboard"
 							onClick={() =>
 								trackEvent(MixpanelEvent.Navigation, {
@@ -35,7 +35,24 @@ const Header = () => {
 							<div className="text-xl font-bold text-white cursor-pointer">
 								CompareGPT
 							</div>
-						</Link>
+						</Link> */}
+						<div 
+							className="flex items-center gap-2 p-2 rounded-lg cursor-pointer group" 
+							onClick={() => {
+								if (process.env.COMPAREGPT_CHAT_URL) {
+									window.location.assign(process.env.COMPAREGPT_CHAT_URL);
+								} else {
+									window.location.assign('https://comparegpt.io/chat');
+								}
+							}}
+						>
+							<img
+								src="/512.png"
+								alt="CompareGPT Logo"
+								className="w-7 h-7 rounded-lg object-cover transition-transform duration-300 group-hover:scale-110"
+							/>
+							<div className="text-xl font-bold text-white cursor-pointer">CompareGPT</div>
+						</div>
 					</div>
 					<div className="hidden md:flex items-center gap-3">
 						<Link

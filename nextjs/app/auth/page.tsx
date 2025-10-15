@@ -81,7 +81,13 @@ export default function AuthPage() {
 						{error || 'Unknown authentication error'}
 					</p>
 					<button
-						onClick={() => window.open('https://comparegpt.io', '_blank')}
+						onClick={() => {
+							if (process.env.COMPAREGPT_CHAT_URL) {
+								window.location.assign(process.env.COMPAREGPT_CHAT_URL);
+							} else {
+								window.location.assign('https://comparegpt.io/chat');
+							}
+						}}
 						className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
 					>
 						Return to CompareGPT
