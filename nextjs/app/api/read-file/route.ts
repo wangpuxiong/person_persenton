@@ -11,8 +11,8 @@ export async function POST(request: Request) {
       const sanitizedFilePath = sanitizeFilename(filePath);
       const normalizedPath = path.normalize(sanitizedFilePath);
       const allowedBaseDirs = [
-        process.env.APP_DATA_DIRECTORY || '/app/user_data',
-        process.env.TEMP_DIRECTORY || '/tmp',
+        process.env.NEXT_PUBLIC_APP_DATA_DIRECTORY || '/app/user_data',
+        process.env.NEXT_PUBLIC_TEMP_DIRECTORY || '/tmp',
         '/app/user_data' 
       ];
       const resolvedPath = fs.realpathSync(path.resolve(normalizedPath));

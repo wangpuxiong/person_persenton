@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import { LLMConfig } from "@/types/llm_config";
 
-const userConfigPath = process.env.USER_CONFIG_PATH!;
-const canChangeKeys = process.env.CAN_CHANGE_KEYS !== "false";
+const userConfigPath = process.env.NEXT_PUBLIC_USER_CONFIG_PATH!;
+const canChangeKeys = process.env.NEXT_PUBLIC_CAN_CHANGE_KEYS !== "false";
 console.log("UserConfigPath:", userConfigPath);
 export async function GET() {
   if (!canChangeKeys) {

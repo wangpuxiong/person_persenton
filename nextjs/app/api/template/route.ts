@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   let browser;
   try {
     browser = await puppeteer.launch({
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+      executablePath: process.env.NEXT_PUBLIC_PUPPETEER_EXECUTABLE_PATH,
       headless: true,
       args: [
         "--no-sandbox",

@@ -153,7 +153,7 @@ function getSessionId(request: NextRequest): string | null {
 
 async function getBrowserAndPage(id: string, sessionId: string | null): Promise<[Browser, Page]> {
   const browser = await puppeteer.launch({
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+    executablePath: process.env.NEXT_PUBLIC_PUPPETEER_EXECUTABLE_PATH,
     headless: true,
     args: [
       "--no-sandbox",
@@ -199,7 +199,7 @@ async function closeBrowserAndPage(browser: Browser | null, page: Page | null) {
 }
 
 function getScreenshotsDir() {
-  const tempDir = process.env.TEMP_DIRECTORY;
+  const tempDir = process.env.NEXT_PUBLIC_TEMP_DIRECTORY;
   if (!tempDir) {
     console.warn(
       "TEMP_DIRECTORY environment variable not set, skipping screenshot"

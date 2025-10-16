@@ -4,7 +4,7 @@ import fs from "fs";
 import crypto from "crypto";
 
 
-const userDataDir = process.env.APP_DATA_DIRECTORY!;
+const userDataDir = process.env.NEXT_PUBLIC_APP_DATA_DIRECTORY!;
 
 export async function POST(request: NextRequest) {
   try {

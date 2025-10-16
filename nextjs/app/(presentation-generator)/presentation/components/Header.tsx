@@ -343,8 +343,9 @@ const Header = ({
 					<div 
 						className="flex items-center gap-2 p-2 rounded-lg cursor-pointer group" 
 						onClick={() => {
-							if (process.env.COMPAREGPT_CHAT_URL) {
-								window.location.assign(process.env.COMPAREGPT_CHAT_URL);
+							console.log("presentation-env>>", process.env)
+							if (process.env.NEXT_PUBLIC_COMPAREGPT_CHAT_URL) {
+								window.location.assign(process.env.NEXT_PUBLIC_COMPAREGPT_CHAT_URL);
 							} else {
 								window.location.assign('https://comparegpt.io/chat');
 							}

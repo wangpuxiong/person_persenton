@@ -82,8 +82,8 @@ export default function AuthPage() {
 					</p>
 					<button
 						onClick={() => {
-							if (process.env.COMPAREGPT_CHAT_URL) {
-								window.location.assign(process.env.COMPAREGPT_CHAT_URL);
+							if (process.env.NEXT_PUBLIC_COMPAREGPT_CHAT_URL) {
+								window.location.assign(process.env.NEXT_PUBLIC_COMPAREGPT_CHAT_URL);
 							} else {
 								window.location.assign('https://comparegpt.io/chat');
 							}

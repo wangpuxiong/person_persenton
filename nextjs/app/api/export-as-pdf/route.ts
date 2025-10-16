@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   }
   const sessionId = getSessionId(req);
   const browser = await puppeteer.launch({
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+    executablePath: process.env.NEXT_PUBLIC_PUPPETEER_EXECUTABLE_PATH,
     headless: true,
     args: [
       "--no-sandbox",
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
   const pdfFileName = `${uuidv4()}.pdf`;
   // const sanitizedTitle = sanitizeFilename(title ?? "presentation");
   const destinationPath = path.join(
-    process.env.APP_DATA_DIRECTORY!,
+    process.env.NEXT_PUBLIC_APP_DATA_DIRECTORY!,
     "exports",
     pdfFileName
   );
