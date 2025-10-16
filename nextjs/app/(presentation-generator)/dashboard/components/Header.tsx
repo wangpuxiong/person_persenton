@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import Wrapper from '@/components/Wrapper'
 import React, { useState } from 'react'
@@ -8,9 +8,13 @@ import { usePathname } from 'next/navigation'
 import HeaderNav from '@/app/(presentation-generator)/components/HeaderNab'
 import { Layout, FilePlus2, LayoutDashboard } from 'lucide-react'
 import { trackEvent, MixpanelEvent } from '@/utils/mixpanel'
+import LanguageSelector from '@/app/LanguageSelector'
+import { useTranslation } from 'react-i18next'
+
 const Header = () => {
 	const pathname = usePathname()
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
+	const { t } = useTranslation('common')
 
 	const NO_BACK_PATH = ['/upload', '/dashboard', '/auth']
 	function hideBackBtn() {
@@ -23,19 +27,6 @@ const Header = () => {
 				<div className="flex items-center justify-between py-1">
 					<div className="flex items-center gap-3">
 						{!hideBackBtn() && <BackBtn />}
-						{/* <Link
-							href="/dashboard"
-							onClick={() =>
-								trackEvent(MixpanelEvent.Navigation, {
-									from: pathname,
-									to: '/dashboard',
-								})
-							}
-						>
-							<div className="text-xl font-bold text-white cursor-pointer">
-								CompareGPT
-							</div>
-						</Link> */}
 						<div 
 							className="flex items-center gap-2 p-2 rounded-lg cursor-pointer group" 
 							onClick={() => {
@@ -69,7 +60,7 @@ const Header = () => {
 						>
 							<FilePlus2 className="w-5 h-5" />
 							<span className="text-sm font-medium font-inter">
-								Create Template
+								{t('button.createTemplate') || 'Create Template'}
 							</span>
 						</Link>
 						<Link
@@ -85,9 +76,14 @@ const Header = () => {
 							role="menuitem"
 						>
 							<Layout className="w-5 h-5" />
-							<span className="text-sm font-medium font-inter">Templates</span>
+							<span className="text-sm font-medium font-inter">
+								{t('nav.templates') || 'Templates'}
+							</span>
 						</Link>
 						<HeaderNav />
+						<div>
+							<LanguageSelector />
+						</div>
 					</div>
 					<button
 						className="md:hidden text-white text-2xl z-10"
@@ -116,7 +112,7 @@ const Header = () => {
 							>
 								<FilePlus2 className="w-5 h-5" />
 								<span className="text-sm font-medium font-inter">
-									Create Template
+									{t('button.createTemplate') || 'Create Template'}
 								</span>
 							</Link>
 							<Link
@@ -133,7 +129,7 @@ const Header = () => {
 							>
 								<Layout className="w-5 h-5" />
 								<span className="text-sm font-medium font-inter">
-									Templates
+									{t('nav.templates') || 'Templates'}
 								</span>
 							</Link>
 							<Link
@@ -150,9 +146,12 @@ const Header = () => {
 							>
 								<LayoutDashboard className="w-5 h-5" />
 								<span className="text-sm font-medium font-inter">
-									Dashboard
+									{t('nav.dashboard') || 'Dashboard'}
 								</span>
 							</Link>
+							<div className="px-3 py-2 border-t border-gray-100">
+								<LanguageSelector />
+							</div>
 						</div>
 					</div>
 				</div>

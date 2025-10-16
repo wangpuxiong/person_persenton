@@ -2,7 +2,12 @@
   "nav": {
     "home": "Home",
     "dashboard": "Dashboard",
-    "settings": "Settings"
+    "settings": "Settings",
+    "templates": "Templates",
+    "reGenerate": "Re-Generate",
+    "present": "Present",
+    "exportAsPDF": "Export as PDF",
+    "exportAsPPTX": "Export as PPTX"
   },
   "button": {
     "create": "Create",
@@ -10,7 +15,8 @@
     "upload": "Upload",
     "export": "Export",
     "preview": "Preview",
-    "back": "Back"
+    "back": "Back",
+    "createTemplate": "Create Template"
   },
   "placeholder": {
     "search": "Search...",

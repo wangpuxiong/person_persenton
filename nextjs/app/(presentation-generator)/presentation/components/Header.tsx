@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import { Button } from '@/components/ui/button'
 import {
 	SquareArrowOutUpRight,
@@ -37,6 +38,8 @@ import { usePresentationUndoRedo } from '../hooks/PresentationUndoRedo'
 import ToolTip from '@/components/ToolTip'
 import { clearPresentationData } from '@/store/slices/presentationGeneration'
 import { clearHistory } from '@/store/slices/undoRedoSlice'
+import LanguageSelector from '@/app/LanguageSelector'
+import { useTranslation } from 'react-i18next'
 
 const Header = ({
 	presentation_id,
@@ -45,6 +48,7 @@ const Header = ({
 	presentation_id: string
 	currentSlide?: number
 }) => {
+	const { t } = useTranslation('common')
 	const [open, setOpen] = useState(false)
 	const [showLoader, setShowLoader] = useState(false)
 	const router = useRouter()
@@ -216,7 +220,7 @@ const Header = ({
 				}`}
 			>
 				<Image src={PDFIMAGE} alt="pdf export" width={30} height={30} />
-				Export as PDF
+				{t('nav.exportAsPDF') || 'Export as PDF'}
 			</Button>
 			<Button
 				onClick={() => {
@@ -231,7 +235,7 @@ const Header = ({
 				}`}
 			>
 				<Image src={PPTXIMAGE} alt="pptx export" width={30} height={30} />
-				Export as PPTX
+				{t('nav.exportAsPPTX') || 'Export as PPTX'}
 			</Button>
 		</div>
 	)
@@ -244,7 +248,7 @@ const Header = ({
 				disabled={isStreaming || !presentationData}
 				className="text-white  disabled:opacity-50"
 			>
-				Re-Generate
+				{t('nav.reGenerate') || 'Re-Generate'}
 			</button>
 			<div className="flex items-center gap-2 ">
 				<ToolTip content="Undo">
@@ -284,7 +288,7 @@ const Header = ({
 				className="border border-white font-bold text-white rounded-[32px] transition-all duration-300 group"
 			>
 				<Play className="w-4 h-4 mr-1 stroke-white group-hover:stroke-black" />
-				Present
+				{t('nav.present') || 'Present'}
 			</Button>
 
 			{/* Desktop Export Button with Popover */}
@@ -303,7 +307,7 @@ const Header = ({
 							}`}
 						>
 							<SquareArrowOutUpRight className="w-4 h-4 mr-1" />
-							Export
+							{t('button.export') || 'Export'}
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent
@@ -335,11 +339,6 @@ const Header = ({
 			<div className="bg-[#5146E5] w-full shadow-lg sticky top-0 ">
 				<Announcement />
 				<Wrapper className="flex items-center justify-between py-1">
-					{/* <Link href="/dashboard" className="min-w-[162px]">
-						<div className="text-xl font-bold text-white cursor-pointer">
-							CompareGPT
-						</div>
-					</Link> */}
 					<div 
 						className="flex items-center gap-2 p-2 rounded-lg cursor-pointer group" 
 						onClick={() => {
@@ -367,6 +366,9 @@ const Header = ({
 
 						<MenuItems mobile={false} />
 						<HeaderNav />
+						<div>
+							<LanguageSelector />
+						</div>
 					</div>
 
 					{/* Mobile Menu */}
@@ -417,7 +419,7 @@ const Header = ({
 								fill="currentColor"
 							/>
 						</svg>
-						Export as PDF
+						{t('nav.exportAsPDF') || 'Export as PDF'}
 					</Button>
 					<Button
 						onClick={() => {
@@ -445,7 +447,7 @@ const Header = ({
 								fill="currentColor"
 							/>
 						</svg>
-						Export as PPTX
+						{t('nav.exportAsPPTX') || 'Export as PPTX'}
 					</Button>
 
 					<Link
@@ -461,8 +463,11 @@ const Header = ({
 						}
 					>
 						<LayoutDashboard className="w-5 h-5" />
-						<span className="text-sm font-medium font-inter">Dashboard</span>
+						<span className="text-sm font-medium font-inter">{t('nav.dashboard') || 'Dashboard'}</span>
 					</Link>
+					<div className="px-3 py-2 border-t border-gray-100">
+						<LanguageSelector />
+					</div>
 				</div>
 			</div>
 		</>

@@ -6,9 +6,11 @@ import { usePathname } from "next/navigation";
 import { trackEvent, MixpanelEvent } from "@/utils/mixpanel";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import { useTranslation } from "next-i18next";
 
 const HeaderNav = () => {
-
+  const { t } = useTranslation('common')
+  
   const canChangeKeys = useSelector((state: RootState) => state.userConfig.can_change_keys);
   const pathname = usePathname();
 
@@ -24,7 +26,7 @@ const HeaderNav = () => {
       >
         <LayoutDashboard className="w-5 h-5" />
         <span className="text-sm font-medium font-inter">
-          Dashboard
+          {t('nav.dashboard') || 'Dashboard'}
         </span>
       </Link>
       {/* Settings 链接已被屏蔽 */}

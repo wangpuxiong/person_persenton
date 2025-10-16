@@ -1,8 +1,13 @@
 {
   "nav": {
     "home": "首页",
-    "dashboard": "仪表盘",
-    "settings": "设置"
+    "dashboard": "个人空间",
+    "settings": "设置",
+    "templates": "模板",
+    "reGenerate": "重新生成",
+    "present": "演示",
+    "exportAsPDF": "导出为PDF",
+    "exportAsPPTX": "导出为PPTX"
   },
   "button": {
     "create": "创建",
@@ -10,7 +15,8 @@
     "upload": "上传",
     "export": "导出",
     "preview": "预览",
-    "back": "返回"
+    "back": "返回",
+    "createTemplate": "创建模板"
   },
   "placeholder": {
     "search": "搜索...",
