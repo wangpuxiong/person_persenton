@@ -6,6 +6,9 @@ import { Providers } from './providers'
 import MixpanelInitializer from './MixpanelInitializer'
 import { LayoutProvider } from './(presentation-generator)/context/LayoutContext'
 import { Toaster } from '@/components/ui/sonner'
+import I18nProvider from './I18nProvider'
+import { supportedLanguages } from './config'
+
 const inter = localFont({
 	src: [
 		{
@@ -29,6 +32,7 @@ const roboto = Roboto({
 	variable: '--font-roboto',
 })
 
+// 获取元数据的函数，支持多语言
 export const metadata: Metadata = {
 	metadataBase: new URL('https://slides.comparegpt.io'),
 	icons: [
@@ -53,9 +57,12 @@ export const metadata: Metadata = {
 			type: 'image/png',
 		},
 	],
-	title: 'PPT(slides) | CompareGPT.io',
-	description:
-		'CompareGPT.io = Autonomous Execution + Near-Zero Hallucination + All agent tools (API keys)',
+	// 默认元数据
+	title: {
+		default: 'PPT(slides) | CompareGPT.io',
+		template: '%s | CompareGPT.io',
+	},
+	description: 'CompareGPT.io = Autonomous Execution + Near-Zero Hallucination + All agent tools (API keys)',
 	keywords: [
 		'AI presentation generator',
 		'data storytelling',
@@ -68,8 +75,7 @@ export const metadata: Metadata = {
 	],
 	openGraph: {
 		title: 'PPT(slides) | CompareGPT.io',
-		description:
-			'CompareGPT.io = Autonomous Execution + Near-Zero Hallucination + All agent tools (API keys)',
+		description: 'CompareGPT.io = Autonomous Execution + Near-Zero Hallucination + All agent tools (API keys)',
 		type: 'website',
 		url: 'https://slides.comparegpt.io/',
 		siteName: 'CompareGPT.io',
@@ -77,26 +83,40 @@ export const metadata: Metadata = {
 	twitter: {
 		card: 'summary_large_image',
 		title: 'PPT(slides) | CompareGPT.io',
-		description:
-			'CompareGPT.io = Autonomous Execution + Near-Zero Hallucination + All agent tools (API keys)',
+		description: 'CompareGPT.io = Autonomous Execution + Near-Zero Hallucination + All agent tools (API keys)',
 		site: 'https://slides.comparegpt.io/',
 		creator: '@comparegpt_io',
 	},
+	// 支持的替代语言
+	alternates: {
+		languages: supportedLanguages.reduce((acc, lang) => {
+			if (lang !== 'zh-CN') {
+				acc[lang] = `/${lang}`;
+			}
+			return acc;
+		}, {} as Record<string, string>),
+	},
 }
 
-export default function RootLayout({
+// 处理动态语言路由
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode
 }>) {
+	// 从URL获取语言代码，默认使用英语
+	const lng = 'zh-CN'; // 实际项目中，这里应该从URL或cookie中获取语言设置
+
 	return (
-		<html lang="en">
+		<html lang={lng}>
 			<body
 				className={`${inter.variable} ${roboto.variable} ${instrument_sans.variable} antialiased`}
 			>
 				<Providers>
 					<MixpanelInitializer>
-						<LayoutProvider>{children}</LayoutProvider>
+						<I18nProvider lng={lng}>
+							<LayoutProvider>{children}</LayoutProvider>
+						</I18nProvider>
 					</MixpanelInitializer>
 				</Providers>
 				<Toaster position="top-center" />

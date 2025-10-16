@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "settings": "Settings"
+  },
+  "button": {
+    "create": "Create",
+    "save": "Save",
+    "upload": "Upload",
+    "export": "Export",
+    "preview": "Preview",
+    "back": "Back"
+  },
+  "placeholder": {
+    "search": "Search...",
+    "enterText": "Enter text..."
+  },
+  "header": {
+    "title": "PPT(slides) | CompareGPT.io"
+  },
+  "description": "CompareGPT.io = Autonomous Execution + Near-Zero Hallucination + All agent tools (API keys)",
+  "welcome": "Welcome to PPT Generator",
+  "test": "Test content"
+}

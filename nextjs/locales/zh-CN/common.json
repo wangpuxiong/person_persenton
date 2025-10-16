@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "home": "首页",
+    "dashboard": "仪表盘",
+    "settings": "设置"
+  },
+  "button": {
+    "create": "创建",
+    "save": "保存",
+    "upload": "上传",
+    "export": "导出",
+    "preview": "预览",
+    "back": "返回"
+  },
+  "placeholder": {
+    "search": "搜索...",
+    "enterText": "输入文本..."
+  },
+  "header": {
+    "title": "PPT演示文稿 | CompareGPT.io"
+  },
+  "description": "CompareGPT.io = 自主执行 + 接近零幻觉 + 所有代理工具（API密钥）",
+  "welcome": "欢迎使用PPT生成器",
+  "test": "测试内容"
+}
