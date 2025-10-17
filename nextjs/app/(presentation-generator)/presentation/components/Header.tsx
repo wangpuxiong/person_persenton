@@ -366,9 +366,9 @@ const Header = ({
 
 						<MenuItems mobile={false} />
 						<HeaderNav />
-						<div>
+						{/* <div>
 							<LanguageSelector />
-						</div>
+						</div> */}
 					</div>
 
 					{/* Mobile Menu */}
@@ -465,9 +465,9 @@ const Header = ({
 						<LayoutDashboard className="w-5 h-5" />
 						<span className="text-sm font-medium font-inter">{t('nav.dashboard') || 'Dashboard'}</span>
 					</Link>
-					<div className="px-3 py-2 border-t border-gray-100">
+					{/* <div className="px-3 py-2 border-t border-gray-100">
 						<LanguageSelector />
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</>

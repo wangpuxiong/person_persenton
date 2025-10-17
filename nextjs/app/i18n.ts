@@ -3,7 +3,7 @@ import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 // 确保正确导入config文件中的变量
-export const fallbackLng = 'zh-CN';
+export const fallbackLng = 'en';
 export const supportedLanguages = ['en', 'zh-CN'];
 
 export const initI18next = async (lng: string, ns: string) => {

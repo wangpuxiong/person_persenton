@@ -90,7 +90,7 @@ export const metadata: Metadata = {
 	// 支持的替代语言
 	alternates: {
 		languages: supportedLanguages.reduce((acc, lang) => {
-			if (lang !== 'zh-CN') {
+			if (lang !== 'en') {
 				acc[lang] = `/${lang}`;
 			}
 			return acc;
@@ -105,7 +105,7 @@ export default async function RootLayout({
 	children: React.ReactNode
 }>) {
 	// 从URL获取语言代码，默认使用英语
-	const lng = 'zh-CN'; // 实际项目中，这里应该从URL或cookie中获取语言设置
+	const lng = 'en'; // 实际项目中，这里应该从URL或cookie中获取语言设置
 
 	return (
 		<html lang={lng}>

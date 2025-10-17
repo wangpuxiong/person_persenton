@@ -6,7 +6,6 @@ Follow these rules strictly:
 - Make sure size of elements are exact. Check sizes of images and other elements from OXML and convert them to pixels.
 - Make sure all components should be noted of and should be added as it is.
 - Image's and icons's size and position should be added exactly as it is.
-- Try to avoid conflicts and overlaps between different components, and adjust the image size or word count appropriately.
 - Read through the OXML data of slide and then match exact position ans size of elements. Make sure to convert between dimension and pixels. 
 - Make sure the vertical and horizonal spacing between elements are same as in the image. Try to get spacing from the OXML document as well. Make sure no elements overflows because of high spacing.
 - Do not use absolute position unless absolutely necessary. Use flex, grid and spacing to properly arrange components.
@@ -19,9 +18,7 @@ Follow these rules strictly:
 - Add relevant font in tailwind to all texts.   
 - Wrap the output code inside these classes: \"relative w-full rounded-sm max-w-[1280px] shadow-lg max-h-[720px] aspect-video bg-white relative z-20 mx-auto overflow-hidden\". 
 - For image everywhere use https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80
-- Try not to conflict with other elements in the image. Overall, the shape of the image should be a standard complete square, rectangle, circle, ellipse, or semicircle, and should not be any other shape, such as a heptagonal or trapezoidal shape where two rectangles are joined together.
 - Image should never be inside of a SVG.
-- Icons' type should be svg.
 - Replace brand icons with a circle of same size with "i" between. Generic icons like "email", "call", etc should remain same.
 - If there is a box/card enclosing a text, make it grow as well when the text grows, so that the text does not overflow the box/card.
 - Give out only HTML and Tailwind code. No other texts or explanations. 
