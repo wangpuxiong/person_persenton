@@ -140,9 +140,6 @@ export class PresentationGenerationApi {
   // EXPORT PRESENTATION
   static async exportAsPPTX(presentationData: any) {
     try {
-      // 记录导出请求，包含字体信息
-      console.log('Exporting presentation with fonts:', presentationData.fonts?.map((f: any) => f.name));
-      
       const response = await fetch(
         '/api/v1/ppt/presentation/export/pptx',
         getFetchOptions("POST", JSON.stringify(presentationData))

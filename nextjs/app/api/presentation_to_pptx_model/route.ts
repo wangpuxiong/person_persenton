@@ -102,8 +102,7 @@ export async function GET(request: NextRequest) {
     // 获取需要嵌入的字体
     const fontsToEmbed = await getFontsToEmbed(page);
     const presentation_pptx_model: PptxPresentationModel = {
-      slides: slides_pptx_models,
-      fonts: fontsToEmbed // 添加字体信息到模型中
+      slides: slides_pptx_models
     };
 
     await closeBrowserAndPage(browser, page);

@@ -5,13 +5,13 @@ import math
 import os
 import random
 import traceback
-from typing import Annotated, Any, Dict, List, Literal, Optional, Tuple
+from typing import Annotated, Any, Dict, List, Literal, Optional, Tuple, Callable, Union
 import dirtyjson
-from fastapi import APIRouter, BackgroundTasks, Body, Depends, HTTPException, Path
-from fastapi.responses import StreamingResponse
-from sqlalchemy import delete
+from fastapi import APIRouter, BackgroundTasks, Body, Depends, HTTPException, Path, Request, Query, Form, UploadFile, File, status, Response
+from fastapi.responses import StreamingResponse, JSONResponse
+from sqlalchemy import delete, insert, func
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlmodel import select
+from sqlmodel import Session, select
 from constants.presentation import DEFAULT_TEMPLATES
 from enums.webhook_event import WebhookEvent
 from models.api_error_model import APIErrorModel
@@ -585,32 +585,99 @@ async def update_presentation(
     )
 
 
+async def preprocess_ppt_model_data(ppt_data: dict) -> dict:
+    """
+    预处理PPT模型数据，修复常见的验证错误
+    
+    参数:
+        ppt_data: 原始PPT数据字典
+    
+    返回:
+        处理后的PPT数据字典
+    """
+    if "slides" in ppt_data:
+        for slide in ppt_data["slides"]:
+            if "shapes" in slide:
+                # 处理可能嵌套的shapes列表
+                flattened_shapes = []
+                for shape in slide["shapes"]:
+                    if isinstance(shape, list):
+                        flattened_shapes.extend(shape)
+                    else:
+                        flattened_shapes.append(shape)
+                slide["shapes"] = flattened_shapes
+                
+                # 预处理每个形状
+                for shape in slide["shapes"]:
+                    # 确保shape是字典
+                    if not isinstance(shape, dict):
+                        continue
+                    
+                    # 处理autoshape类型的形状
+                    if shape.get("shape_type") == "autoshape":
+                        # 修复border_radius类型问题
+                        if "border_radius" in shape:
+                            shape["border_radius"] = int(shape["border_radius"])
+                        
+                        # 确保type字段是有效的MSO_AUTO_SHAPE_TYPE值
+                        if "type" in shape and shape["type"] not in [1, 2, 3, 4, 5]:
+                            shape["type"] = 1  # 默认使用矩形
+                        
+                        # 如果没有paragraphs字段，添加一个空列表
+                        if "paragraphs" not in shape:
+                            shape["paragraphs"] = []
+                    
+                    # 确保position字段是有效的
+                    if "position" in shape:
+                        for key in ["left", "top", "width", "height"]:
+                            if key in shape["position"]:
+                                shape["position"][key] = float(shape["position"][key])
+    
+    return ppt_data
+
 @PRESENTATION_ROUTER.post("/export/pptx", response_model=str)
 async def export_presentation_as_pptx(
-    pptx_model: Annotated[PptxPresentationModel, Body()],
+    request: Request,
     current_user: Optional[str] = Depends(get_current_user),
 ):
     """
     将演示文稿导出为PPTX格式
     
     参数:
-        pptx_model: PPTX演示文稿模型
+        request: HTTP请求对象
     
     返回:
         导出的PPTX文件路径
     """
-    temp_dir = TEMP_FILE_SERVICE.create_temp_dir()
+    # 直接从请求体获取数据，以便在验证前进行预处理
+    try:
+        ppt_data = await request.json()
+        
+        # 预处理数据
+        processed_ppt_data = await preprocess_ppt_model_data(ppt_data)
+        
+        # 创建PPTX模型
+        pptx_model = PptxPresentationModel(**processed_ppt_data)
+        
+        # 继续原有逻辑
+        temp_dir = TEMP_FILE_SERVICE.create_temp_dir()
+        pptx_creator = PptxPresentationCreator(pptx_model, temp_dir)
+        await pptx_creator.create_ppt()
 
-    pptx_creator = PptxPresentationCreator(pptx_model, temp_dir)
-    await pptx_creator.create_ppt()
+        export_directory = get_exports_directory()
+        pptx_path = os.path.join(
+            export_directory, f"{pptx_model.name or uuid.uuid4()}.pptx"
+        )
+        pptx_creator.save(pptx_path)
 
-    export_directory = get_exports_directory()
-    pptx_path = os.path.join(
-        export_directory, f"{pptx_model.name or uuid.uuid4()}.pptx"
-    )
-    pptx_creator.save(pptx_path)
-
-    return pptx_path
+        return pptx_path
+    except Exception as e:
+        # 提供更详细的错误信息
+        error_detail = str(e)
+        if "validation" in error_detail.lower():
+            # 如果是验证错误，尝试提供更有用的信息
+            raise HTTPException(status_code=422, detail=f"数据验证错误: {error_detail}")
+        raise HTTPException(status_code=400, detail=f"处理PPT数据时出错: {error_detail}")
 
 
 @PRESENTATION_ROUTER.post("/export", response_model=PresentationPathAndEditPath)

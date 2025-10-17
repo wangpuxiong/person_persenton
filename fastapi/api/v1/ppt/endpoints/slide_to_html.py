@@ -9,6 +9,7 @@ from openai import OpenAI
 from openai import APIError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import delete, func
+from sqlalchemy.sql.functions import user
 from sqlmodel import select
 from utils.asset_directory_utils import get_images_directory
 from utils.get_env import get_comparegpt_api_url_env, get_comparegpt_api_model_env, get_responses_model_env
@@ -21,6 +22,7 @@ from .prompts import (
 )
 from models.sql.template import TemplateModel
 from api.v1.auth.router import get_current_user, get_user_with_model_access, get_current_api_key
+from sqlalchemy import or_
 
 
 # Create separate routers for each functionality
@@ -103,6 +105,10 @@ class GetPresentationSummaryResponse(BaseModel):
     presentations: List[PresentationSummary]
     total_presentations: int
     total_layouts: int
+    user_presentations: int
+    user_layouts: int
+    official_presentations: int
+    official_layouts: int
     message: Optional[str] = None
 
 
@@ -876,13 +882,17 @@ async def get_layouts(
         
         # 验证用户是否有访问该演示文稿的权限
         template_meta = await session.get(TemplateModel, presentation)
-        if template_meta and template_meta.user_id and template_meta.user_id != current_user:
+        if template_meta and template_meta.user_id  and template_meta.user_id != "-1" and template_meta.user_id != current_user:
             raise HTTPException(status_code=403, detail="Not authorized to access this template")
 
-        # 查询该演示文稿的所有布局
+        # 查询该演示文稿的所有布局（包括当前用户和公共官方ID的布局）
+        from sqlalchemy import or_
         stmt = select(PresentationLayoutCodeModel).where(
             PresentationLayoutCodeModel.presentation == presentation,
-            PresentationLayoutCodeModel.user_id == current_user
+            or_(
+                PresentationLayoutCodeModel.user_id == current_user,
+                PresentationLayoutCodeModel.user_id == "-1"
+            )
         )
         result = await session.execute(stmt)
         layouts_db = result.scalars().all()
@@ -943,12 +953,12 @@ async def get_layouts(
         )
 
 
-# ENDPOINT: 获取所有演示文稿的摘要
+# ENDPOINT: 获取所有演示文稿的摘要（包括用户自定义模板和官方模板）
 @LAYOUT_MANAGEMENT_ROUTER.get(
     "/summary",
     response_model=GetPresentationSummaryResponse,
     summary="Get all presentations with layout counts",
-    description="Retrieve a summary of all presentations and the number of layouts in each",
+    description="Retrieve a summary of all presentations (user custom and official) and the number of layouts in each",
     responses={
         200: {
             "model": GetPresentationSummaryResponse,
@@ -964,6 +974,7 @@ async def get_presentations_summary(
 ):
     """
     获取所有演示文稿的摘要，包括布局数量和最后更新时间。
+    返回当前用户的模板（用户自定义模板）和用户ID为-1的模板（官方模板）。
     
     参数:
         session: 异步数据库会话
@@ -973,16 +984,21 @@ async def get_presentations_summary(
         GetPresentationSummaryResponse包含演示文稿摘要数组
     """
     try:
-        # 查询当前用户所有演示文稿的布局数量和最后更新时间
+        # 查询当前用户和官方模板(-1)所有演示文稿的布局数量和最后更新时间
         stmt = (
             select(
                 PresentationLayoutCodeModel.presentation,
                 func.count(PresentationLayoutCodeModel.id).label("layout_count"),
-                func.max(PresentationLayoutCodeModel.updated_at).label("last_updated_at")
+                func.max(PresentationLayoutCodeModel.updated_at).label("last_updated_at"),
+                PresentationLayoutCodeModel.user_id.label("user_id")
             ).where(
-                PresentationLayoutCodeModel.user_id == current_user
+                or_(
+                    PresentationLayoutCodeModel.user_id == current_user,
+                    PresentationLayoutCodeModel.user_id == "-1"  # 官方模板的用户ID为-1
+                )
             ).group_by(
-                PresentationLayoutCodeModel.presentation
+                PresentationLayoutCodeModel.presentation,
+                PresentationLayoutCodeModel.user_id
             )
         )
 
@@ -991,6 +1007,10 @@ async def get_presentations_summary(
 
         # 转换为响应格式
         presentations = []
+        user_presentations = 0
+        user_layouts = 0
+        official_presentations = 0
+        official_layouts = 0
         for row in presentation_data:
             template_meta = await session.get(TemplateModel, row.presentation)
             template = None
@@ -1000,6 +1020,7 @@ async def get_presentations_summary(
                     "name": template_meta.name,
                     "description": template_meta.description,
                     "created_at": template_meta.created_at,
+                    "is_official": row.user_id == "-1"  # 添加官方模板标记
                 }
             presentations.append(
                 PresentationSummary(
@@ -1009,7 +1030,13 @@ async def get_presentations_summary(
                     template=template,
                 )
             )
-
+            if row.user_id == current_user:
+                user_presentations += 1
+                user_layouts += row.layout_count
+            elif row.user_id == "-1":
+                official_presentations += 1
+                official_layouts += row.layout_count
+                
         # 计算过滤后的演示文稿总数和布局总数
         total_presentations = len(presentations)
         total_layouts = sum(p.layout_count for p in presentations)
@@ -1019,7 +1046,13 @@ async def get_presentations_summary(
             presentations=presentations,
             total_presentations=total_presentations,
             total_layouts=total_layouts,
-            message=f"Retrieved {total_presentations} presentation(s) with {total_layouts} total layout(s)",
+            user_presentations=user_presentations,
+            user_layouts=user_layouts,
+            official_presentations=official_presentations,
+            official_layouts=official_layouts,
+            message=f"Retrieved {total_presentations} presentation(s) with {total_layouts} total layout(s). "
+                    f"User has {user_presentations} custom presentation(s) with {user_layouts} layout(s), "
+                    f"and {official_presentations} official presentation(s) with {official_layouts} layout(s).",
         )
 
     except Exception as e:

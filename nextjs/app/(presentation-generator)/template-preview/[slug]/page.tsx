@@ -42,7 +42,50 @@ const GroupLayoutPreview = () => {
 	const { getFullDataByTemplateID, loading, refetch } = useLayout()
 	const layoutGroup = getFullDataByTemplateID(rawSlug)
 
-	const isCustom = rawSlug.startsWith('custom-')
+	// 获取模板元数据以检查其是否为官方，并获取模板信息
+	const [templateMeta, setTemplateMeta] = useState<{
+		name?: string
+		description?: string
+		template?: {
+			is_official?: boolean
+		}
+	} | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	
+	useEffect(() => {
+		const fetchTemplateMeta = async () => {
+			try {
+				setIsLoading(true);
+				const res = await fetch('/api/v1/ppt/template-management/summary', {
+					method: 'GET',
+					headers: getHeader(),
+				});
+				if (res.ok) {
+					const data = await res.json();
+					const template = data?.presentations.find((p: any) => p.presentation_id === rawSlug.substring(7));
+					if (template) {
+						setTemplateMeta({
+							name: template.name,
+							description: template.description,
+							template: {
+								is_official: template.template?.is_official
+							}
+						});
+					}
+				}
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		
+		if (layoutGroup?.length > 0) {
+			fetchTemplateMeta();
+		}
+	}, [layoutGroup]);
+
+	//检查这是否是可以编辑的自定义模板
+	//排除可编辑的官方模板
+	const isCustom = rawSlug.startsWith('custom-') && !templateMeta?.template?.is_official;
 	const presentationId = isCustom && rawSlug.length > 7 ? rawSlug.slice(7) : ''
 
 	const [editorOpen, setEditorOpen] = useState(false)
@@ -64,10 +107,6 @@ const GroupLayoutPreview = () => {
 			}
 		>
 	>({})
-	const [templateMeta, setTemplateMeta] = useState<{
-		name?: string
-		description?: string
-	} | null>(null)
 
 	useEffect(() => {
 		const loadCustomLayouts = async () => {
@@ -104,6 +143,9 @@ const GroupLayoutPreview = () => {
 					setTemplateMeta({
 						name: data.template.name,
 						description: data.template.description,
+						template: {
+							is_official: false
+						}
 					})
 				}
 				if (Array.isArray(data?.fonts) && data.fonts.length) {

@@ -169,3 +169,7 @@ class PptxPresentationModel(BaseModel):
     name: Optional[str] = None
     shapes: Optional[List[PptxShapeModel]] = None
     slides: List[PptxSlideModel]
+
+    model_config = {
+        "extra": "allow"  # 允许额外的字段，如fonts
+    }

@@ -23,11 +23,11 @@ const LayoutPreview = () => {
 	const pathname = usePathname()
 
 	const [summaryMap, setSummaryMap] = useState<
-		Record<
-			string,
-			{ lastUpdatedAt?: number; name?: string; description?: string }
-		>
-	>({})
+	Record<
+		string,
+		{ lastUpdatedAt?: number; name?: string; description?: string; isOfficial?: boolean }
+	>
+>({})
 
 	const [slideContentStyle, setSlideContentStyle] =
 		useState<React.CSSProperties>({})
@@ -53,7 +53,7 @@ const LayoutPreview = () => {
 			.then((data) => {
 				const map: Record<
 					string,
-					{ lastUpdatedAt?: number; name?: string; description?: string }
+					{ lastUpdatedAt?: number; name?: string; description?: string; isOfficial?: boolean }
 				> = {}
 				if (data && Array.isArray(data.presentations)) {
 					for (const p of data.presentations) {
@@ -64,6 +64,7 @@ const LayoutPreview = () => {
 								: 0,
 							name: p.template?.name,
 							description: p.template?.description,
+							isOfficial: p.template?.is_official || false
 						}
 					}
 				}
@@ -87,9 +88,23 @@ const LayoutPreview = () => {
 	const customTemplates = layoutTemplates.filter((g) =>
 		g.templateID.toLowerCase().startsWith('custom-')
 	)
+	// 从customTemplates中筛选出官方模板（根据summaryMap中的is_official标记）
+	const officialTemplates = customTemplates.filter((template) =>
+		summaryMap[template.templateID]?.isOfficial === true
+	)
+	// 从customTemplates中筛选出非官方模板（用户自定义模板）
+	const userCustomTemplates = customTemplates.filter((template) =>
+		summaryMap[template.templateID]?.isOfficial !== true
+	)
 
-	// Sort custom templates by last_updated_at desc using summaryMap
-	const customTemplatesSorted = [...customTemplates].sort(
+	// 对用户自定义模板按last_updated_at降序排序
+	const userCustomTemplatesSorted = [...userCustomTemplates].sort(
+		(a, b) =>
+			(summaryMap[b.templateID]?.lastUpdatedAt || 0) -
+			(summaryMap[a.templateID]?.lastUpdatedAt || 0)
+	)
+	// 对官方模板按last_updated_at降序排序
+	const officialTemplatesSorted = [...officialTemplates].sort(
 		(a, b) =>
 			(summaryMap[b.templateID]?.lastUpdatedAt || 0) -
 			(summaryMap[a.templateID]?.lastUpdatedAt || 0)
@@ -179,19 +194,19 @@ const LayoutPreview = () => {
 							</button>
 						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-							{customTemplatesSorted.length > 0 ? (
-								customTemplatesSorted.map((template) => {
-									const meta = summaryMap[template.templateID]
+					{userCustomTemplatesSorted.length > 0 ? (
+						userCustomTemplatesSorted.map((template) => {
+							const meta = summaryMap[template.templateID]
 
-									const displayName = meta?.name
-										? meta.name
-										: template.templateID
-									const displayDescription = meta?.description
-										? meta.description
-										: template.settings.description
-									const layoutTemplate = getFullDataByTemplateID(
-										template.templateID
-									)
+							const displayName = meta?.name
+								? meta.name
+								: template.templateID
+							const displayDescription = meta?.description
+								? meta.description
+								: template.settings.description
+							const layoutTemplate = getFullDataByTemplateID(
+								template.templateID
+							)
 									return (
 										<Card
 											key={template.templateID}
@@ -282,6 +297,111 @@ const LayoutPreview = () => {
 										</div>
 										<p className="text-sm text-gray-600 mb-4">
 											Create your first custom template
+										</p>
+									</div>
+								</Card>
+							)}
+						</div>
+					</div>
+				</section>
+
+				{/* Official AI Templates */}
+				<section className="h-full flex justify-center items-center">
+					<div className="max-w-7xl mx-auto px-2 pb-4 md:px-6 md:py-6 w-full">
+						<h2 className="text-xl font-semibold text-gray-900 mb-4">
+							Official AI Templates
+						</h2>
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+							{officialTemplatesSorted.length > 0 ? (
+								officialTemplatesSorted.map((template) => {
+									const meta = summaryMap[template.templateID]
+
+									const displayName = meta?.name
+										? meta.name
+										: template.templateID
+									const displayDescription = meta?.description
+										? meta.description
+										: template.settings.description
+									const layoutTemplate = getFullDataByTemplateID(
+										template.templateID
+									)
+									return (
+										<Card
+											key={template.templateID}
+											className="cursor-pointer hover:shadow-md transition-all duration-200 group"
+											onClick={() => {
+												trackEvent(MixpanelEvent.Navigation, {
+													from: pathname,
+													to: `/template-preview/${template.templateID}`,
+												})
+												router.push(`/template-preview/${template.templateID}`)
+											}}
+										>
+											<div className="p-6">
+												<div className="flex items-center justify-between mb-3">
+													<h3 className="text-lg font-semibold text-gray-900 capitalize group-hover:text-blue-600 transition-colors">
+														{displayName}
+													</h3>
+
+													<div className="flex items-center gap-2">
+														<span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+															{template.layouts.length}
+														</span>
+														<ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+													</div>
+												</div>
+												<div className="flex items-center justify-between">
+													<p className="text-xs text-gray-600  ">
+														ID: {template.templateID}
+													</p>
+													<Copy
+														className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors"
+														onClick={() => {
+															navigator.clipboard.writeText(template.templateID)
+															toast.success('Copied to clipboard')
+														}}
+													/>
+												</div>
+												<p className="text-sm text-gray-600 my-4">
+													{displayDescription}
+												</p>
+												<div className="grid grid-cols-2 gap-2 mb-3 min-h-[300px]">
+													{layoutTemplate &&
+														layoutTemplate
+															?.slice(0, 4)
+															.map((layout: any, index: number) => {
+																const {
+																	component: LayoutComponent,
+																	sampleData,
+																	layoutId,
+																	templateID,
+																} = layout
+																return (
+																	<div
+																		key={`${templateID}-${index}`}
+																		className=" relative border border-gray-200 cursor-pointer overflow-hidden aspect-video"
+																	>
+																		<div className="absolute cursor-pointer bg-transparent z-40 top-0 left-0 w-full h-full" />
+																		<div className="transform scale-[0.2] flex justify-center items-center origin-top-left  w-[500%] h-[500%]">
+																			<LayoutComponent data={sampleData} />
+																		</div>
+																	</div>
+																)
+															})}
+												</div>
+											</div>
+										</Card>
+									)
+								})
+							) : (
+								// 没有官方模板时的空状态
+								<Card className="border-gray-200">
+									<div className="p-6 text-center">
+										<h3 className="text-lg font-semibold text-gray-900">
+											No Official Templates Yet
+										</h3>
+										<p className="text-sm text-gray-600 mt-2">
+											Official templates will appear here
 										</p>
 									</div>
 								</Card>

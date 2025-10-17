@@ -91,6 +91,7 @@ const Header = ({
 			}
 			trackEvent(MixpanelEvent.Header_ExportAsPPTX_API_Call)
 			const pptx_path = await PresentationGenerationApi.exportAsPPTX(pptx_model)
+			console.log('PPTX path:', pptx_path)
 			if (pptx_path) {
 				// window.open(pptx_path, '_self');
 				downloadLink(pptx_path)
@@ -170,6 +171,8 @@ const Header = ({
 		try {
 			// 完全避免使用window.open，统一使用a标签下载
 			const link = document.createElement('a')
+
+			console.log('Download path:', path)
 
 			// 设置下载属性和文件名
 			const fileName = path.split('/').pop() || 'download'
