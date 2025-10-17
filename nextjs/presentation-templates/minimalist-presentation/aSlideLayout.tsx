@@ -60,9 +60,9 @@ const dynamicSlideLayout: React.FC<ImageTextFooterLayoutProps> = ({ data: slideD
             <div className="absolute top-0 left-[640px] w-[600px] h-[720px] bg-[#f4f2ee]"></div>
 
             {/* "CREATIVE BRIEF" Text */}
-            <div className="absolute left-[687.5px] top-[110px] w-[525px] h-[220px] flex flex-col justify-start">
-                <p className="font-['Montserrat'] text-[122px] leading-[0.9] text-[#333333] tracking-tight">{slideData?.creativeTitle || "CREATIVE"}</p>
-                <p className="font-['Montserrat'] text-[122px] leading-[0.9] text-[#333333] tracking-tight">{slideData?.briefTitle || "BRIEF"}</p>
+            <div className="absolute left-[687.5px] top-[110px] w-[525px] h-[220px] flex flex-col justify-start overflow-hidden">
+                <p className="font-['Montserrat'] text-[112px] leading-[0.9] text-[#333333] tracking-tight">{slideData?.creativeTitle || "CREATIVE"}</p>
+                <p className="font-['Montserrat'] text-[112px] leading-[0.9] text-[#333333] tracking-tight">{slideData?.briefTitle || "BRIEF"}</p>
             </div>
 
             {/* "Borcelle Fragrances Advertising Campaign" Text */}

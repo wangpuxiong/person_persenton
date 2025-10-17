@@ -100,7 +100,7 @@ const dynamicSlideLayout: React.FC<BrandTitleTagsDescriptionImageLayoutProps> = 
                 </div>
 
                 {/* Lorem Ipsum Paragraph */}
-                <p className="absolute top-[380px] left-[70px] w-[820px] h-[200px] text-[23.99px] font-['Montserrat'] text-[#333333] leading-normal overflow-hidden">
+                <p className="absolute top-[380px] left-[70px] w-[820px] h-[270px] text-[23.99px] font-['Montserrat'] text-[#333333] leading-normal overflow-hidden">
                     {description}
                 </p>
             </div>
@@ -109,7 +109,7 @@ const dynamicSlideLayout: React.FC<BrandTitleTagsDescriptionImageLayoutProps> = 
             <img
                 src={mainImage}
                 alt={mainImagePrompt}
-                className="absolute right-0 top-0 w-[320px] h-full object-cover"
+                className="absolute right-0 top-0 w-[360px] h-full"
             />
 
             {/* Footer */}
