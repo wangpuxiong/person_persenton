@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -41,6 +42,7 @@ const FontManager: React.FC<FontManagerProps> = ({
   getAllUnsupportedFonts,
   processSlideToHtml,
 }) => {
+  const { t } = useTranslation('template');
   const [uploadingFonts, setUploadingFonts] = useState<Set<string>>(new Set());
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
@@ -94,10 +96,10 @@ const FontManager: React.FC<FontManagerProps> = ({
       <CardHeader>
         <CardTitle className="text-xl flex items-center gap-2">
           <Type className="w-6 h-6" />
-          Font Management
+          {t('fontManagement')}
         </CardTitle>
         <p className="text-sm text-gray-600">
-          We couldn't load these fonts automatically. Please upload them manually. Make sure naem of the font should be exactly as shown. 
+          {t('fontManagementDescription')}
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -106,7 +108,7 @@ const FontManager: React.FC<FontManagerProps> = ({
           <div>
             <h4 className="text-sm font-medium text-green-700 mb-3 flex items-center gap-1">
               <CheckCircle className="w-4 h-4" />
-              Supported Fonts ({fontsData.internally_supported_fonts.length})
+              {t('supportedFonts', { count: fontsData.internally_supported_fonts.length })}
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {fontsData.internally_supported_fonts.map((font, index) => (
@@ -126,7 +128,7 @@ const FontManager: React.FC<FontManagerProps> = ({
           <div>
             <h4 className="text-sm font-medium text-orange-700 mb-3 flex items-center gap-1">
               <AlertCircle className="w-4 h-4" />
-              Fonts Needing Upload ({fontsNeedingUpload.length})
+              {t('fontsNeedingUpload', { count: fontsNeedingUpload.length })}
             </h4>
             <div className="space-y-3">
               {fontsNeedingUpload.map((fontName: string, index: number) => (
@@ -140,7 +142,7 @@ const FontManager: React.FC<FontManagerProps> = ({
                         {fontName}
                       </span>
                       <p className="text-xs text-orange-600 mt-1">
-                        Required for presentation
+                        {t('requiredForPresentation')}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -164,12 +166,12 @@ const FontManager: React.FC<FontManagerProps> = ({
                         {uploadingFonts.has(fontName) ? (
                           <>
                             <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                            Uploading...
+                            {t('uploading')}
                           </>
                         ) : (
                           <>
                             <Upload className="w-3 h-3 mr-1" />
-                            Upload Font
+                            {t('uploadFont')}
                           </>
                         )}
                       </Button>
@@ -186,7 +188,7 @@ const FontManager: React.FC<FontManagerProps> = ({
           <div>
             <h4 className="text-sm font-medium text-green-700 mb-3 flex items-center gap-1">
               <CheckCircle className="w-4 h-4" />
-              Uploaded Fonts ({UploadedFonts.length})
+              {t('uploadedFonts', { count: UploadedFonts.length })}
             </h4>
             <div className="space-y-2">
               {UploadedFonts.map((font, index) => (
@@ -199,7 +201,7 @@ const FontManager: React.FC<FontManagerProps> = ({
                       {font.fontName}
                     </span>
                     <p className="text-xs text-green-600 mt-1">
-                      Available for all slides
+                      {t('availableForAllSlides')}
                     </p>
                   </div>
                   <Button
@@ -223,7 +225,7 @@ const FontManager: React.FC<FontManagerProps> = ({
           onClick={processSlideToHtml}
           className="text-xs px-8 py-2 font-semibold bg-blue-600 text-white hover:text-white hover:bg-blue-700 border-blue-600"
           >
-            Extract Template
+            {t('extractTemplate')}
         </Button>
           </div>
       </CardContent>

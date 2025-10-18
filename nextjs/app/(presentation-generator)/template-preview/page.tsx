@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRouter, usePathname } from 'next/navigation'
 import LoadingStates from './components/LoadingStates'
 import { Card } from '@/components/ui/card'
@@ -11,6 +12,7 @@ import { getHeader } from '../services/api/header'
 import { toast } from 'sonner'
 
 const LayoutPreview = () => {
+	const { t } = useTranslation('template')
 	const {
 		getAllTemplateIDs,
 		getLayoutsByTemplateID,
@@ -23,11 +25,11 @@ const LayoutPreview = () => {
 	const pathname = usePathname()
 
 	const [summaryMap, setSummaryMap] = useState<
-	Record<
-		string,
-		{ lastUpdatedAt?: number; name?: string; description?: string; isOfficial?: boolean }
-	>
->({})
+		Record<
+			string,
+			{ lastUpdatedAt?: number; name?: string; description?: string; isOfficial?: boolean }
+		>
+	>({})
 
 	const [slideContentStyle, setSlideContentStyle] =
 		useState<React.CSSProperties>({})
@@ -45,7 +47,7 @@ const LayoutPreview = () => {
 	}, [])
 
 	useEffect(() => {
-		// Fetch summary to map custom template slug to template meta and last updated time
+		// 从API获取自定义模板的摘要信息，映射到slug到模板元数据的记录
 		fetch(`/api/v1/ppt/template-management/summary`, {
 			headers: getHeader(),
 		})
@@ -73,7 +75,7 @@ const LayoutPreview = () => {
 			.catch(() => setSummaryMap({}))
 	}, [])
 
-	// Transform context data to match expected format
+	// 从context中获取所有模板ID，转换为包含布局、设置和元数据的格式
 	const layoutTemplates = getAllTemplateIDs().map((templateID) => ({
 		templateID,
 		layouts: getLayoutsByTemplateID(templateID),
@@ -166,10 +168,10 @@ const LayoutPreview = () => {
 				<div className="max-w-7xl mx-auto border-b px-2 md:px-6 py-4 md:py-6">
 					<div className="text-center">
 						<h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-							All Templates
+							{t('allTemplates')}
 						</h1>
 						<p className="text-gray-600 mt-2">
-							{layoutTemplates.length} templates
+							{t('totalTemplates', { count: layoutTemplates.length })}
 						</p>
 					</div>
 				</div>
@@ -178,7 +180,7 @@ const LayoutPreview = () => {
 					<div className="max-w-7xl mx-auto px-2 py-4 md:px-6 md:py-6 w-full">
 						<div className="flex items-center justify-between mb-4">
 							<h2 className="text-xl font-semibold text-gray-900">
-								Custom AI Templates
+								{t('customTemplates')}
 							</h2>
 							<button
 								className="text-sm text-gray-800 hover:text-blue-600 transition-colors flex items-center gap-2 group"
@@ -190,7 +192,7 @@ const LayoutPreview = () => {
 									router.push(`/custom-template`)
 								}}
 							>
-								Create Custom Template
+								{t('createCustomTemplate')}
 							</button>
 						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -289,14 +291,14 @@ const LayoutPreview = () => {
 									<div className="p-6">
 										<div className="flex items-center justify-between mb-3">
 											<h3 className="text-lg font-semibold text-gray-900 capitalize group-hover:text-blue-600 transition-colors">
-												Create Custom Template
+												{t('createCustomTemplate')}
 											</h3>
 											<div className="flex items-center gap-2">
 												<ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
 											</div>
 										</div>
 										<p className="text-sm text-gray-600 mb-4">
-											Create your first custom template
+											{t('createCustomTemplateDescription')}
 										</p>
 									</div>
 								</Card>
@@ -309,7 +311,7 @@ const LayoutPreview = () => {
 				<section className="h-full flex justify-center items-center">
 					<div className="max-w-7xl mx-auto px-2 pb-4 md:px-6 md:py-6 w-full">
 						<h2 className="text-xl font-semibold text-gray-900 mb-4">
-							Official AI Templates
+							{t('officialTemplates')}
 						</h2>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 							{officialTemplatesSorted.length > 0 ? (
@@ -340,7 +342,7 @@ const LayoutPreview = () => {
 											<div className="p-6">
 												<div className="flex items-center justify-between mb-3">
 													<h3 className="text-lg font-semibold text-gray-900 capitalize group-hover:text-blue-600 transition-colors">
-														{displayName}
+														{t(displayName)}
 													</h3>
 
 													<div className="flex items-center gap-2">
@@ -350,20 +352,8 @@ const LayoutPreview = () => {
 														<ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
 													</div>
 												</div>
-												<div className="flex items-center justify-between">
-													<p className="text-xs text-gray-600  ">
-														ID: {template.templateID}
-													</p>
-													<Copy
-														className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors"
-														onClick={() => {
-															navigator.clipboard.writeText(template.templateID)
-															toast.success('Copied to clipboard')
-														}}
-													/>
-												</div>
 												<p className="text-sm text-gray-600 my-4">
-													{displayDescription}
+													{t(displayDescription)}
 												</p>
 												<div className="grid grid-cols-2 gap-2 mb-3 min-h-[300px]">
 													{layoutTemplate &&
@@ -398,10 +388,10 @@ const LayoutPreview = () => {
 								<Card className="border-gray-200">
 									<div className="p-6 text-center">
 										<h3 className="text-lg font-semibold text-gray-900">
-											No Official Templates Yet
+											{t('noOfficialTemplatesYet')}
 										</h3>
 										<p className="text-sm text-gray-600 mt-2">
-											Official templates will appear here
+											{t('officialTemplatesDescription')}
 										</p>
 									</div>
 								</Card>
@@ -414,7 +404,7 @@ const LayoutPreview = () => {
 				<section className="h-full flex justify-center items-center">
 					<div className="max-w-7xl mx-auto px-2 pb-4 md:px-6 md:py-6 w-full">
 						<h2 className="text-xl font-semibold text-gray-900 mb-4">
-							Inbuilt Templates
+							{t('inBuiltTemplates')}
 						</h2>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 							{inBuiltTemplates.map((template) => {
@@ -446,7 +436,7 @@ const LayoutPreview = () => {
 										<div className="p-6 flex flex-col h-full">
 											<div className="flex items-center justify-between mb-3">
 												<h3 className="text-lg font-semibold text-gray-900 capitalize group-hover:text-blue-600 transition-colors">
-													{displayName}
+													{t(displayName)}
 												</h3>
 												<div className="flex items-center gap-2">
 													<span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
@@ -456,7 +446,7 @@ const LayoutPreview = () => {
 												</div>
 											</div>
 											<p className="text-sm text-gray-600 mb-4">
-												{displayDescription}
+												{t(displayDescription)}
 											</p>
 											<div className="grid grid-cols-2 gap-2 mt-auto">
 												{layoutTemplate &&

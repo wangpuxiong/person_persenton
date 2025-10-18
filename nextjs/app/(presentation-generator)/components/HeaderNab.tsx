@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDashboard, Upload } from "lucide-react";
+import { LayoutDashboard, PresentationIcon } from "lucide-react";
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -16,10 +16,21 @@ const HeaderNav = () => {
 
   return (
     <div className="flex items-center gap-2">
-
+      <Link
+        href="/upload"
+        prefetch={true}
+        className="flex items-center gap-2 px-3 py-2 text-white hover:bg-indigo-500 rounded-md transition-colors outline-none"
+        role="menuitem"
+        onClick={() => trackEvent(MixpanelEvent.Navigation, { from: pathname, to: "/upload" })}
+      >
+        <PresentationIcon className="w-5 h-5" />
+        <span className="text-sm font-medium font-inter">
+          {t('nav.upload') || 'Upload'}
+        </span>
+      </Link>
       <Link
         href="/dashboard"
-        prefetch={false}
+        prefetch={true}
         className="flex items-center gap-2 px-3 py-2 text-white hover:bg-indigo-500 rounded-md transition-colors outline-none"
         role="menuitem"
         onClick={() => trackEvent(MixpanelEvent.Navigation, { from: pathname, to: "/dashboard" })}

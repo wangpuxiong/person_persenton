@@ -2,4 +2,4 @@
 export const supportedLanguages = ['en', 'zh-CN'];
 
 // 默认语言
-export const fallbackLng = 'en';
+export const fallbackLng = 'zh-CN';

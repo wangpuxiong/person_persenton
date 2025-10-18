@@ -81,9 +81,9 @@ const Header = () => {
 							</span>
 						</Link>
 						<HeaderNav />
-						{/* <div>
+						<div>
 							<LanguageSelector />
-						</div> */}
+						</div>
 					</div>
 					<button
 						className="md:hidden text-white text-2xl z-10"
@@ -149,9 +149,9 @@ const Header = () => {
 									{t('nav.dashboard') || 'Dashboard'}
 								</span>
 							</Link>
-							{/* <div className="px-3 py-2 border-t border-gray-100">
+							<div className="px-3 py-2 border-t border-gray-100">
 								<LanguageSelector />
-							</div> */}
+							</div>
 						</div>
 					</div>
 				</div>

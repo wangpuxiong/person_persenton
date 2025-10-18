@@ -1,8 +1,11 @@
+'use client'
 import { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { UploadedFont, FontData } from "../types";
 
 export const useFontManagement = () => {
+  const { t } = useTranslation('template');
   const [UploadedFonts, setUploadedFonts] = useState<UploadedFont[]>([]);
   const [fontsData, setFontsData] = useState<FontData | null>(null);
 
@@ -54,7 +57,7 @@ export const useFontManagement = () => {
       // Check if font is already uploaded
       const existingFont = UploadedFonts.find((f) => f.fontName === fontName);
       if (existingFont) {
-        toast.info(`Font "${fontName}" is already uploaded`);
+        toast.info(t("fontAlreadyUploaded", { fontName }));
         return existingFont.fontUrl;
       }
 
@@ -66,7 +69,7 @@ export const useFontManagement = () => {
 
       if (!validExtensions.includes(fileExtension)) {
         toast.error(
-          "Invalid font file type. Please upload .ttf, .otf, .woff, .woff2, or .eot files"
+          t("invalidFontFileType")
         );
         return null;
       }
@@ -74,7 +77,7 @@ export const useFontManagement = () => {
       // Validate file size (10MB limit)
       const maxSize = 10 * 1024 * 1024; // 10MB
       if (file.size > maxSize) {
-        toast.error("Font file size must be less than 10MB");
+        toast.error(t("fontFileSizeExceeded"));
         return null;
       }
 
@@ -101,18 +104,18 @@ export const useFontManagement = () => {
           };
 
           setUploadedFonts((prev) => [...prev, newFont]);
-          toast.success(`Font "${fontName}" uploaded successfully`);
+          toast.success(t("fontUploadedSuccess", { fontName }));
           return newFont.fontUrl;
         } else {
           throw new Error(data.message || "Upload failed");
         }
       } catch (error) {
         console.error("Error uploading font:", error);
-        toast.error(`Failed to upload font "${fontName}"`, {
+        toast.error(t("fontUploadFailed", { fontName }), {
           description:
             error instanceof Error
               ? error.message
-              : "An unexpected error occurred",
+              : t("errorOccurred"),
         });
         return null;
       }
@@ -131,7 +134,7 @@ export const useFontManagement = () => {
       styleElement.remove();
     }
 
-    toast.info("Font removed globally");
+    toast.info(t("fontRemovedGlobally"));
   }, []);
 
   const getAllUnsupportedFonts = useCallback((): string[] => {

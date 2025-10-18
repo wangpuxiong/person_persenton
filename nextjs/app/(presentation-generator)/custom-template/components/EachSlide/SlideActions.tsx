@@ -1,5 +1,6 @@
 'use client'
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { AlertCircle, CheckCircle, Edit, Loader2, Repeat2, Trash, Code } from "lucide-react";
 import ToolTip from "@/components/ToolTip";
 import { SlideActionsProps } from "../../types";
@@ -15,6 +16,7 @@ export const SlideActions: React.FC<SlideActionsProps> = ({
   onRetry,
   onDelete,
 }) => {
+  const { t } = useTranslation('template');
   return (
     <div className="flex items-center w-full justify-between gap-2">
       <div>
@@ -34,7 +36,7 @@ export const SlideActions: React.FC<SlideActionsProps> = ({
           {slide.processed && slide.html && !isEditMode && !isHtmlEditMode && (
             <>
               <div>
-                <ToolTip content="Edit slide with AI">
+                <ToolTip content={t('editSlideWithAI')}>
                   <button
                     onClick={onEditClick}
                     disabled={isProcessing || !slide.processed}
@@ -45,12 +47,12 @@ export const SlideActions: React.FC<SlideActionsProps> = ({
                     }`}
                   >
                     <Edit className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
-                    <span className="text-white">Edit Slide</span>
+                    <span className="text-white">{t('editSlide')}</span>
                   </button>
                 </ToolTip>
               </div>
               <div>
-                <ToolTip content="Edit HTML directly">
+                <ToolTip content={t('editHTMLDirectly')}>
                   <button
                     onClick={onHtmlEditClick}
                     disabled={isProcessing || !slide.processed}
@@ -61,14 +63,14 @@ export const SlideActions: React.FC<SlideActionsProps> = ({
                     }`}
                   >
                     <Code className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
-                    <span className="text-white">Edit HTML</span>
+                    <span className="text-white">{t('editHTML')}</span>
                   </button>
                 </ToolTip>
               </div>
             </>
           )}
           <div>
-            <ToolTip content="Re-Design this slide">
+            <ToolTip content={t('reDesignSlide')}>
               <button
                 onClick={onRetry}
                 disabled={isProcessing || !slide.processed}
@@ -79,12 +81,12 @@ export const SlideActions: React.FC<SlideActionsProps> = ({
                 }`}
               >
                 <Repeat2 className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
-                <span className="text-white">Re-Construct</span>
+                <span className="text-white">{t('reDesign')}</span>
               </button>
             </ToolTip>
           </div>
           <div>
-            <ToolTip content="Delete Slide">
+            <ToolTip content={t('deleteSlide')}>
               <button
                 disabled={isProcessing}
                 onClick={onDelete}

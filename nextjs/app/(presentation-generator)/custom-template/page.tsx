@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import FontManager from "./components/FontManager";
 import Header from "../dashboard/components/Header";
 import { useLayout } from "../context/LayoutContext";
@@ -10,15 +11,14 @@ import { useFileUpload } from "./hooks/useFileUpload";
 import { useSlideProcessing } from "./hooks/useSlideProcessing";
 import { useLayoutSaving } from "./hooks/useLayoutSaving";
 import { useRouter, usePathname } from "next/navigation";
-import { LoadingSpinner } from "./components/LoadingSpinner";
 import { FileUploadSection } from "./components/FileUploadSection";
 import { SaveLayoutButton } from "./components/SaveLayoutButton";
 import { SaveLayoutModal } from "./components/SaveLayoutModal";
 import EachSlide from "./components/EachSlide/NewEachSlide";
-import { APIKeyWarning } from "./components/APIKeyWarning";
 import { trackEvent, MixpanelEvent } from "@/utils/mixpanel";
 
 const CustomTemplatePage = () => {
+  const { t } = useTranslation('template');
   const router = useRouter();
   const pathname = usePathname();
   const { refetch } = useLayout();
@@ -87,15 +87,14 @@ const CustomTemplatePage = () => {
         {/* Header */}
         <div className="text-center space-y-2 my-6">
           <h1 className="text-4xl font-bold text-gray-900">
-            Custom Template Processor
+            {t('customTemplateProcessor')}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Upload your PDF or PPTX file to extract slides and convert them to
-            a template which you can use to generate AI presentations.
+            {t('uploadFileDescription')}
           </p>
           <div className="max-w-2xl mx-auto mt-2">
             <div className="inline-block rounded border border-orange-200 bg-orange-50 px-3 py-2 text-sm text-orange-700">
-              AI template generation can take around 5 minutes per slide.
+              {t('processingTimeWarning')}
             </div>
           </div>
         </div>

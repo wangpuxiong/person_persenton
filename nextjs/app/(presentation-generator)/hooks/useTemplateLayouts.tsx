@@ -25,7 +25,7 @@ export const useTemplateLayouts = () => {
 
 
 
-  // Render slide content with group validation, automatic Tiptap text editing, and editable images/icons
+  // 通过组验证、自动Tiptap文本编辑和可编辑图像/图标渲染幻灯片内容
   const renderSlideContent = useMemo(() => {
     return (slide: any, isEditMode: boolean) => {
 

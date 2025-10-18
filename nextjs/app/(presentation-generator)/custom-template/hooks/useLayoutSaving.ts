@@ -1,4 +1,6 @@
+'use client'
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { ApiResponseHandler } from "@/app/(presentation-generator)/services/api/api-error-handler";
@@ -11,6 +13,7 @@ export const useLayoutSaving = (
   refetch: () => void,
   setSlides: React.Dispatch<React.SetStateAction<ProcessedSlide[]>>
 ) => {
+  const { t } = useTranslation('template');
   const [isSavingLayout, setIsSavingLayout] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -48,7 +51,7 @@ export const useLayoutSaving = (
 
         const data = await ApiResponseHandler.handleResponse(
           response,
-          `Failed to convert slide ${slide.slide_number} to React`
+          t("failedToConvertSlideToReact", { slideNumber: slide.slide_number })
         );
 
         return {
@@ -60,17 +63,17 @@ export const useLayoutSaving = (
         };
       } catch (error) {
         retryCount++;
-        console.error(`Error converting slide ${slide.slide_number} (attempt ${retryCount}):`, error);
+        console.error(t('errorConvert', {slideNumber: slide.slide_number, retryCount}), error);
         
         if (retryCount < maxRetries) {
-          toast.error(`Failed to convert slide ${slide.slide_number}. Retrying in 2 minutes...`, {
-            description: `Attempt ${retryCount}/${maxRetries}. Error: ${error instanceof Error ? error.message : "An unexpected error occurred"}`,
+          toast.error(t('failToConvert', {slideNumber: slide.slide_number}), {
+            description: t('Attempt', {retryCount, maxRetries, error: error instanceof Error ? error.message : t('errorOccurred')}),
           });
           
           // Wait for 2 minutes before retrying
           await delay(2 * 60 * 1000);
           
-          toast.info(`Retrying conversion for slide ${slide.slide_number}...`);
+          toast.info(t('retryConversion', {slideNumber: slide.slide_number}));
         } else {
           throw new Error(`Failed to convert slide ${slide.slide_number} after ${maxRetries} attempts: ${error instanceof Error ? error.message : "An unexpected error occurred"}`);
         }

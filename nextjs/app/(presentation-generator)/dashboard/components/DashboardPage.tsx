@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 
 import Wrapper from "@/components/Wrapper";
 import { DashboardApi } from "@/app/(presentation-generator)/services/api/dashboard";
@@ -10,6 +11,7 @@ import { PresentationGrid } from "@/app/(presentation-generator)/dashboard/compo
 import Header from "@/app/(presentation-generator)/dashboard/components/Header";
 
 const DashboardPage: React.FC = () => {
+  const { t } = useTranslation('dashboard');
   const [presentations, setPresentations] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +54,7 @@ const DashboardPage: React.FC = () => {
         <main className="container mx-auto py-4 md:py-8">
           <section>
             <h2 className="text-2xl font-roboto font-medium mb-6">
-              Slide Presentation
+              {t('slidePresentation')}
             </h2>
             <PresentationGrid
               presentations={presentations}

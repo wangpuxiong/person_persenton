@@ -1,4 +1,6 @@
+'use client'
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import html2canvas from "html2canvas";
 import { ProcessedSlide } from "../types";
 
@@ -8,6 +10,7 @@ export const useSlideEdit = (
   onSlideUpdate?: (updatedSlideData: any) => void,
   setSlides?: React.Dispatch<React.SetStateAction<ProcessedSlide[]>>
 ) => {
+  const { t } = useTranslation('template');
   const [isEditMode, setIsEditMode] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [prompt, setPrompt] = useState("");
@@ -88,7 +91,7 @@ export const useSlideEdit = (
       return;
 
     if (!prompt.trim()) {
-      alert("Please enter a prompt before saving.");
+      alert(t("pleaseEnterPromptBeforeSaving"));
       return;
     }
 
@@ -148,7 +151,7 @@ export const useSlideEdit = (
       });
 
       if (!response.ok) {
-        throw new Error(`API call failed: ${response.statusText}`);
+        throw new Error(t("apiCallFailed", { statusText: response.statusText }));
       }
 
       const data = await response.json();
@@ -178,9 +181,9 @@ export const useSlideEdit = (
     } catch (error) {
       console.error("Error updating slide:", error);
       alert(
-        `Error updating slide: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
+        t("failedToUpdateSlide", {
+          errorMessage: error instanceof Error ? error.message : t("unknownError"),
+        })
       );
     } finally {
       setIsUpdating(false);

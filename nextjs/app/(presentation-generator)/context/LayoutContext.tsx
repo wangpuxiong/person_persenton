@@ -6,6 +6,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
+import { useTranslation } from "react-i18next";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -134,6 +135,7 @@ const compileCustomLayout = (layoutCode: string, React: any, z: any) => {
 export const LayoutProvider: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
+  const { t } = useTranslation('common');
   const [layoutData, setLayoutData] = useState<LayoutData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -166,7 +168,7 @@ export const LayoutProvider: React.FC<{
         // template settings or default settings
         const settings = template.settings || {
           templateName: template.templateName,
-          description: `${template.templateID} presentation layouts`,
+          description: `${template.templateID} ${t('layout.templateLayouts')}`,
           ordered: false,
           default: false,
         };
@@ -184,17 +186,16 @@ export const LayoutProvider: React.FC<{
             );
 
             if (!module.default) {
-              toast.error(`${file} has no default export`, {
-                description:
-                  "Please ensure the layout file exports a default component",
+              toast.error(`${t('layout.error.noDefaultExport', { fileName: file })}`, {
+                description: t('layout.error.noDefaultExportDescription'),
               });
               console.warn(`❌ ${file} has no default export`);
               continue;
             }
 
             if (!module.Schema) {
-              toast.error(`${file} has no Schema export`, {
-                description: "Please ensure the layout file exports a Schema",
+              toast.error(`${t('layout.error.noSchemaExport', { fileName: file })}`, {
+                description: t('layout.error.noSchemaExportDescription'),
               });
               console.warn(`❌ ${file} has no Schema export`);
               continue;
@@ -213,7 +214,7 @@ export const LayoutProvider: React.FC<{
               module.layoutName || file.replace(/([A-Z])/g, " $1").trim();
             const layoutDescription =
               module.layoutDescription ||
-              `${layoutName} layout for presentations`;
+              `${t('layout.layoutForPresentations', { layoutName })}`;
 
             const jsonSchema = z.toJSONSchema(module.Schema, {
               override: (ctx) => {
@@ -287,7 +288,7 @@ export const LayoutProvider: React.FC<{
 
       if (!templateResponse.ok) {
         throw new Error(
-          `Failed to fetch layouts: ${templateResponse.statusText}`
+          `${t('layout.error.fetchLayoutsFailed', { statusText: templateResponse.statusText })}`
         );
       }
 
@@ -295,7 +296,7 @@ export const LayoutProvider: React.FC<{
         await templateResponse.json();
 
       if (!templateData || templateData.length === 0) {
-        setError("No template found");
+        setError(t('layout.error.noTemplateFound'));
         return;
       }
 
@@ -329,7 +330,7 @@ export const LayoutProvider: React.FC<{
       // The preloading is now handled within buildData
     } catch (err: unknown) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to load layouts";
+        err instanceof Error ? err.message : t('layout.error.loadLayoutsFailed');
       setError(errorMessage);
       console.error("💥 Error loading layouts:", err);
     } finally {
@@ -402,7 +403,7 @@ export const LayoutProvider: React.FC<{
 
         const settings = {
           templateName: templateName,
-          description: `Custom presentation layouts`,
+          description: t('layout.customLayouts'),
           ordered: false,
           default: false,
         };

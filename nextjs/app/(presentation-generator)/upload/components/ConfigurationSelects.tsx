@@ -1,3 +1,4 @@
+'use client'	
 import {
 	Select,
 	SelectContent,
@@ -14,6 +15,7 @@ import {
 	VerbosityType,
 } from '../type'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Check, ChevronsUpDown, SlidersHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -41,6 +43,7 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog'
 import ToolTip from '@/components/ToolTip'
+import { t } from 'i18next'
 
 // Types
 interface ConfigurationSelectsProps {
@@ -49,9 +52,9 @@ interface ConfigurationSelectsProps {
 }
 
 type SlideOption =
+	| '3'
 	| '5'
 	| '8'
-	| '9'
 	| '10'
 	| '11'
 	| '12'
@@ -66,9 +69,9 @@ type SlideOption =
 
 // Constants
 const SLIDE_OPTIONS: SlideOption[] = [
+	'3',
 	'5',
 	'8',
-	'9',
 	'10',
 	'11',
 	'12',
@@ -83,12 +86,13 @@ const SLIDE_OPTIONS: SlideOption[] = [
 ]
 
 /**
- * Renders a select component for slide count
+ * 渲染选定组件以进行幻灯片计数
  */
 const SlideCountSelect: React.FC<{
 	value: string | null
 	onValueChange: (value: string) => void
 }> = ({ value, onValueChange }) => {
+	const { t } = useTranslation('upload')
 	const [customInput, setCustomInput] = useState(
 		value && !SLIDE_OPTIONS.includes(value as SlideOption) ? value : ''
 	)
@@ -117,7 +121,7 @@ const SlideCountSelect: React.FC<{
 				<SelectValue placeholder="Select Slides" />
 			</SelectTrigger>
 			<SelectContent className="font-instrument_sans">
-				{/* Sticky custom input at the top */}
+				{/* 固定自定义输入框在顶部 */}
 				<div
 					className="sticky top-0 z-10 bg-white  p-2 border-b"
 					onMouseDown={(e) => e.stopPropagation()}
@@ -146,14 +150,14 @@ const SlideCountSelect: React.FC<{
 							placeholder="--"
 							className="h-8 w-16 px-2 text-sm"
 						/>
-						<span className="text-sm font-medium">slides</span>
+						<span className="text-sm font-medium">{t('slides')}</span>
 					</div>
 				</div>
 
 				{/* Hidden item to allow SelectValue to render custom selection */}
 				{value && !SLIDE_OPTIONS.includes(value as SlideOption) && (
 					<SelectItem value={value} className="hidden">
-						{value} slides
+						{value} {t('slides')}
 					</SelectItem>
 				)}
 
@@ -164,7 +168,7 @@ const SlideCountSelect: React.FC<{
 						className="font-instrument_sans text-sm font-medium"
 						role="option"
 					>
-						{option} slides
+						{option} {t('slides')}
 					</SelectItem>
 				))}
 			</SelectContent>
@@ -173,14 +177,15 @@ const SlideCountSelect: React.FC<{
 }
 
 /**
- * Renders a model selection component with search functionality
+ * 渲染AI模型选择组件
  */
 const ModelSelect: React.FC<{
   value: ModelOption | null;
   onValueChange: (value: ModelOption) => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}> = ({ value, onValueChange, open, onOpenChange }) => (
+  t: (key: string) => string;
+}> = ({ value, onValueChange, open, onOpenChange, t }) => (
   <Popover open={open} onOpenChange={onOpenChange}>
     <PopoverTrigger asChild>
       <Button
@@ -192,7 +197,7 @@ const ModelSelect: React.FC<{
         className="w-[200px] justify-between font-instrument_sans font-semibold overflow-hidden bg-blue-100 hover:bg-blue-100 border-blue-200 focus-visible:ring-blue-300 border-none"
       >
         <p className="text-sm font-medium truncate">
-          {value ? `${value.name} (${value.provider})` : "Select model"}
+          {value ? `${value.name} (${value.provider})` : t('selectModel')}
         </p>
         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
@@ -200,11 +205,11 @@ const ModelSelect: React.FC<{
     <PopoverContent className="w-[300px] p-0" align="end">
       <Command>
         <CommandInput
-          placeholder="Search model..."
+          placeholder={t('searchModel')}	
           className="font-instrument_sans"
         />
         <CommandList>
-          <CommandEmpty>No model found.</CommandEmpty>
+          <CommandEmpty>{t('noModelFound')}</CommandEmpty>
           <CommandGroup>
             {MODEL_OPTIONS.map((model) => (
               <CommandItem
@@ -235,14 +240,15 @@ const ModelSelect: React.FC<{
 );
 
 /**
- * Renders a language selection component with search functionality
+ * 渲染语言选择组件
  */
 const LanguageSelect: React.FC<{
 	value: string | null
 	onValueChange: (value: string) => void
 	open: boolean
 	onOpenChange: (open: boolean) => void
-}> = ({ value, onValueChange, open, onOpenChange }) => (
+	t: (key: string) => string;
+}> = ({ value, onValueChange, open, onOpenChange, t }) => (
 	<Popover open={open} onOpenChange={onOpenChange}>
 		<PopoverTrigger asChild>
 			<Button
@@ -254,7 +260,7 @@ const LanguageSelect: React.FC<{
 				className="w-32 md:w-[200px] justify-between font-instrument_sans font-semibold overflow-hidden bg-blue-100 hover:bg-blue-100 border-blue-200 focus-visible:ring-blue-300 border-none"
 			>
 				<p className="text-sm font-medium truncate">
-					{value || 'Select language'}
+					{value || t('selectLanguage')}
 				</p>
 				<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 			</Button>
@@ -262,11 +268,11 @@ const LanguageSelect: React.FC<{
 		<PopoverContent className="w-[300px] p-0" align="end">
 			<Command>
 				<CommandInput
-					placeholder="Search language..."
+					placeholder={t('searchLanguage')}
 					className="font-instrument_sans"
 				/>
 				<CommandList>
-					<CommandEmpty>No language found.</CommandEmpty>
+					<CommandEmpty>{t('noLanguageFound')}</CommandEmpty>
 					<CommandGroup>
 						{Object.values(LanguageType).map((language) => (
 							<CommandItem
@@ -299,6 +305,7 @@ export function ConfigurationSelects({
 	config,
 	onConfigChange,
 }: ConfigurationSelectsProps) {
+	const { t } = useTranslation('upload')
 	const [openLanguage, setOpenLanguage] = useState(false)
 	const [openAdvanced, setOpenAdvanced] = useState(false)
     const [openModel, setOpenModel] = useState(false);
@@ -349,17 +356,19 @@ export function ConfigurationSelects({
 				onValueChange={(value) => onConfigChange('language', value)}
 				open={openLanguage}
 				onOpenChange={setOpenLanguage}
+				t={t}
 			/>
 			<ModelSelect
                 value={config.model}
                 onValueChange={(value) => onConfigChange("model", value)}
                 open={openModel}
                 onOpenChange={setOpenModel}
+				t={t}
             />
-			<ToolTip content="Advanced settings">
+			<ToolTip content={t('advancedSettings')}>
 				<button
-					aria-label="Advanced settings"
-					title="Advanced settings"
+					aria-label={t('advancedSettings')}
+					title={t('advancedSettings')}
 					type="button"
 					onClick={() => handleOpenAdvancedChange(true)}
 					className="ml-auto flex items-center gap-2 text-sm underline underline-offset-4  bg-blue-100 hover:bg-blue-100 border-blue-200 focus-visible:ring-blue-300 border-none p-2 rounded-md font-instrument_sans font-medium"
@@ -371,17 +380,17 @@ export function ConfigurationSelects({
 			<Dialog open={openAdvanced} onOpenChange={handleOpenAdvancedChange}>
 				<DialogContent className="max-w-2xl font-instrument_sans flex flex-col max-h-full px-2 py-4 md:p-6">
 					<DialogHeader>
-						<DialogTitle>Advanced settings</DialogTitle>
+						<DialogTitle>{t('advancedSettings')}</DialogTitle>
 					</DialogHeader>
 
 					<div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5 overflow-auto">
 						{/* Tone */}
 						<div className="w-full flex flex-col gap-2">
 							<label className="text-sm font-semibold text-gray-700">
-								Tone
+								{t('tone')}
 							</label>
 							<p className="text-xs text-gray-500">
-								Controls the writing style (e.g., casual, professional, funny).
+								{t('toneDescription')}
 							</p>
 							<Select
 								value={advancedDraft.tone}
@@ -393,7 +402,7 @@ export function ConfigurationSelects({
 								}
 							>
 								<SelectTrigger className="w-full font-instrument_sans capitalize font-medium bg-blue-100 border-blue-200 focus-visible:ring-blue-300">
-									<SelectValue placeholder="Select tone" />
+									<SelectValue placeholder={t('selectTone')} />
 								</SelectTrigger>
 								<SelectContent className="font-instrument_sans">
 									{Object.values(ToneType).map((tone) => (
@@ -402,7 +411,7 @@ export function ConfigurationSelects({
 											value={tone}
 											className="text-sm font-medium capitalize"
 										>
-											{tone}
+											{t(tone)}
 										</SelectItem>
 									))}
 								</SelectContent>
@@ -412,11 +421,10 @@ export function ConfigurationSelects({
 						{/* Verbosity */}
 						<div className="w-full flex flex-col gap-2">
 							<label className="text-sm font-semibold text-gray-700">
-								Verbosity
+								{t('verbosity')}
 							</label>
 							<p className="text-xs text-gray-500">
-								Controls how detailed slide descriptions are: concise, standard,
-								or text-heavy.
+								{t('verbosityDescription')}
 							</p>
 							<Select
 								value={advancedDraft.verbosity}
@@ -428,7 +436,7 @@ export function ConfigurationSelects({
 								}
 							>
 								<SelectTrigger className="w-full font-instrument_sans capitalize font-medium bg-blue-100 border-blue-200 focus-visible:ring-blue-300">
-									<SelectValue placeholder="Select verbosity" />
+									<SelectValue placeholder={t('selectVerbosity')} />
 								</SelectTrigger>
 								<SelectContent className="font-instrument_sans">
 									{Object.values(VerbosityType).map((verbosity) => (
@@ -437,7 +445,7 @@ export function ConfigurationSelects({
 											value={verbosity}
 											className="text-sm font-medium capitalize"
 										>
-											{verbosity}
+											{t(verbosity)}
 										</SelectItem>
 									))}
 								</SelectContent>
@@ -448,7 +456,7 @@ export function ConfigurationSelects({
 						<div className="w-full flex flex-col gap-2 p-3 rounded-md bg-blue-100 border-blue-200">
 							<div className="flex items-center justify-between">
 								<label className="text-sm font-semibold text-gray-700">
-									Include table of contents
+									{t('includeTableOfContents')}
 								</label>
 								<Switch
 									checked={advancedDraft.includeTableOfContents}
@@ -461,13 +469,13 @@ export function ConfigurationSelects({
 								/>
 							</div>
 							<p className="text-xs text-gray-600">
-								Add an index slide summarizing sections (requires 3+ slides).
+								{t('includeTableOfContentsDescription')}
 							</p>
 						</div>
 						<div className="w-full flex flex-col gap-2 p-3 rounded-md bg-blue-100 border-blue-200">
 							<div className="flex items-center justify-between">
 								<label className="text-sm font-semibold text-gray-700">
-									Title slide
+									{t('includeTitleSlide')}
 								</label>
 								<Switch
 									checked={advancedDraft.includeTitleSlide}
@@ -480,28 +488,27 @@ export function ConfigurationSelects({
 								/>
 							</div>
 							<p className="text-xs text-gray-600">
-								Include a title slide as the first slide.
+								{t('includeTitleSlideDescription')}
 							</p>
 						</div>
 						{/* <div className="w-full flex flex-col gap-2 p-3 rounded-md bg-blue-100 border-blue-200">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-semibold text-gray-700">Web search</label>
-                <Switch
-                  checked={advancedDraft.webSearch}
-                  onCheckedChange={(checked) => setAdvancedDraft((prev) => ({ ...prev, webSearch: checked }))}
-                />
-              </div>
-              <p className="text-xs text-gray-600">Allow the model to consult the web for fresher facts.</p>
-            </div> */}
+							<div className="flex items-center justify-between">
+								<label className="text-sm font-semibold text-gray-700">{t('webSearch')}</label>
+								<Switch
+								checked={advancedDraft.webSearch}
+								onCheckedChange={(checked) => setAdvancedDraft((prev) => ({ ...prev, webSearch: checked }))}
+								/>
+							</div>
+							<p className="text-xs text-gray-600">{t('webSearchDescription')}</p>
+						</div> */}
 
 						{/* Instructions */}
 						<div className="w-full sm:col-span-2 flex flex-col gap-2">
 							<label className="text-sm font-semibold text-gray-700">
-								Instructions
+								{t('instructions')}
 							</label>
 							<p className="text-xs text-gray-500">
-								Optional guidance for the AI. These override defaults except
-								format constraints.
+								{t('instructionsDescription')}
 							</p>
 							<Textarea
 								value={advancedDraft.instructions}
@@ -512,7 +519,7 @@ export function ConfigurationSelects({
 										instructions: e.target.value,
 									}))
 								}
-								placeholder="Example: Focus on enterprise buyers, emphasize ROI and security compliance. Keep slides data-driven, avoid jargon, and include a short call-to-action on the final slide."
+								placeholder={t('instructionsExample')}
 								className="py-2 px-3 border-2 font-medium text-sm min-h-[100px] max-h-[200px] border-blue-200 focus-visible:ring-offset-0 focus-visible:ring-blue-300"
 							/>
 						</div>
@@ -523,13 +530,13 @@ export function ConfigurationSelects({
 							variant="outline"
 							onClick={() => handleOpenAdvancedChange(false)}
 						>
-							Cancel
+							{t('cancel')}
 						</Button>
 						<Button
 							onClick={handleSaveAdvanced}
 							className="bg-[#5141e5] text-white hover:bg-[#5141e5]/90"
 						>
-							Save
+							{t('save')}
 						</Button>
 					</DialogFooter>
 				</DialogContent>

@@ -2,6 +2,7 @@
   "nav": {
     "home": "首页",
     "dashboard": "个人空间",
+    "upload": "创建PPT",
     "settings": "设置",
     "templates": "模板",
     "reGenerate": "重新生成",
@@ -24,6 +25,20 @@
   },
   "header": {
     "title": "PPT演示文稿 | CompareGPT.io"
+  },
+  "layout": {
+    "templateLayouts": "模板布局",
+    "layoutForPresentations": "用于演示文稿的{{layoutName}} 布局",
+    "customLayouts": "自定义PPT布局",
+    "error": {
+      "noDefaultExport": "{{fileName}} 没有默认导出",
+      "noSchemaExport": "{{fileName}} 没有Schema可以导出",
+      "noDefaultExportDescription": "请确保布局文件导出一个默认组件",
+      "noSchemaExportDescription": "请确保布局文件导出一个Schema",
+      "noTemplateFound": "没有找到模板",
+      "fetchLayoutsFailed": "获取布局失败: {{statusText}}",
+      "loadLayoutsFailed": "加载布局失败"
+    }
   },
   "description": "CompareGPT.io = 自主执行 + 接近零幻觉 + 所有代理工具（API密钥）",
   "welcome": "欢迎使用PPT生成器",

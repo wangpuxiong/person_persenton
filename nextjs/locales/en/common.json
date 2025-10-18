@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "dashboard": "Dashboard",
+    "upload": "Create Presentation",
     "settings": "Settings",
     "templates": "Templates",
     "reGenerate": "Re-Generate",
@@ -24,6 +25,20 @@
   },
   "header": {
     "title": "PPT(slides) | CompareGPT.io"
+  },
+  "layout": {
+    "templateLayouts": "Template Layouts",
+    "layoutForPresentations": "{{layoutName}} layout for presentations",
+    "customLayouts": "Custom presentation layouts",
+    "error": {
+      "noDefaultExport": "{{fileName}} has no default export",
+      "noSchemaExport": "{{fileName}} has no Schema export",
+      "noDefaultExportDescription": "Please ensure the layout file exports a default component",
+      "noSchemaExportDescription": "Please ensure the layout file exports a Schema",
+      "noTemplateFound": "No template found",
+      "fetchLayoutsFailed": "Failed to fetch layouts: {{statusText}}",
+      "loadLayoutsFailed": "Failed to load layouts"
+    }
   },
   "description": "CompareGPT.io = Autonomous Execution + Near-Zero Hallucination + All agent tools (API keys)",
   "welcome": "Welcome to PPT Generator",

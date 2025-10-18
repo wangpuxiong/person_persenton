@@ -1,6 +1,7 @@
 'use client'
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import SlideContent from "../SlideContent";
 import { SlideContentDisplayProps } from "../../types";
@@ -28,6 +29,7 @@ export const SlideContentDisplay: React.FC<SlideContentDisplayProps> = ({
   onTouchEnd,
   retrySlide,
 }) => {
+  const { t } = useTranslation('template');
   // Don't show slide content when in HTML edit mode
   if (isHtmlEditMode) {
     return null;
@@ -36,7 +38,7 @@ export const SlideContentDisplay: React.FC<SlideContentDisplayProps> = ({
   if (slide.processing) {
     return (
       <div className="space-y-4">
-        <p className="text-base text-blue-600 font-medium">🔄 Converting to HTML...</p>
+        <p className="text-base text-blue-600 font-medium">🔄 {t('convertingToHtml')}</p>
         <div className="space-y-3">
           <Timer duration={160} />
         </div>
@@ -54,7 +56,7 @@ export const SlideContentDisplay: React.FC<SlideContentDisplayProps> = ({
       <div className="relative">
         {slide.convertingToReact && (
           <div className="mb-4">
-            <p className="text-sm text-purple-700 font-medium mb-1">⚙️ Converting HTML to React...</p>
+            <p className="text-sm text-purple-700 font-medium mb-1">⚙️ {t('convertingToReact')}</p>
             <Timer duration={90} />
           </div>
         )}
@@ -94,7 +96,7 @@ export const SlideContentDisplay: React.FC<SlideContentDisplayProps> = ({
   if (slide.error) {
     return (
       <div className="space-y-4">
-        <p className="text-base text-red-600 font-medium">✗ Conversion failed</p>
+        <p className="text-base text-red-600 font-medium">✗ {t('conversionFailed')}</p>
         <div className="text-sm text-gray-700 p-4 bg-red-50 rounded border border-red-200">
           {slide.error.includes("image exceeds 5 MB maximum") ? (
             <div>
@@ -107,7 +109,7 @@ export const SlideContentDisplay: React.FC<SlideContentDisplayProps> = ({
         </div>
         <div className="flex justify-center">
           <button className="bg-red-50 flex gap-2 items-center rounded border border-red-200 px-4 py-2 " onClick={() => retrySlide(slide.slide_number)}>
-            <Repeat2 className="w-4 h-4" />Retry
+            <Repeat2 className="w-4 h-4" />{t('retry')}
           </button>
         </div>
       </div>
@@ -116,7 +118,7 @@ export const SlideContentDisplay: React.FC<SlideContentDisplayProps> = ({
 
   return (
     <div className="space-y-4">
-      <p className="text-base text-gray-500">⏳ Waiting in queue to process...</p>
+      <p className="text-base text-gray-500">⏳ {t('waitingInQueueToProcess')}</p>
       <div className="animate-pulse space-y-3">
         <div className="h-6 bg-gray-200 rounded w-2/3"></div>
         <div className="h-6 bg-gray-200 rounded w-1/2"></div>

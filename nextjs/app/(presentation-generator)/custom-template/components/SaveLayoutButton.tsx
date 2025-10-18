@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { FileText, Loader2 } from "lucide-react";
 
@@ -13,7 +14,7 @@ export const SaveLayoutButton: React.FC<SaveLayoutButtonProps> = ({
   isSaving,
   isProcessing,
 }) => {
-  
+  const { t } = useTranslation('template');
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
       <Button
@@ -25,12 +26,12 @@ export const SaveLayoutButton: React.FC<SaveLayoutButtonProps> = ({
         {isSaving ? (
           <>
             <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-            Saving Template...
+            {t('savingTemplate')}
           </>
         ) : (
           <>
             <FileText className="w-5 h-5 mr-2" />
-            Save as Template
+            {t('saveAsTemplate')}
           </>
         )}
       </Button>

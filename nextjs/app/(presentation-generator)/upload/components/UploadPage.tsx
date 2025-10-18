@@ -11,6 +11,7 @@
 
 'use client'
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRouter, usePathname } from 'next/navigation'
 import { useDispatch } from 'react-redux'
 import {
@@ -45,6 +46,7 @@ interface LoadingState {
 }
 
 const UploadPage = () => {
+	const { t } = useTranslation('upload')
 	const router = useRouter()
 	const pathname = usePathname()
 	const dispatch = useDispatch()
@@ -123,12 +125,12 @@ const UploadPage = () => {
 	const handleDocumentProcessing = async () => {
 		setLoadingState({
 			isLoading: true,
-			message: 'Processing documents...',
+			message: t('processingDocuments'),
 			showProgress: true,
 			duration: 90,
 			extra_info:
 				files.length > 0
-					? 'It might take a few minutes for large documents.'
+					? t('extraInfoAboutDocument')
 					: '',
 		})
 
@@ -172,7 +174,7 @@ const UploadPage = () => {
 	const handleDirectPresentationGeneration = async () => {
 		setLoadingState({
 			isLoading: true,
-			message: 'Generating outlines...',
+			message: t('generatingOutlines'),
 			showProgress: true,
 			duration: 30,
 		})
@@ -211,47 +213,63 @@ const UploadPage = () => {
 			showProgress: false,
 		})
 		toast.error('Error', {
-			description: error.message || 'Error in upload page.',
+			description: error.message || t('errorInUploadPage'),
 		})
 	}
 
 	return (
-		<Wrapper className="pb-10 lg:max-w-[70%] xl:max-w-[65%]">
-			<OverlayLoader
-				show={loadingState.isLoading}
-				text={loadingState.message}
-				showProgress={loadingState.showProgress}
-				duration={loadingState.duration}
-				extra_info={loadingState.extra_info}
-			/>
-			<div className="flex flex-col gap-4 md:items-center justify-end md:flex-row py-4">
-				<ConfigurationSelects
-					config={config}
-					onConfigChange={handleConfigChange}
-				/>
+		<>
+			<div className="flex flex-col items-center justify-center  py-8 px-2 md:px-6">
+				<h1 className="text-3xl font-semibold font-instrument_sans">
+					{t("createPresentation")}
+				</h1>
+				<p className="text-base text-gray-500">
+					{t("createPresentationDescription1")}
+				</p>
+				<p className="text-base text-gray-500">
+					{t("createPresentationDescription2")}
+				</p>
+				<p className="text-base text-gray-500">
+					{t("createPresentationDescription3")}
+				</p>
 			</div>
+			<Wrapper className="pb-10 lg:max-w-[70%] xl:max-w-[65%]">
+				<OverlayLoader
+					show={loadingState.isLoading}
+					text={loadingState.message}
+					showProgress={loadingState.showProgress}
+					duration={loadingState.duration}
+					extra_info={loadingState.extra_info}
+				/>
+				<div className="flex flex-col gap-4 md:items-center justify-end md:flex-row py-4">
+					<ConfigurationSelects
+						config={config}
+						onConfigChange={handleConfigChange}
+					/>
+				</div>
 
-			<div className="relative">
-				<PromptInput
-					value={config.prompt}
-					onChange={(value) => handleConfigChange('prompt', value)}
-					data-testid="prompt-input"
+				<div className="relative">
+					<PromptInput
+						value={config.prompt}
+						onChange={(value) => handleConfigChange('prompt', value)}
+						data-testid="prompt-input"
+					/>
+				</div>
+				<SupportingDoc
+					files={[...files]}
+					onFilesChange={setFiles}
+					data-testid="file-upload-input"
 				/>
-			</div>
-			<SupportingDoc
-				files={[...files]}
-				onFilesChange={setFiles}
-				data-testid="file-upload-input"
-			/>
-			<Button
-				onClick={handleGeneratePresentation}
-				className="w-full rounded-[32px] flex items-center justify-center py-6 bg-indigo-600 text-white font-instrument_sans font-semibold text-xl hover:bg-indigo-500 transition-colors duration-300"
-				data-testid="next-button"
-			>
-				<span>Next</span>
-				<ChevronRight className="!w-6 !h-6" />
-			</Button>
-		</Wrapper>
+				<Button
+					onClick={handleGeneratePresentation}
+					className="w-full rounded-[32px] flex items-center justify-center py-6 bg-indigo-600 text-white font-instrument_sans font-semibold text-xl hover:bg-indigo-500 transition-colors duration-300"
+					data-testid="next-button"
+				>
+					<span>{t("next")}</span>
+					<ChevronRight className="!w-6 !h-6" />
+				</Button>
+			</Wrapper>
+		</>
 	)
 }
 

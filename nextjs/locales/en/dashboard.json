@@ -1,0 +1,13 @@
+{
+    "slidePresentation": "Slide Presentation",
+    "createSlidePresentation": "Create New Slide Presentation",
+    "createVideoPresentation": "Create New Video Presentation",
+    "startFromScratch": "Start from scratch and bring your ideas to life",
+    "tryAgain": "Try again",
+    "delete": "Delete",
+    "deleteSuccess": "Presentation deleted",
+    "deleteSuccessDesc": "The presentation has been deleted successfully",
+    "deleteError": "Error deleting presentation",
+    "noPresentationsYet": "You don't have any presentations yet.",
+    "startCreatingFirstOne": "Start creating the first one."
+}

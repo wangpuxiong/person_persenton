@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,22 +32,23 @@ export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
   slides,
   completedSlides,
 }) => {
+  const { t } = useTranslation('template');
   return (
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Upload className="w-5 h-5" />
-          Upload PDF or PPTX File
+          {t('uploadTitle')}
         </CardTitle>
         <CardDescription>
-          Select a PDF or PowerPoint file (.pdf or .pptx) to process. Maximum file size: 100MB
+          {t('uploadDescription')}
         </CardDescription>
         {slides.length > 0 && (
           <div className="flex items-center justify-end gap-2">
             {slides.some((s) => s.processing) && (
               <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
             )}
-            {completedSlides}/{slides.length} slides completed
+            {t('completedSlides', { completedSlides, totalSlides: slides.length })}
           </div>
         )}
       </CardHeader>
@@ -56,7 +58,7 @@ export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
             <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <Label htmlFor="file-upload" className="cursor-pointer">
               <span className="text-lg font-medium text-gray-700">
-                Click to upload a PDF or PPTX file
+                {t('clickToUpload')}
               </span>
               <input
                 id="file-upload"
@@ -67,7 +69,7 @@ export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
               />
             </Label>
             <p className="text-sm text-gray-500 mt-2">
-              Drag and drop your file here or click to browse
+              {t('dragDropOrClickToBrowse')}
             </p>
           </div>
         ) : (
@@ -104,10 +106,10 @@ export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
           >
             {isProcessingPptx
-              ? "Extracting Slides..."
+              ? t('extractingSlides')
               : !selectedFile
-              ? "Select a PDF or PPTX file first"
-              : "Process File"}
+              ? t('selectPdfOrPptxFileFirst')
+              : t('processFile')}
           </Button>
           {isProcessingPptx && <Timer duration={90} />}
         </div>

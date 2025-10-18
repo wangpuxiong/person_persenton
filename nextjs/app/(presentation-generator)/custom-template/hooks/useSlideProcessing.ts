@@ -1,3 +1,5 @@
+'use client'
+import { useTranslation } from "react-i18next";
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { ApiResponseHandler } from "@/app/(presentation-generator)/services/api/api-error-handler";
@@ -10,6 +12,7 @@ export const useSlideProcessing = (
   
   setFontsData: React.Dispatch<React.SetStateAction<FontData | null>>
 ) => {
+  const { t } = useTranslation('template');
   const [isProcessingPptx, setIsProcessingPptx] = useState(false);
 
   // Process individual slide to HTML
@@ -41,7 +44,7 @@ export const useSlideProcessing = (
 
         const htmlData = await ApiResponseHandler.handleResponse(
           htmlResponse,
-          `Failed to convert slide ${slide.slide_number} to HTML`
+          t('failedToConvertSlide', { slideNumber: slide.slide_number })
         );
 
         console.log(`Successfully processed slide ${slide.slide_number}`);
@@ -79,7 +82,7 @@ export const useSlideProcessing = (
       } catch (error) {
         console.error(`Error processing slide ${slide.slide_number}:`, error);
         const errorMessage =
-          error instanceof Error ? error.message : "Failed to convert to HTML";
+          error instanceof Error ? error.message : t('convertHTMLFailed');
 
         // Update slide with error
         setSlides((prev) => {
@@ -118,7 +121,7 @@ export const useSlideProcessing = (
   // Process PDF or PPTX file to extract slides
   const processFile = useCallback(async () => {
     if (!selectedFile) {
-      toast.error("Please select a PDF or PPTX file first");
+      toast.error(t('selectFileFirst'));
       return;
     }
 
@@ -139,7 +142,7 @@ export const useSlideProcessing = (
         });
         slidesResponseData = await ApiResponseHandler.handleResponse(
           pdfResponse,
-          "Failed to process PDF file"
+          t('failedToProcessPDF')
         );
       } else if (isPptx) {
         formData.append("pptx_file", selectedFile);
@@ -149,14 +152,14 @@ export const useSlideProcessing = (
         });
         slidesResponseData = await ApiResponseHandler.handleResponse(
           pptxResponse,
-          "Failed to process PPTX file"
+          t('failedToProcessPPTX')
         );
       } else {
-        throw new Error("Unsupported file type. Please upload a PDF or PPTX file.");
+        throw new Error(t('unsupportedFileType'));
       }
 
       if (!slidesResponseData.success || !slidesResponseData.slides?.length) {
-        throw new Error("No slides found in the uploaded file");
+        throw new Error(t('noSlidesFound'));
       }
 
       // Extract fonts data only for PPTX where available
@@ -181,11 +184,11 @@ export const useSlideProcessing = (
       const hasUnsupported = Array.isArray(slidesResponseData.fonts?.not_supported_fonts) && slidesResponseData.fonts.not_supported_fonts.length > 0;
 
       toast.success(
-        `Template Processing Finished`,
+        t('templateProcessingFinished'),
         {
           description: hasUnsupported
-            ? `Please Upload the not supported fonts, and click Extract Template`
-            : `All fonts are supported. Starting template extraction...`
+            ? t('pleaseUploadUnsupportedFonts')
+            : t('allFontsAreSupported')
         }
       );
 
@@ -199,8 +202,8 @@ export const useSlideProcessing = (
     } catch (error) {
       console.error("Error processing file:", error);
       const errorMessage =
-        error instanceof Error ? error.message : "An unexpected error occurred";
-      toast.error("Processing failed", {
+        error instanceof Error ? error.message : t('errorOccurred');
+      toast.error(t('processingFailed'), {
         description: errorMessage,
       });
     } finally {

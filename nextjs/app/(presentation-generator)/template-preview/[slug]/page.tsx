@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams, useRouter, usePathname } from 'next/navigation'
 import LoadingStates from '../components/LoadingStates'
 import { Card } from '@/components/ui/card'
@@ -24,6 +25,7 @@ import { trackEvent, MixpanelEvent } from '@/utils/mixpanel'
 import { getHeader } from '../../services/api/header'
 
 const GroupLayoutPreview = () => {
+	const { t } = useTranslation('template')
 	const params = useParams()
 	const router = useRouter()
 	const rawSlug = ((): string => {
@@ -83,9 +85,8 @@ const GroupLayoutPreview = () => {
 		}
 	}, [layoutGroup]);
 
-	//检查这是否是可以编辑的自定义模板
-	//排除可编辑的官方模板
 	const isCustom = rawSlug.startsWith('custom-') && !templateMeta?.template?.is_official;
+	const isOfficial = rawSlug.startsWith('custom-') && templateMeta?.template?.is_official;
 	const presentationId = isCustom && rawSlug.length > 7 ? rawSlug.slice(7) : ''
 
 	const [editorOpen, setEditorOpen] = useState(false)
@@ -314,7 +315,7 @@ const GroupLayoutPreview = () => {
 							className="flex items-center gap-2"
 						>
 							<ArrowLeft className="w-4 h-4" />
-							Back
+							{t('back')}
 						</Button>
 						<Button
 							variant="outline"
@@ -329,7 +330,7 @@ const GroupLayoutPreview = () => {
 							className="flex items-center gap-2"
 						>
 							<Home className="w-4 h-4" />
-							All Templates
+							{t('allTemplates')}
 						</Button>
 						{isCustom && (
 							<button
@@ -346,11 +347,18 @@ const GroupLayoutPreview = () => {
 								}}
 							>
 								<Trash2 className="w-4 h-4" />
-								Delete
+								{t('delete')}
 							</button>
 						)}
 					</div>
 
+					{isOfficial ? 
+					<div className='text-center'>
+						<h1 className="text-2xl md:text-3xl font-bold text-gray-900 capitalize">
+							{t('officialLayouts')}
+						</h1>
+					</div> 
+					: 
 					<div className="text-center">
 						<h1 className="text-2xl md:text-3xl font-bold text-gray-900 capitalize">
 							{templateMeta?.name || layoutGroup[0].templateID} Layouts
@@ -359,7 +367,7 @@ const GroupLayoutPreview = () => {
 							{layoutGroup.length} layout{layoutGroup.length !== 1 ? 's' : ''} •{' '}
 							{templateMeta?.description || layoutGroup[0].templateID}
 						</p>
-					</div>
+					</div>}
 				</div>
 			</header>
 
@@ -414,11 +422,11 @@ const GroupLayoutPreview = () => {
 													disabled={!layoutsMap[fileName]}
 													title={
 														!layoutsMap[fileName]
-															? 'Loading layout code...'
-															: 'Edit layout code'
+															? t('loadingLayoutCode')
+															: t('editLayoutCode')
 													}
 												>
-													<Pencil className="w-4 h-4" /> Edit
+													<Pencil className="w-4 h-4" /> {t('edit')}
 												</Button>
 											)}
 										</div>
@@ -464,7 +472,7 @@ const GroupLayoutPreview = () => {
 							<SheetTitle className="flex items-center justify-between w-full">
 								<span className="flex items-center gap-2 text-purple-800">
 									<Code className="w-5 h-5 text-purple-600" />
-									HTML Editor
+									{t('htmlEditorTitle')}
 								</span>
 							</SheetTitle>
 						</SheetHeader>
@@ -493,7 +501,7 @@ const GroupLayoutPreview = () => {
 										disabled={isSaving}
 									>
 										<X size={14} />
-										Cancel
+										{t('cancel')}
 									</Button>
 									<Button
 										onClick={handleSave}
@@ -502,7 +510,7 @@ const GroupLayoutPreview = () => {
 										disabled={isSaving}
 									>
 										<Save size={14} />
-										Save HTML
+										{t('saveHtml')}
 									</Button>
 								</div>
 							</SheetTitle>

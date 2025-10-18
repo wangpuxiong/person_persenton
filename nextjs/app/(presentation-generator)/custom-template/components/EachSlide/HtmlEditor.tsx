@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Save, X, Code } from "lucide-react";
 import { ProcessedSlide } from "../../types";
@@ -24,6 +25,7 @@ export const HtmlEditor: React.FC<HtmlEditorProps> = ({
   onSave,
   onCancel,
 }) => {
+  const { t } = useTranslation('template');
   const [htmlContent, setHtmlContent] = useState(slide.html || "");
 
   useEffect(() => {
@@ -48,7 +50,7 @@ export const HtmlEditor: React.FC<HtmlEditorProps> = ({
           <SheetTitle className="flex items-center justify-between w-full">
             <span className="flex items-center gap-2 text-purple-800">
               <Code className="w-5 h-5 text-purple-600" />
-              HTML Editor
+              {t('htmlEditorTitle')}
             </span>
            
           </SheetTitle>
@@ -78,7 +80,7 @@ export const HtmlEditor: React.FC<HtmlEditorProps> = ({
                 className="flex items-center gap-1"
               >
                 <X size={14} />
-                Cancel
+                {t('cancel')}
               </Button>
               <Button
                 onClick={handleSave}
@@ -86,7 +88,7 @@ export const HtmlEditor: React.FC<HtmlEditorProps> = ({
                 size="sm"
               >
                 <Save size={14} />
-                Save HTML
+                {t('saveHTML')}
               </Button>
             </div>
           </SheetTitle>

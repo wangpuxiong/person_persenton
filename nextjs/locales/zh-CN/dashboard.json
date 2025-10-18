@@ -1,0 +1,13 @@
+{
+    "slidePresentation": "已创建的幻灯片",
+    "createSlidePresentation": "创建PPT",
+    "createVideoPresentation": "创建视频",
+    "startFromScratch": "从零起步，让你的创意照进现实。",
+    "tryAgain": "再次尝试",
+    "delete": "删除",
+    "deleteSuccess": "删除成功",
+    "deleteSuccessDesc": "幻灯片已成功删除",
+    "deleteError": "删除幻灯片时出错",
+    "noPresentationsYet": "您还没有创建任何幻灯片。",
+    "startCreatingFirstOne": "开始创建您的第一个幻灯片。"
+}

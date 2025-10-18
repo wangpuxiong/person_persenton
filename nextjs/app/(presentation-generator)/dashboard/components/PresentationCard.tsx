@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useTranslation } from 'react-i18next';
 
 import { Card } from "@/components/ui/card";
 import { DashboardApi } from "@/app/(presentation-generator)/services/api/dashboard";
@@ -25,6 +26,7 @@ export const PresentationCard = ({
   slide: any;
   onDeleted?: (presentationId: string) => void;
 }) => {
+  const { t } = useTranslation('dashboard');
   const router = useRouter();
   const { renderSlideContent } = useTemplateLayouts();
 
@@ -43,14 +45,14 @@ export const PresentationCard = ({
     const response = await DashboardApi.deletePresentation(id);
 
     if (response) {
-      toast.success("Presentation deleted", {
-        description: "The presentation has been deleted successfully",
+      toast.success(t("deleteSuccess"), {
+        description: t("deleteSuccessDesc"),
       });
       if (onDeleted) {
         onDeleted(id);
       }
     } else {
-      toast.error("Error deleting presentation");
+      toast.error(t("deleteError"));
     }
   };
   return (
@@ -78,7 +80,7 @@ export const PresentationCard = ({
                 className="flex items-center justify-between w-full px-2 py-1 hover:bg-gray-100"
                 onClick={handleDelete}
               >
-                <p>Delete</p>
+                <p>{t('delete')}</p>
                 <TrashIcon className="w-4 h-4 text-red-500" />
               </button>
             </PopoverContent>

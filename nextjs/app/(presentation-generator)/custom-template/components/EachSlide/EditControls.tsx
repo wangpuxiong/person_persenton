@@ -1,6 +1,7 @@
 'use client'
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Pencil, Eraser, RotateCcw, SendHorizontal, X } from "lucide-react";
@@ -21,6 +22,7 @@ export const EditControls: React.FC<EditControlsProps> = ({
   onEraserModeChange,
   onClearCanvas,
 }) => {
+  const { t } = useTranslation('template');
   const colors = [
     "#000000",
     "#FF0000",
@@ -50,7 +52,7 @@ export const EditControls: React.FC<EditControlsProps> = ({
               className="flex items-center gap-1"
             >
               <Pencil size={14} />
-              Draw
+              {t('draw')}
             </Button>
 
             <Button
@@ -60,7 +62,7 @@ export const EditControls: React.FC<EditControlsProps> = ({
               className="flex items-center gap-1"
             >
               <Eraser size={14} />
-              Erase
+              {t('erase')}
             </Button>
           </div>
 
@@ -112,7 +114,7 @@ export const EditControls: React.FC<EditControlsProps> = ({
             className="flex items-center gap-1"
           >
             <RotateCcw size={14} />
-            Clear
+            {t('clear')}
           </Button>
         </div>
 
@@ -123,7 +125,7 @@ export const EditControls: React.FC<EditControlsProps> = ({
           className="flex items-center gap-1"
         >
           <X size={14} />
-          Cancel
+          {t('cancel')}
         </Button>
       </div>
 
@@ -133,12 +135,12 @@ export const EditControls: React.FC<EditControlsProps> = ({
           htmlFor="edit-prompt"
           className="text-sm font-medium font-inter text-gray-700"
         >
-          Describe the changes you want to make:
+          {t('describeChanges')}
         </label>
         <div className="flex gap-2">
           <Textarea
             id="edit-prompt"
-            placeholder="Enter your prompt here... (e.g., 'Change the title color to blue', 'Add a border to the image', etc.)"
+            placeholder={t('enterPrompt')}
             value={prompt}
             onChange={(e) => onPromptChange(e.target.value)}
             className="flex-1 font-inter duration-300 h-[70px] border-blue-200 border-2 rounded-lg outline-none focus:border-blue-500 focus:ring-0 max-h-[70px] resize-none"
@@ -151,11 +153,11 @@ export const EditControls: React.FC<EditControlsProps> = ({
               className="flex flex-col w-28 font-inter font-semibold items-center gap-1 h-full bg-green-600 hover:bg-green-700 px-4"
             >
               {isUpdating ? (
-                "Updating..."
+                t('updateing')
               ) : (
                 <>
                   <SendHorizontal size={14} />
-                  Update
+                  {t('update')}
                 </>
               )}
             </Button>
