@@ -22,7 +22,7 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
     loading
   } = useLayout();
 
-  const [summaryMap, setSummaryMap] = React.useState<Record<string, { lastUpdatedAt?: number; name?: string; description?: string }>>({});
+  const [summaryMap, setSummaryMap] = React.useState<Record<string, { lastUpdatedAt?: number; name?: string; description?: string; isOfficial?: boolean }>>({});
 
   useEffect(() => {
     // Fetch custom templates summary to get last_updated_at and template meta for sorting and display
@@ -31,7 +31,7 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
     })
       .then(res => res.json())
       .then(data => {
-        const map: Record<string, { lastUpdatedAt?: number; name?: string; description?: string }> = {};
+        const map: Record<string, { lastUpdatedAt?: number; name?: string; description?: string; isOfficial?: boolean }> = {};
         if (data && Array.isArray(data.presentations)) {
           for (const p of data.presentations) {
             const slug = `custom-${p.presentation_id}`;
@@ -39,6 +39,7 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
               lastUpdatedAt: p.last_updated_at ? new Date(p.last_updated_at).getTime() : 0,
               name: p.template?.name,
               description: p.template?.description,
+              isOfficial: p.template?.is_official || false
             };
           }
         }
@@ -83,9 +84,14 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
     () => templates.filter(g => !g.id.toLowerCase().startsWith("custom-")),
     [templates]
   );
-  const customTemplates = React.useMemo(() => {
-    const unsorted = templates.filter(g => g.id.toLowerCase().startsWith("custom-"));
-    // Sort by last_updated_at desc using summaryMap keyed by template id
+  // 从customTemplates中筛选出官方模板和用户自定义模板
+  const officialTemplates = React.useMemo(() => {
+    const unsorted = templates.filter(g => g.id.toLowerCase().startsWith("custom-") && summaryMap[g.id]?.isOfficial === true);
+    return unsorted.sort((a, b) => (summaryMap[b.id]?.lastUpdatedAt || 0) - (summaryMap[a.id]?.lastUpdatedAt || 0));
+  }, [templates, summaryMap]);
+
+  const userCustomTemplates = React.useMemo(() => {
+    const unsorted = templates.filter(g => g.id.toLowerCase().startsWith("custom-") && summaryMap[g.id]?.isOfficial !== true);
     return unsorted.sort((a, b) => (summaryMap[b.id]?.lastUpdatedAt || 0) - (summaryMap[a.id]?.lastUpdatedAt || 0));
   }, [templates, summaryMap]);
 
@@ -177,18 +183,35 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
         </div>
       </div>
 
-      {/* Custom AI Templates */}
+      {/* Official AI Templates */}
+      {officialTemplates.length > 0 && (
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Official AI Templates</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {officialTemplates.map((template) => (
+              <TemplateLayouts
+                key={template.id}
+                template={template}
+                onSelectTemplate={handleTemplateSelection}
+                selectedTemplate={selectedTemplate}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* User Custom AI Templates */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900">Custom AI Templates</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Your Custom Templates</h3>
         </div>
-        {customTemplates.length === 0 ? (
+        {userCustomTemplates.length === 0 ? (
           <div className="text-sm text-gray-600 py-2">
             No custom templates. Create one from "All Templates" menu.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {customTemplates.map((template) => (
+            {userCustomTemplates.map((template) => (
               <TemplateLayouts
                 key={template.id}
                 template={template}
@@ -203,4 +226,4 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
   );
 };
 
-export default TemplateSelection; 
+export default TemplateSelection;
