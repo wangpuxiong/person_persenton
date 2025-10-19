@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/u
 import { supportedLanguages } from './config';
 
 const LanguageSelector = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation('common');
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
 
   const handleLanguageChange = (value: string) => {
@@ -15,6 +15,7 @@ const LanguageSelector = () => {
     i18n.changeLanguage(value);
   };
 
+  // 保持原来的语言标签，不因当前语言设置而变化
   const languageLabels: Record<string, string> = {
     'en': 'English',
     'zh-CN': '简体中文'
@@ -27,7 +28,7 @@ const LanguageSelector = () => {
       <SelectTrigger className="w-auto h-auto p-2 border-0 bg-transparent hover:bg-blue-900/30 rounded-md data-[state=open]:bg-blue-900/30 [&_svg]:text-white">
         <div className="flex items-center gap-2 text-sm font-medium">
           <Globe className="h-4 w-4 text-blue-500" />
-          <span className="text-white">{currentLanguageLabel}</span>
+          <span className="text-white">{t('language.label')}</span>
         </div>
       </SelectTrigger>
       <SelectContent>

@@ -13,10 +13,8 @@ import {
 } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { cn } from "@/lib/utils";
-import OpenAIConfig from "./OpenAIConfig";
 import GoogleConfig from "./GoogleConfig";
 import AnthropicConfig from "./AnthropicConfig";
-import OllamaConfig from "./OllamaConfig";
 import CustomConfig from "./CustomConfig";
 import {
   updateLLMConfig,

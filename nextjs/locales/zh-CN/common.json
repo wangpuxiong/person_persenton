@@ -23,6 +23,11 @@
     "search": "搜索...",
     "enterText": "输入文本..."
   },
+  "language": {
+    "en": "英语",
+    "zh-CN": "简体中文",
+    "label": "语言"
+  },
   "header": {
     "title": "PPT演示文稿 | CompareGPT.io",
     "failedToGetPPT": "获取演示文稿PPTX文件失败",
