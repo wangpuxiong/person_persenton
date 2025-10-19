@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { setCanChangeKeys, setLLMConfig } from '@/store/slices/userConfig'
 import { hasValidLLMConfig } from '@/utils/storeHelpers'
 import { usePathname, useRouter } from 'next/navigation'
@@ -16,6 +17,7 @@ export function ConfigurationInitializer({
 }: {
 	children: React.ReactNode
 }) {
+	const { t } = useTranslation('common')
 	const dispatch = useDispatch()
 	const [isLoading, setIsLoading] = useState(true)
 	const router = useRouter()
@@ -61,7 +63,6 @@ export function ConfigurationInitializer({
 
 	const initApp = async () => {
 		try {
-			console.log('initApp>>', 1)
 			// 首先检查用户是否经过身份验证
 			if (!isAuthenticated) {
 				const authResult = await checkAuthentication()
@@ -75,15 +76,20 @@ export function ConfigurationInitializer({
 				}
 			}
 
-			// 最后，获取用户配置状态
-			await fetchUserConfigState()
+			// 跳转
+			if (route === '/') {
+				router.push('/upload')
+				setLoadingToFalseAfterNavigatingTo('/upload')
+			} else {
+				setIsLoading(false)
+			}
 		} catch (error) {
 			console.error('Initialization error:', error)
 			if (error instanceof ApiError && error.isAuthenticationError) {
 				handleAuthError()
 			} else {
 				toast.error(
-					'Failed to initialize application. Please refresh and try again.'
+					t('configuration.failedToInitializeApplication')
 				)
 				setIsLoading(false)
 			}
@@ -97,102 +103,6 @@ export function ConfigurationInitializer({
 				setIsLoading(false)
 			}
 		}, 500)
-	}
-
-	const fetchUserConfigState = async () => {
-		setIsLoading(true)
-		try {
-			const response = await fetch('/api/can-change-keys')
-			const { canChange: canChangeKeys } = await response.json()
-			dispatch(setCanChangeKeys(canChangeKeys))
-
-			if (canChangeKeys) {
-				try {
-					const response = await fetch('/api/user-config')
-					const llmConfig = await response.json()
-					if (!llmConfig.LLM) {
-						llmConfig.LLM = 'openai'
-					}
-					dispatch(setLLMConfig(llmConfig))
-					const isValid = hasValidLLMConfig(llmConfig)
-					if (isValid) {
-						// Check if the selected Ollama model is pulled
-						if (llmConfig.LLM === 'ollama') {
-							const isPulled = await checkIfSelectedOllamaModelIsPulled(
-								llmConfig.OLLAMA_MODEL
-							)
-							if (!isPulled) {
-								router.push('/')
-								setLoadingToFalseAfterNavigatingTo('/')
-								return
-							}
-						}
-						if (llmConfig.LLM === 'custom') {
-							const isAvailable = await checkIfSelectedCustomModelIsAvailable(
-								llmConfig
-							)
-							if (!isAvailable) {
-								router.push('/')
-								setLoadingToFalseAfterNavigatingTo('/')
-								return
-							}
-						}
-						if (route === '/') {
-							router.push('/upload')
-							setLoadingToFalseAfterNavigatingTo('/upload')
-						} else {
-							setIsLoading(false)
-						}
-					} else if (route !== '/') {
-						router.push('/')
-						setLoadingToFalseAfterNavigatingTo('/')
-					} else {
-						setIsLoading(false)
-					}
-				} catch (error) {
-					console.error('Error fetching user config:', error)
-					toast.error('Failed to load user configuration')
-					setIsLoading(false)
-				}
-			} else {
-				if (route === '/') {
-					router.push('/upload')
-					setLoadingToFalseAfterNavigatingTo('/upload')
-				} else {
-					setIsLoading(false)
-				}
-			}
-		} catch (error) {
-			console.error('Error in fetchUserConfigState:', error)
-			if (error instanceof ApiError && error.isAuthenticationError) {
-				handleAuthError()
-			} else {
-				toast.error('Failed to load application configuration')
-				setIsLoading(false)
-			}
-		}
-	}
-
-	const checkIfSelectedCustomModelIsAvailable = async (
-		llmConfig: LLMConfig
-	) => {
-		try {
-			const response = await fetch('/api/v1/ppt/openai/models/available', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					url: llmConfig.CUSTOM_LLM_URL,
-					api_key: llmConfig.CUSTOM_LLM_API_KEY,
-				}),
-			})
-			const data = await response.json()
-			return data.includes(llmConfig.CUSTOM_MODEL)
-		} catch (error) {
-			console.error('Error fetching custom models:', error)
-			return false
-		}
 	}
 
 	if (isLoading) {
@@ -209,10 +119,10 @@ export function ConfigurationInitializer({
 						{/* Loading Text */}
 						<div className="space-y-2">
 							<h3 className="text-lg font-semibold text-gray-800 font-inter">
-								Initializing Application
+								{t('configuration.initializingApplication')}
 							</h3>
 							<p className="text-sm text-gray-600 font-inter">
-								Loading configuration and checking model availability...
+								{t('configuration.loadingConfigurationAndCheckingModelAvailability')}
 							</p>
 						</div>
 

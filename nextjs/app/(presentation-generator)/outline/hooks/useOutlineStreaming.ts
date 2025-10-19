@@ -1,4 +1,6 @@
+'use client'
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { setOutlines } from "@/store/slices/presentationGeneration";
@@ -8,6 +10,7 @@ import { RootState } from "@/store/store";
 
 
 export const useOutlineStreaming = (presentationId: string | null) => {
+  const { t } = useTranslation('outline');
   const dispatch = useDispatch();
   const { outlines } = useSelector((state: RootState) => state.presentationGeneration);
   const [isStreaming, setIsStreaming] = useState(true);
@@ -96,7 +99,7 @@ export const useOutlineStreaming = (presentationId: string | null) => {
                 eventSource.close();
               } catch (error) {
                 console.error("Error parsing accumulated chunks:", error);
-                toast.error("Failed to parse presentation data");
+                toast.error(t('failedToParsePresentationData'));
                 eventSource.close();
               }
               accumulatedChunks = "";
@@ -121,9 +124,9 @@ export const useOutlineStreaming = (presentationId: string | null) => {
               activeIndexRef.current = -1;
               highestIndexRef.current = -1;
               eventSource.close();
-              toast.error('Error in outline streaming',
+              toast.error(t('errorInOutlineStreaming'),
                 {
-                  description: data.detail || 'Failed to connect to the server. Please try again.',
+                  description: data.detail || t('failedToConnectToServer'),
                 }
               );
               break;
@@ -139,7 +142,7 @@ export const useOutlineStreaming = (presentationId: string | null) => {
           activeIndexRef.current = -1;
           highestIndexRef.current = -1;
           eventSource.close();
-          toast.error("Failed to connect to the server. Please try again.");
+          toast.error(t('failedToConnectToServer'));
         };
       } catch (error) {
 
@@ -149,7 +152,7 @@ export const useOutlineStreaming = (presentationId: string | null) => {
         setHighestActiveIndex(-1)
         activeIndexRef.current = -1;
         highestIndexRef.current = -1;
-        toast.error("Failed to initialize connection");
+        toast.error(t('failedToInitializeConnection'));
       }
     };
     initializeStream();

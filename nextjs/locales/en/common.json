@@ -24,7 +24,15 @@
     "enterText": "Enter text..."
   },
   "header": {
-    "title": "PPT(slides) | CompareGPT.io"
+    "title": "PPT(slides) | CompareGPT.io",
+    "failedToGetPPT": "Failed to get presentation PPTX model",
+    "noPathReturn": "No path returned from export",
+    "havingTrouble": "Having trouble exporting!",
+    "havingTroubleDesc": "We are having trouble exporting your presentation. Please try again.",
+    "failedToExportPDF": "Failed to export PDF",
+    "clickDownloadLink": "Please click the download link in the new tab",
+    "downloadReady": "Your file is ready for download",
+    "exportingPresentation": "Exporting presentation..."
   },
   "layout": {
     "templateLayouts": "Template Layouts",
@@ -37,8 +45,30 @@
       "noSchemaExportDescription": "Please ensure the layout file exports a Schema",
       "noTemplateFound": "No template found",
       "fetchLayoutsFailed": "Failed to fetch layouts: {{statusText}}",
-      "loadLayoutsFailed": "Failed to load layouts"
+      "loadLayoutsFailed": "Failed to load layouts",
+      "invalidExport": "Invalid export in {{layoutName}}",
+      "defaultExportNotFound": "Default export not found. Please export a default React component.",
+      "schemaMissing": "Schema missing in {{layoutName}}",
+      "schemaExportNotFound": "Schema export not found. Please export a Zod Schema as 'Schema'.",
+      "schemaGenerationFailed": "Schema generation failed for {{layoutName}}",
+      "schemaParseFailed": "Schema.parse failed for {{layoutName}}",
+      "compilationError": "Compilation error in {{layoutName}}",
+      "failedToCompile": "Failed to compile {{layoutName}}",
+      "useLayoutWithinProvider": "useLayout must be used within a LayoutProvider"
     }
+  },
+  "configuration": {
+    "failedToInitializeApplication": "Failed to initialize application. Please refresh and try again.",
+    "initializingApplication": "Initializing Application",
+    "loadingConfigurationAndCheckingModelAvailability": "Loading configuration and checking model availability..."
+  },
+  "auth": {
+    "pleaseLogInToCompareGPTBeforeOpenThisPage": "Please log in to Compare GPT before open this page",
+    "authenticationFailed": "Authentication failed",
+    "failedToConnectToAuthenticationServer": "Failed to connect to authentication server",
+    "authenticationError": "Authentication Error",
+    "unknownAuthenticationError": "Unknown authentication error",
+    "returnToCompareGPT": "Return to CompareGPT"
   },
   "description": "CompareGPT.io = Autonomous Execution + Near-Zero Hallucination + All agent tools (API keys)",
   "welcome": "Welcome to PPT Generator",

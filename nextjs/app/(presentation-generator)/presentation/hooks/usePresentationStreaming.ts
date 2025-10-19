@@ -1,4 +1,6 @@
+'use client'
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import {
   clearPresentationData,
@@ -16,6 +18,7 @@ export const usePresentationStreaming = (
   setError: (error: boolean) => void,
   fetchUserSlides: () => void
 ) => {
+  const { t } = useTranslation("presentation");
   const dispatch = useDispatch();
   const previousSlidesLength = useRef(0);
 
@@ -94,10 +97,10 @@ export const usePresentationStreaming = (
             break;
           case "error":
             eventSource.close();
-            toast.error("Error in outline streaming", {
+            toast.error(t("error_in_outline_streaming"), {
               description:
                 data.detail ||
-                "Failed to connect to the server. Please try again.",
+                t("failed_to_connect_to_server_please_try_again"),
             });
             setLoading(false);
             dispatch(setStreaming(false));

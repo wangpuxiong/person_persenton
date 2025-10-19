@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
     DndContext,
     closestCenter,
@@ -38,6 +39,7 @@ const OutlineContent: React.FC<OutlineContentProps> = ({
     onDragEnd,
     onAddSlide
 }) => {
+    const { t } = useTranslation('outline');
     const sensors = useSensors(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
@@ -53,21 +55,21 @@ const OutlineContent: React.FC<OutlineContentProps> = ({
                 <div className="flex items-center justify-center">
                     <span className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 text-blue-600 px-2 py-0.5 text-xs">
                         <Loader2 className="h-3 w-3 animate-spin" />
-                        Thinking
+                        {t('think')}
                     </span>
                 </div>
             )}
-            {/* <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between">
                 <h5 className="text-lg font-medium">
-                    Presentation Outline
+                    {t('presentationOutline')}
                 </h5>
                 {isStreaming && (
                     <div className="flex items-center text-sm text-blue-600">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                        Generating outlines...
+                        {t('generatingOutline')}
                     </div>
                 )}
-            </div> */}
+            </div>
             {/* Skeleton loading state */}
             {isLoading && (
                 <div className="space-y-4">
@@ -98,20 +100,21 @@ const OutlineContent: React.FC<OutlineContentProps> = ({
                         collisionDetection={closestCenter}
                         onDragEnd={onDragEnd}
                     >
-                        {isStreaming ? (
-
-                           outlines.map((item, index) => (
-                            <OutlineItem
-                                key={`slide-${index}`}
-                                index={index + 1}
-                                slideOutline={item}
-                                isStreaming={isStreaming}
-                                isActiveStreaming={activeSlideIndex === index}
-                                isStableStreaming={highestActiveIndex >= 0 && index < highestActiveIndex}
-                            />
-                        ))
-                        ) :
-                            <SortableContext
+                        {isStreaming ? 
+                        (
+                            outlines.map((item, index) => (
+                                <OutlineItem
+                                    key={`slide-${index}`}
+                                    index={index + 1}
+                                    slideOutline={item}
+                                    isStreaming={isStreaming}
+                                    isActiveStreaming={activeSlideIndex === index}
+                                    isStableStreaming={highestActiveIndex >= 0 && index < highestActiveIndex}
+                                />
+                            ))
+                        )
+                        :
+                        <SortableContext
                             items={outlines?.map((item, index) => ({ id: `slide-${index}` })) || []}
                             strategy={verticalListSortingStrategy}
                         >
@@ -137,7 +140,7 @@ const OutlineContent: React.FC<OutlineContentProps> = ({
                         disabled={isLoading || isStreaming}
                         className="w-full my-4 text-blue-600 border-blue-200"
                     >
-                        + Add Slide
+                        + {t('addSlide')}
                     </Button>
                 </div>
             )}
@@ -155,7 +158,7 @@ const OutlineContent: React.FC<OutlineContentProps> = ({
                         }}
                         className="text-blue-600 border-blue-200"
                     >
-                        + Add First Slide
+                        + {t('addFirstSlide')}
                     </Button>
                 </div>
             )}

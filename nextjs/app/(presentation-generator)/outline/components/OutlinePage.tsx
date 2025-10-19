@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
@@ -20,6 +21,7 @@ import ModelSelection from "./ModelSelection";
 import { ImageModelType } from "./ModelSelection";
 
 const OutlinePage: React.FC = () => {
+  const { t } = useTranslation('outline');
   const { presentation_id, outlines } = useSelector(
     (state: RootState) => state.presentationGeneration
   );
@@ -57,9 +59,9 @@ const OutlinePage: React.FC = () => {
         <div className="flex-grow overflow-y-hidden w-full max-w-[1200px] mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
             <TabsList className="grid w-fit md:w-[75%] mx-auto my-4 grid-cols-3">
-              <TabsTrigger value={TABS.OUTLINE}>Outline & Content</TabsTrigger>
-              <TabsTrigger value={TABS.LAYOUTS}>Select Template</TabsTrigger>
-              <TabsTrigger value={TABS.MODELS}>Select Models</TabsTrigger>
+              <TabsTrigger value={TABS.OUTLINE}>{t('outlineContent')}</TabsTrigger>
+              <TabsTrigger value={TABS.LAYOUTS}>{t('selectTemplates')}</TabsTrigger>
+              <TabsTrigger value={TABS.MODELS}>{t('selectModels')}</TabsTrigger>
             </TabsList>
 
             <div className="flex-grow w-full mx-auto flex flex-col overflow-y-hidden">

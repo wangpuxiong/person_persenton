@@ -27,6 +27,7 @@ import { usePathname } from 'next/navigation'
 import { trackEvent, MixpanelEvent } from '@/utils/mixpanel'
 import NewSlide from '../../components/NewSlide'
 import { addToHistory } from '@/store/slices/undoRedoSlice'
+import { useTranslation } from 'react-i18next'
 
 interface SlideContentProps {
 	slide: any
@@ -36,6 +37,7 @@ interface SlideContentProps {
 
 const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 	const dispatch = useDispatch()
+	const { t } = useTranslation('presentation')
 	const [isUpdating, setIsUpdating] = useState(false)
 	const [showNewSlideSelection, setShowNewSlideSelection] = useState(false)
 	const { presentationData, isStreaming } = useSelector(
@@ -54,7 +56,7 @@ const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 		) as HTMLInputElement
 		const value = element?.value
 		if (!value?.trim()) {
-			toast.error('Please enter a prompt before submitting')
+			toast.error(t('slideContent.enter_prompt_before_submitting'))
 			return
 		}
 		setIsUpdating(true)
@@ -68,12 +70,12 @@ const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 
 			if (response) {
 				dispatch(updateSlide({ index: slide.index, slide: response }))
-				toast.success('Slide updated successfully')
+				toast.success(t('slideContent.slide_updated_successfully'))
 			}
 		} catch (error: any) {
 			console.error('Error in slide editing:', error)
-			toast.error('Error in slide editing.', {
-				description: error.message || 'Error in slide editing.',
+			toast.error(t('slideContent.error_in_slide_editing'), {
+				description: error.message || t('slideContent.error_in_slide_editing'),
 			})
 		} finally {
 			setIsUpdating(false)
@@ -92,8 +94,8 @@ const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 			dispatch(deletePresentationSlide(slide.index))
 		} catch (error: any) {
 			console.error('Error deleting slide:', error)
-			toast.error('Error deleting slide.', {
-				description: error.message || 'Error deleting slide.',
+			toast.error(t('slideContent.error_deleting_slide'), {
+				description: error.message || t('slideContent.error_deleting_slide'),
 			})
 		}
 	}
@@ -207,7 +209,7 @@ const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 
 					{!showNewSlideSelection && (
 						<div className="group-hover:opacity-100 hidden md:block opacity-0 transition-opacity my-4 duration-300">
-							<ToolTip content="Add new slide below">
+							<ToolTip content={t('slideContent.add_new_slide_below')}>
 								{!isStreaming && !loading && (
 									<div
 										onClick={() => {
@@ -235,7 +237,7 @@ const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 					)}
 
 					{!isStreaming && !loading && (
-						<ToolTip content="Delete slide">
+						<ToolTip content={t('slideContent.delete_slide')}>
 							<div
 								onClick={() => {
 									trackEvent(MixpanelEvent.Slide_Delete_Slide_Button_Clicked, {
@@ -253,7 +255,7 @@ const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 						<div className="absolute top-2 z-20 sm:top-4 hidden md:block left-2 sm:left-4 transition-transform">
 							<Popover>
 								<PopoverTrigger>
-									<ToolTip content="Update slide using prompt">
+									<ToolTip content={t('slideContent.update_slide_using_prompt')}>
 										<div
 											className={`p-2 group-hover:scale-105 rounded-lg bg-[#5141e5] hover:shadow-md transition-all duration-300 cursor-pointer shadow-md `}
 										>
@@ -277,7 +279,7 @@ const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 										>
 											<Textarea
 												id={`slide-${slide.index}-prompt`}
-												placeholder="Enter your prompt here..."
+												placeholder={t('slideContent.enter_your_prompt_here')}
 												className="w-full min-h-[100px] max-h-[100px] p-2 text-sm border rounded-lg focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
 												disabled={isUpdating}
 												onKeyDown={(e) => {
@@ -302,7 +304,7 @@ const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 													)
 												}}
 											>
-												{isUpdating ? 'Updating...' : 'Update'}
+												{isUpdating ? t('slideContent.updating') : t('slideContent.update')}
 												<SendHorizontal className="w-4 sm:w-5 h-4 sm:h-5" />
 											</button>
 										</form>
@@ -317,7 +319,7 @@ const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 							<Popover>
 								<PopoverTrigger asChild>
 									<div className=" cursor-pointer ">
-										<ToolTip content="Show speaker notes">
+										<ToolTip content={t('slideContent.show_speaker_notes')}>
 											<StickyNote className="text-xl text-gray-500" />
 										</ToolTip>
 									</div>
@@ -330,7 +332,7 @@ const SlideContent = ({ slide, index, presentationId }: SlideContentProps) => {
 								>
 									<div className="space-y-2">
 										<p className="text-xs font-semibold text-gray-600">
-											Speaker notes
+											{t('slideContent.speaker_notes')}
 										</p>
 										<div className="text-sm text-gray-800 whitespace-pre-wrap max-h-64 overflow-auto">
 											{slide.speaker_note}

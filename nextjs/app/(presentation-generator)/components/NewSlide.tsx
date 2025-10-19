@@ -6,6 +6,7 @@ import { useLayout, FullDataInfo } from "../context/LayoutContext";
 import { v4 as uuidv4 } from "uuid";
 import { Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from "next-i18next";
 interface NewSlideProps {
   setShowNewSlideSelection: (show: boolean) => void;
   templateID: string;
@@ -19,6 +20,7 @@ const NewSlide = ({
   presentationId,
 }: NewSlideProps) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation('component')
   const handleNewSlide = (sampleData: any, id: string) => {
     try {
       const newSlide = {
@@ -33,7 +35,7 @@ const NewSlide = ({
       setShowNewSlideSelection(false);
     } catch (error: any) {
       console.error(error);
-      toast.error("Error adding new slide");
+      toast.error(t('new_slide.error'));
     }
   };
   const { getFullDataByTemplateID, loading } = useLayout();
@@ -43,7 +45,7 @@ const NewSlide = ({
     return (
       <div className="my-6 w-full bg-gray-50 p-8 max-w-[1280px]">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-semibold">Select a Slide Layout</h2>
+          <h2 className="text-2xl font-semibold">{t('new_slide.title')}</h2>
           <Trash2
             onClick={() => setShowNewSlideSelection(false)}
             className="text-gray-500 text-2xl cursor-pointer"
@@ -59,7 +61,7 @@ const NewSlide = ({
   return (
     <div className="my-6 w-full bg-gray-50 p-8 max-w-[1280px]">
       <div className="flex justify-between items-center  mb-8">
-        <h2 className="text-2xl font-semibold">Select a Slide Layout</h2>
+        <h2 className="text-2xl font-semibold">{t('new_slide.title')}</h2>
         <Trash2
           onClick={() => setShowNewSlideSelection(false)}
           className="text-gray-500 text-2xl cursor-pointer"

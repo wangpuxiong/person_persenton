@@ -1,4 +1,6 @@
+'use client'
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { ModelOption, MODEL_OPTIONS } from "../../upload/type";
@@ -31,7 +33,8 @@ const ModelSelection: React.FC<ModelSelectionProps> = ({
   selectedImageModel,
   onSelectImageModel
 }) => {
-  // 查找默认的 PPT 生成模型，这里假设 MODEL_OPTIONS 中存在 gpt 4.1
+  const { t } = useTranslation('outline');
+  // 查找默认的 PPT 生成模型
   const DEFAULT_PPT_MODEL = MODEL_OPTIONS.find(model => model.name === 'gpt-4.1');
   // 默认的图像生成模型
   const DEFAULT_IMAGE_MODEL = IMAGE_MODEL_OPTIONS.find(model => model.name === 'gemini-2.5-flash-image-preview');
@@ -50,8 +53,7 @@ const ModelSelection: React.FC<ModelSelectionProps> = ({
     <div className="space-y-8 mb-4 p-6">
       {/* PPT 生成模型选择 */}
       <div className="p-6 bg-blue-50 rounded-lg border border-blue-100">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Presentation Generation Model</h3>
-        <p className="text-sm text-gray-600 mb-4">Choose the AI model that will generate the content for your presentation.</p>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('selectModelWillBeUsedToGeneratePresentation')}</h3>
         <RadioGroup 
           value={selectedPptModel ? JSON.stringify(selectedPptModel) : ''} 
           onValueChange={(value) => onSelectPptModel(JSON.parse(value))} 
@@ -77,8 +79,7 @@ const ModelSelection: React.FC<ModelSelectionProps> = ({
 
       {/* 图像生成模型选择 */}
       <div className="p-6 bg-blue-50 rounded-lg border border-blue-100">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Image Generation Model</h3>
-        <p className="text-sm text-gray-600 mb-4">Choose the AI model that will generate images for your presentation slides.</p>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('selectModelWillBeUsedToGenerateImage')}</h3>
         <RadioGroup 
           value={selectedImageModel ? JSON.stringify(selectedImageModel) : ''} 
           onValueChange={(value) => onSelectImageModel(JSON.parse(value))} 
@@ -105,8 +106,10 @@ const ModelSelection: React.FC<ModelSelectionProps> = ({
       {/* 提示信息 */}
       <div className="mt-8 p-4 bg-amber-50 rounded-lg border border-amber-100">
         <p className="text-sm text-gray-700">
-          <strong>Note:</strong> The selected models will be used to generate your presentation content and images. 
-          Different models may produce different results in terms of quality, style, and processing time.
+          <strong>{t('note')}</strong> {t('selectModelNote')}
+        </p>
+        <p className="text-sm text-gray-700">
+          {t('selectModelNoteForImage')}
         </p>
       </div>
     </div>

@@ -1,0 +1,105 @@
+{
+    "no_presentation_id_found": "No presentation id found",
+    "please_try_again": "Please try again",
+    "go_to_home": "Go to home",
+    "retry": "Retry",
+    "refresh_page": "Refresh Page",
+    "we_couldnt_load_your_presentation_please_try_again": "We couldn't load your presentation. Please try again.",
+    "something_went_wrong": "Something went wrong",
+    "failed_to_load_presentation": "Failed to load presentation",
+    "error_in_outline_streaming": "Error in outline streaming",
+    "failed_to_connect_to_server_please_try_again": "Failed to connect to the server. Please try again.",
+    "loading": {
+        "loading_state.1": "We're crafting your presentation with AI magic ✨",
+        "loading_state.2": "Analyzing your content for perfect slides 📊",
+        "loading_state.3": "Organizing information for maximum impact 🎯",
+        "loading_state.4": "Adding visual elements to engage your audience 🎨",
+        "loading_state.5": "Almost there! Putting final touches ⚡️",
+        "create_presentation": "Creating Your Presentation"
+    },
+    "sidePanel": {
+        "image_preview": "Image Preview",
+        "list_preview": "List Preview",
+        "open_panel": "Open Panel",
+        "show_panel": "Show Panel"
+    },
+    "slideContent": {
+        "enter_prompt_before_submitting": "Please enter a prompt before submitting",
+        "slide_updated_successfully": "Slide updated successfully",
+        "error_in_slide_editing": "Error in slide editing",
+        "error_deleting_slide": "Error deleting slide",
+        "add_new_slide_below": "Add new slide below",
+        "delete_slide": "Delete slide",
+        "update_slide_using_prompt": "Update slide using prompt",
+        "enter_your_prompt_here": "Enter your prompt here...",
+        "updating": "Updating...",
+        "update": "Update",
+        "show_speaker_notes": "Show speaker notes",
+        "speaker_notes": "Speaker notes"
+    },
+    "help": {
+        "title": "Help Center",
+        "clear_search": "Clear search",
+        "no_results": "No results found for \"{{searchQuery}}\"",
+        "search_placeholder": "Search help topics...",
+        "category": {
+            "All": "All",
+            "Images": "Images",
+            "AI Prompts": "AI Prompts",
+            "Text": "Text",
+            "Icons": "Icons",
+            "Layout": "Layout",
+            "Export": "Export"
+        },
+        "questions": {
+            "1": {
+                "question": "How do I change an image?",
+                "answer": "Click on any image to reveal the image toolbar. You'll see options to Edit, Adjust position, and change how the image fits within its container. The Edit option allows you to replace or modify the current image."
+            },
+            "2": {
+                "question": "Can I generate new images with AI?",
+                "answer": "Yes! Click on any image and select the Edit option from the toolbar. In the side panel that appears, you'll find the AI Generate tab. Enter your prompt describing the image you want, and our AI will generate an image based on your description."
+            },
+            "3": {
+                "question": "How do I upload my own images?",
+                "answer": "Click on any image, then select Edit from the toolbar. In the side panel, click on the Upload tab at the top. You can browse your files to select one. Once uploaded, you can apply it to your design."
+            },
+            "11": {
+                "question": "Can I change slide layout through prompt?",
+                "answer": "Yes you can! Click on the WandSparkles icon on the top left of each slide and it will give you a prompt input box. Describe your layout requirements and the AI will change the slide layout accordingly."
+            },
+            "12": {
+                "question": "Can I change slide image through prompt?",
+                "answer": "Yes you can! Click on the WandSparkles icon on the top left of each slide and it will give you a prompt input box. Describe the image you want and the AI will update the slide image based on your requirements."
+            },
+            "14": {
+                "question": "Can I change content through prompt?",
+                "answer": "Yes you can! Click on the WandSparkles icon on the top left of each slide and it will give you a prompt input box. Describe what content you want and the AI will update the slide's text and content based on your description."
+            },
+            "4": {
+                "question": "How can I format and highlight text?",
+                "answer": "Select any text to see the formatting toolbar appear. You'll have options for Bold, Italic, Underline, Strikethrough,and more."
+            },
+            "5": {
+                "question": "How do I change icons?",
+                "answer": "Click on any existing icon to modify it. In the icon selector panel, you can browse icos or use the search function to find specific icons. We offer thousands of icons in various styles."
+            },
+            "16": {
+                "question": "Can I change the position of slide?",
+                "answer": "Of course, On side panel you can drag the slide and place wherever you want."
+            },
+            "15": {
+                "question": "Can I add new slide between the slide?",
+                "answer": "Yes you can just click on the plus icon below each slide.It will display the all the layouts and choose required one."
+            },
+            "6": {
+                "question": "Can I add more sections to my slides?",
+                "answer": "Absolutely! Hover near the bottom of any text box or content block, and you'll see a + icon appear. Click this button to add a new section below the current one. You can also use the Insert menu to add specific section types."
+            },
+            "8": {
+                "question": "How do I download or export my presentation?",
+                "answer": "Click the Export button in the top right menu. You can choose to download as PDF, PowerPoint."
+            }
+        }
+    }
+}

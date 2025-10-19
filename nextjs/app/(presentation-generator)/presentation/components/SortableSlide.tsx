@@ -2,6 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Slide } from '../../types/slide';
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface SortableSlideProps {
     slide: Slide;
@@ -12,6 +13,7 @@ interface SortableSlideProps {
 }
 
 export function SortableSlide({ slide, index, selectedSlide, onSlideClick, renderSlideContent }: SortableSlideProps) {
+    const { t } = useTranslation('presentation');
     const lastClickTime = useRef(0);
 
     const {
@@ -62,4 +64,4 @@ export function SortableSlide({ slide, index, selectedSlide, onSlideClick, rende
             </div>
         </div>
     );
-} 
+}

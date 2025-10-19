@@ -7,6 +7,7 @@ import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 import Underline from "@tiptap/extension-underline";
+import { useTranslation } from "next-i18next";
 
 const extensions = [StarterKit, Markdown, Underline];
 
@@ -27,6 +28,7 @@ const TiptapTextReplacer: React.FC<TiptapTextReplacerProps> = ({
   slideIndex,
   onContentChange = () => {},
 }) => {
+  const { t } = useTranslation('component')
 
   
 
@@ -115,7 +117,7 @@ const TiptapTextReplacer: React.FC<TiptapTextReplacerProps> = ({
                 onContentChange(content, dataPath.path, slideIndex);
               }
             }}
-            placeholder="Enter text..."
+            placeholder={t('tiptap_text_replacer.placeholder')}
           />
         );
       });
@@ -143,7 +145,7 @@ const TiptapTextReplacer: React.FC<TiptapTextReplacerProps> = ({
               onContentChange(content, dataPath, slideIndex);
             }
           }}
-          placeholder="Enter text..."
+          placeholder={t('tiptap_text_replacer.placeholder')}
         />
       );
     });

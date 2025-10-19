@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
 
 const HeaderNav = () => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('component')
   
   const canChangeKeys = useSelector((state: RootState) => state.userConfig.can_change_keys);
   const pathname = usePathname();
@@ -25,7 +25,7 @@ const HeaderNav = () => {
       >
         <PresentationIcon className="w-5 h-5" />
         <span className="text-sm font-medium font-inter">
-          {t('nav.upload') || 'Upload'}
+          {t('header_nav.upload') || 'Create New PPT'}
         </span>
       </Link>
       <Link
@@ -37,7 +37,7 @@ const HeaderNav = () => {
       >
         <LayoutDashboard className="w-5 h-5" />
         <span className="text-sm font-medium font-inter">
-          {t('nav.dashboard') || 'Dashboard'}
+          {t('header_nav.dashboard') || 'Dashboard'}
         </span>
       </Link>
       {/* Settings 链接已被屏蔽 */}

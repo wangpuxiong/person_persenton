@@ -1,0 +1,80 @@
+{
+    "header_nav": {
+        "upload": "Create New PPT",
+        "dashboard": "Dashboard"
+    },
+    "icons_editor": {
+        "title": "Choose Icon",
+        "search_placeholder": "Search icons...",
+        "search_button": "Search",
+        "no_results": "No icons found for your search.",
+        "refine_search": "Try refining your search query."
+    },
+    "image_editor": {
+        "title": "Update Image",
+        "tabs": {
+            "generate": "AI Generate",
+            "upload": "Upload",
+            "edit": "Edit"
+        },
+        "error": "Failed to generate image. Please try again.",
+        "get_previous_error": "Failed to get previous generated images. Please try again.",
+        "upload_failed": "Failed to upload image. Please try again.",
+        "get_images_failed": "Failed to get uploaded images. Please try again.",
+        "delete_failed": "Failed to delete image. Please try again.",
+        "generate": {
+            "current_prompt": "Current Prompt",
+            "image_description": "Image Description",
+            "description_placeholder": "Describe the image you want to generate...",
+            "generate_button": "Generate Image",
+            "generating": "Generating...",
+            "previous_images": "Previous Generated Images",
+            "enter_prompt": "Please enter a prompt"
+        },
+        "upload": {
+            "click_to_upload": "Click to upload an image",
+            "uploading": "Uploading your image...",
+            "processing": "Processing...",
+            "file_size_limit": "Maximum file size: 5MB",
+            "uploaded_preview": "Uploaded Image Preview",
+            "click_to_use": "Click to use this image",
+            "use": "Use",
+            "uploaded_images": "Uploaded Images:",
+            "file_too_large": "File size should be less than 5MB",
+            "invalid_file_type": "Please upload an image file",
+            "uploaded_image_preview": "Uploaded Image Preview"
+        },
+        "edit": {
+            "current_image": "Current Image",
+            "change_focus_point": "Click to Change Focus Point",
+            "set_focus_point": "Click anywhere to set focus point",
+            "done": "Done",
+            "object_fit": "Object Fit",
+            "cover": "Cover",
+            "contain": "Contain",
+            "fill": "Fill"
+        }
+    },
+    "markdown_editor": {
+        "placeholder": "Enter markdown content here..."
+    },
+    "new_slide": {
+        "title": "Select a Slide Layout",
+        "error": "Error adding new slide"
+    },
+    "slide_error_boundary": {
+        "error_label": "{label} render error",
+        "error_default": "Slide render error"
+    },
+    "tiptap_text": {
+        "placeholder": "Enter text...",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "strikethrough": "Strikethrough",
+        "code": "Code"
+    },
+    "tiptap_text_replacer": {
+        "placeholder": "Enter text..."
+    }
+}

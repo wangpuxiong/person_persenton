@@ -439,7 +439,7 @@ export const LayoutProvider: React.FC<{
               i.layout_name.replace(/([A-Z])/g, " $1").trim();
             const layoutDescription =
               (module && (module as any).layoutDescription) ||
-              `${layoutName} layout for presentations`;
+              t('layout.layoutForPresentations', { layoutName });
 
             let fullData: FullDataInfo | null = null;
             let jsonSchema: any = null;
@@ -449,15 +449,15 @@ export const LayoutProvider: React.FC<{
             // Validate exports
             if (!module || !(module as any).default) {
               const errorComp = createErrorComponent(
-                `Invalid export in ${i.layout_name}`,
-                "Default export not found. Please export a default React component."
+                t('layout.error.invalidExport', { layoutName: i.layout_name }),
+                t('layout.error.defaultExportNotFound')
               );
               componentToUse = errorComp;
               jsonSchema = {};
             } else if (!(module as any).Schema) {
               const errorComp = createErrorComponent(
-                `Schema missing in ${i.layout_name}`,
-                "Schema export not found. Please export a Zod Schema as 'Schema'."
+                t('layout.error.schemaMissing', { layoutName: i.layout_name }),
+                t('layout.error.schemaExportNotFound')
               );
               componentToUse = errorComp;
               jsonSchema = {};
@@ -481,7 +481,7 @@ export const LayoutProvider: React.FC<{
                 });
               } catch (schemaErr: any) {
                 const errorComp = createErrorComponent(
-                  `Schema generation failed for ${i.layout_name}`,
+                  t('layout.error.schemaGenerationFailed', { layoutName: i.layout_name }),
                   schemaErr?.message || String(schemaErr)
                 );
                 componentToUse = errorComp;
@@ -496,7 +496,7 @@ export const LayoutProvider: React.FC<{
                   sampleData = (module as any).Schema.parse({});
                 } catch (parseErr: any) {
                   const errorComp = createErrorComponent(
-                    `Schema.parse failed for ${i.layout_name}`,
+                    t('layout.error.schemaParseFailed', { layoutName: i.layout_name }),
                     parseErr?.message || String(parseErr)
                   );
                   componentToUse = errorComp;
@@ -542,14 +542,14 @@ export const LayoutProvider: React.FC<{
             const uniqueKey = `${`custom-${presentationId}`}:${i.layout_name.toLowerCase().replace(/layout$/, "")}`;
             const layoutName = i.layout_name.replace(/([A-Z])/g, " $1").trim();
             const errorComp = createErrorComponent(
-              `Compilation error in ${i.layout_name}`,
+              t('layout.error.compilationError', { layoutName: i.layout_name }),
               e?.message || String(e)
             );
 
             const layout: LayoutInfo = {
               id: uniqueKey,
               name: layoutName,
-              description: `Failed to compile ${i.layout_name}`,
+              description: t('layout.error.failedToCompile', { layoutName: i.layout_name }),
               json_schema: {},
               templateID: templateID,
               templateName: templateName,
@@ -706,9 +706,10 @@ export const LayoutProvider: React.FC<{
 };
 
 export const useLayout = (): LayoutContextType => {
-  const context = useContext(LayoutContext);
-  if (context === undefined) {
-    throw new Error("useLayout must be used within a LayoutProvider");
-  }
-  return context;
-};
+    const { t } = useTranslation('common');
+    const context = useContext(LayoutContext);
+    if (context === undefined) {
+      throw new Error(t('layout.error.useLayoutWithinProvider'));
+    }
+    return context;
+  };

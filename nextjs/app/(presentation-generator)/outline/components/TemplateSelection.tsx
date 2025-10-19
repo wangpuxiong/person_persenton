@@ -1,4 +1,6 @@
+'use client'
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useLayout } from "../../context/LayoutContext";
 import TemplateLayouts from "./TemplateLayouts";
 
@@ -14,6 +16,7 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
   selectedTemplate,
   onSelectTemplate
 }) => {
+  const { t } = useTranslation('outline');
   const {
     getLayoutsByTemplateID,
     getTemplateSetting,
@@ -148,10 +151,10 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
       <div className="space-y-6">
         <div className="text-center py-8">
           <h5 className="text-lg font-medium mb-2 text-gray-700">
-            No Templates Available
+            {t('noTemplatesAvailable')}
           </h5>
           <p className="text-gray-600 text-sm">
-            No presentation templates could be loaded. Please try refreshing the page.
+            {t('noTemplatesAvailableDescription')}
           </p>
         </div>
       </div>
@@ -170,7 +173,7 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
     <div className="space-y-8 mb-4">
       {/* In Built Templates */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">In Built Templates</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('inBuiltTemplates')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {inBuiltTemplates.map((template) => (
             <TemplateLayouts
@@ -186,7 +189,7 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
       {/* Official AI Templates */}
       {officialTemplates.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">Official AI Templates</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('officialAITemplates')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {officialTemplates.map((template) => (
               <TemplateLayouts
@@ -203,11 +206,11 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
       {/* User Custom AI Templates */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900">Your Custom Templates</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('userCustomAITemplates')}</h3>
         </div>
         {userCustomTemplates.length === 0 ? (
           <div className="text-sm text-gray-600 py-2">
-            No custom templates. Create one from "All Templates" menu.
+            {t('noCustomTemplates')} {t('createOneFromAllTemplatesMenu')}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -87,23 +87,20 @@ const Header = ({
 			trackEvent(MixpanelEvent.Header_GetPptxModel_API_Call)
 			const pptx_model = await get_presentation_pptx_model(presentation_id)
 			if (!pptx_model) {
-				throw new Error('Failed to get presentation PPTX model')
+				throw new Error(t('header.failedToGetPPT'))
 			}
 			trackEvent(MixpanelEvent.Header_ExportAsPPTX_API_Call)
 			const pptx_path = await PresentationGenerationApi.exportAsPPTX(pptx_model)
-			console.log('PPTX path:', pptx_path)
 			if (pptx_path) {
-				// window.open(pptx_path, '_self');
 				downloadLink(pptx_path)
 			} else {
-				throw new Error('No path returned from export')
+				throw new Error(t('header.noPathReturn'))
 			}
 		} catch (error) {
 			console.error('Export failed:', error)
 			setShowLoader(false)
-			toast.error('Having trouble exporting!', {
-				description:
-					'We are having trouble exporting your presentation. Please try again.',
+			toast.error(t('header.havingTrouble'), {
+				description:t('header.havingTroubleDesc'),
 			})
 		} finally {
 			setShowLoader(false)
@@ -136,13 +133,12 @@ const Header = ({
 				// window.open(pdfPath, '_blank');
 				downloadLink(pdfPath)
 			} else {
-				throw new Error('Failed to export PDF')
+				throw new Error(t('header.failedToExportPDF'))
 			}
 		} catch (err) {
 			console.error(err)
-			toast.error('Having trouble exporting!', {
-				description:
-					'We are having trouble exporting your presentation. Please try again.',
+			toast.error(t('header.havingTrouble'), {
+				description:t('header.havingTroubleDesc'),
 			})
 		} finally {
 			setShowLoader(false)
@@ -154,18 +150,6 @@ const Header = ({
 		trackEvent(MixpanelEvent.Header_ReGenerate_Button_Clicked, { pathname })
 		router.push(`/presentation?id=${presentation_id}&stream=true`)
 	}
-	// const downloadLink = (path: string) => {
-	//   // if we have popup access give direct download if not redirect to the path
-	//   if (window.opener) {
-	//     window.open(path, '_blank');
-	//   } else {
-	//     const link = document.createElement('a');
-	//     link.href = path;
-	//     link.download = path.split('/').pop() || 'download';
-	//     document.body.appendChild(link);
-	//     link.click();
-	//   }
-	// };
 
 	const downloadLink = (path: string) => {
 		try {
@@ -198,8 +182,8 @@ const Header = ({
 		} catch (error) {
 			console.error('Download failed:', error)
 			// 作为最后的备选方案，在出现问题时通知用户
-			toast.info('Please click the download link in the new tab', {
-				description: 'Your file is ready for download',
+			toast.info(t('header.clickDownloadLink'), {
+				description: t('header.downloadReady'),
 			})
 			// 在新标签页打开，但添加noopener noreferrer以提高安全性
 			window.open(path, '_blank', 'noopener,noreferrer')
@@ -223,7 +207,7 @@ const Header = ({
 				}`}
 			>
 				<Image src={PDFIMAGE} alt="pdf export" width={30} height={30} />
-				{t('nav.exportAsPDF') || 'Export as PDF'}
+				{t('nav.exportAsPDF')}
 			</Button>
 			<Button
 				onClick={() => {
@@ -238,7 +222,7 @@ const Header = ({
 				}`}
 			>
 				<Image src={PPTXIMAGE} alt="pptx export" width={30} height={30} />
-				{t('nav.exportAsPPTX') || 'Export as PPTX'}
+				{t('nav.exportAsPPTX')}
 			</Button>
 		</div>
 	)
@@ -251,7 +235,7 @@ const Header = ({
 				disabled={isStreaming || !presentationData}
 				className="text-white  disabled:opacity-50"
 			>
-				{t('nav.reGenerate') || 'Re-Generate'}
+				{t('nav.reGenerate')}
 			</button>
 			<div className="flex items-center gap-2 ">
 				<ToolTip content="Undo">
@@ -291,7 +275,7 @@ const Header = ({
 				className="border border-white font-bold text-white rounded-[32px] transition-all duration-300 group"
 			>
 				<Play className="w-4 h-4 mr-1 stroke-white group-hover:stroke-black" />
-				{t('nav.present') || 'Present'}
+				{t('nav.present')}
 			</Button>
 
 			{/* Desktop Export Button with Popover */}
@@ -310,7 +294,7 @@ const Header = ({
 							}`}
 						>
 							<SquareArrowOutUpRight className="w-4 h-4 mr-1" />
-							{t('button.export') || 'Export'}
+							{t('button.export')}
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent
@@ -335,7 +319,7 @@ const Header = ({
 		<>
 			<OverlayLoader
 				show={showLoader}
-				text="Exporting presentation..."
+				text={t('header.exportingPresentation')}
 				showProgress={true}
 				duration={40}
 			/>
@@ -345,7 +329,6 @@ const Header = ({
 					<div 
 						className="flex items-center gap-2 p-2 rounded-lg cursor-pointer group" 
 						onClick={() => {
-							console.log("presentation-env>>", process.env)
 							if (process.env.NEXT_PUBLIC_COMPAREGPT_CHAT_URL) {
 								window.location.assign(process.env.NEXT_PUBLIC_COMPAREGPT_CHAT_URL);
 							} else {
@@ -422,7 +405,7 @@ const Header = ({
 								fill="currentColor"
 							/>
 						</svg>
-						{t('nav.exportAsPDF') || 'Export as PDF'}
+						{t('nav.exportAsPDF')}
 					</Button>
 					<Button
 						onClick={() => {
@@ -450,7 +433,7 @@ const Header = ({
 								fill="currentColor"
 							/>
 						</svg>
-						{t('nav.exportAsPPTX') || 'Export as PPTX'}
+						{t('nav.exportAsPPTX')}
 					</Button>
 
 					<Link
@@ -466,7 +449,7 @@ const Header = ({
 						}
 					>
 						<LayoutDashboard className="w-5 h-5" />
-						<span className="text-sm font-medium font-inter">{t('nav.dashboard') || 'Dashboard'}</span>
+						<span className="text-sm font-medium font-inter">{t('nav.dashboard')}</span>
 					</Link>
 					<div className="px-3 py-2 border-t border-gray-100">
 						<LanguageSelector />

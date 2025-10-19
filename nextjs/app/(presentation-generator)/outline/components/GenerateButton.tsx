@@ -1,4 +1,6 @@
+'use client'
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { usePathname } from "next/navigation";
 import { MixpanelEvent, trackEvent } from "@/utils/mixpanel";
 import { Button } from "@/components/ui/button";
@@ -25,6 +27,7 @@ const GenerateButton: React.FC<GenerateButtonProps> = ({
     outlineCount,
     onSubmit
 }) => {
+    const { t } = useTranslation('outline');
     const pathname = usePathname();
 
     const isDisabled =
@@ -34,10 +37,10 @@ const GenerateButton: React.FC<GenerateButtonProps> = ({
 
     const getButtonText = () => {
         if (loadingState.isLoading) return loadingState.message;
-        if (streamState.isLoading || streamState.isStreaming) return "Generating Outline...";
-        if (!selectedTemplate) return "Select a Template";
-        if (!selectedPptModel || !selectedImageModel) return "Select the Model to be used";
-        return "Generate Presentation";
+        if (streamState.isLoading || streamState.isStreaming) return t("generatingOutline");
+        if (!selectedTemplate) return t("selectATemplate");
+        if (!selectedPptModel || !selectedImageModel) return t("selectTheModelToBeUsed");
+        return t("generatePresentation");
     };
 
     return (

@@ -1,3 +1,5 @@
+'use client'
+import { useTranslation } from "react-i18next"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { Trash2 } from "lucide-react"
@@ -27,6 +29,7 @@ export function OutlineItem({
     isActiveStreaming = false,
     isStableStreaming = false,
 }: OutlineItemProps) {
+    const { t } = useTranslation('outline')
     const {
         outlines,
     } = useSelector((state: RootState) => state.presentationGeneration);
@@ -169,7 +172,7 @@ export function OutlineItem({
                 {/* Action Buttons */}
                 <div className="flex gap-1 sm:gap-2 items-center">
 
-                    <ToolTip content="Delete Slide">
+                    <ToolTip content={t('deleteSlide')}>
                         <button
                             onClick={handleSlideDelete}
                             className="p-1.5 sm:p-2 bg-gray-200/50 hover:bg-gray-200 rounded-lg transition-colors"

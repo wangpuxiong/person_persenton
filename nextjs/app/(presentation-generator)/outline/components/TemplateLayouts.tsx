@@ -1,11 +1,12 @@
+'use client'
 import { CheckCircle } from "lucide-react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { usePathname } from "next/navigation";
 import { trackEvent, MixpanelEvent } from "@/utils/mixpanel";
 import { Template } from "../types/index";
 import { useLayout } from "../../context/LayoutContext";
 import { useFontLoader } from "../../hooks/useFontLoader";
-import { log } from "console";
 interface TemplateLayoutsProps {
   template: Template;
   onSelectTemplate: (template: Template) => void;
@@ -17,6 +18,7 @@ const TemplateLayouts: React.FC<TemplateLayoutsProps> = ({
   onSelectTemplate,
   selectedTemplate,
 }) => {
+  const { t } = useTranslation('template');
   const { getFullDataByTemplateID, getCustomTemplateFonts } = useLayout();
   const layoutTemplate = getFullDataByTemplateID(template.id);
   const fonts = getCustomTemplateFonts(template.id.split("custom-")[1]);
@@ -41,9 +43,9 @@ const TemplateLayouts: React.FC<TemplateLayoutsProps> = ({
 
       <div className="mb-3 ">
         <h6 className="text-base capitalize font-medium text-gray-900 mb-1">
-          {template.name}
+          {t(template.name)}
         </h6>
-        <p className="text-sm text-gray-600">{template.description}</p>
+        <p className="text-sm text-gray-600">{t(template.description)}</p>
       </div>
 
       {/* Layout previews */}
@@ -71,14 +73,14 @@ const TemplateLayouts: React.FC<TemplateLayoutsProps> = ({
       </div>
 
       <div className="flex items-center justify-between text-sm text-gray-500">
-        <span>{layoutTemplate?.length} layouts</span>
+        <span>{layoutTemplate?.length} {t('layouts')}</span>
         <span
           className={`px-2 py-1 rounded text-xs ${template.ordered
             ? "bg-gray-100 text-gray-700"
             : "bg-blue-100 text-blue-700"
             }`}
         >
-          {template.ordered ? "Structured" : "Flexible"}
+          {template.ordered ? t('structured') : t('flexible')}
         </span>
       </div>
     </div>

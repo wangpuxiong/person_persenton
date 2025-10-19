@@ -1,5 +1,6 @@
 "use client";
 import React, {  useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -26,6 +27,7 @@ import { usePresentationUndoRedo } from "../hooks/PresentationUndoRedo";
 const PresentationPage: React.FC<PresentationPageProps> = ({
   presentation_id,
 }) => {
+  const { t } = useTranslation("presentation");
   const pathname = usePathname();
   // State management
   const [loading, setLoading] = useState(true);
@@ -84,11 +86,11 @@ const PresentationPage: React.FC<PresentationPageProps> = ({
 
   useEffect(() => {
     if(!loading && !isStreaming && presentationData?.slides && presentationData?.slides.length > 0){  
-      const presentation_id = presentationData?.slides[0].layout.split(":")[0].split("custom-")[1];
-    const fonts = getCustomTemplateFonts(presentation_id);
-  
-    useFontLoader(fonts || []);
-  }
+      const templateId = presentationData?.slides[0].layout.split(":")[0].split("custom-")[1];
+      const fonts = getCustomTemplateFonts(templateId);
+    
+      useFontLoader(fonts || []);
+    }
   }, [presentationData,loading,isStreaming]);
   // Presentation Mode View
   if (isPresentMode) {
@@ -112,11 +114,11 @@ const PresentationPage: React.FC<PresentationPageProps> = ({
           role="alert"
         >
           <AlertCircle className="w-16 h-16 mb-4 text-red-500" />
-          <h2 className="text-xl font-semibold mb-2">Something went wrong</h2>
+          <h2 className="text-xl font-semibold mb-2">{t("something_went_wrong")}</h2>
           <p className="text-center mb-4">
-            We couldn't load your presentation. Please try again.
+            {t("we_couldnt_load_your_presentation_please_try_again")}
           </p>
-          <Button className="bg-indigo-600 text-white hover:bg-indigo-500" onClick={() => { trackEvent(MixpanelEvent.PresentationPage_Refresh_Page_Button_Clicked, { pathname }); window.location.reload(); }}>Refresh Page</Button>
+          <Button className="bg-indigo-600 text-white hover:bg-indigo-500" onClick={() => { trackEvent(MixpanelEvent.PresentationPage_Refresh_Page_Button_Clicked, { pathname }); window.location.reload(); }}>{t("refresh_page")}</Button>
         </div>
       </div>
     );

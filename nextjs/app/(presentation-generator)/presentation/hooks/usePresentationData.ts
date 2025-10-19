@@ -1,4 +1,6 @@
+'use client'
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import { setPresentationData } from "@/store/slices/presentationGeneration";
@@ -11,6 +13,7 @@ export const usePresentationData = (
   setLoading: (loading: boolean) => void,
   setError: (error: boolean) => void
 ) => {
+  const { t } = useTranslation("presentation");
   const dispatch = useDispatch();
 
   const fetchUserSlides = useCallback(async () => {
@@ -23,11 +26,11 @@ export const usePresentationData = (
       }
     } catch (error) {
       setError(true);
-      toast.error("Failed to load presentation");
+      toast.error(t('failed_to_load_presentation'));
       console.error("Error fetching user slides:", error);
       setLoading(false);
     }
-  }, [presentationId, dispatch, setLoading, setError]);
+  }, [presentationId, dispatch, setLoading, setError, t]);
 
   return {
     fetchUserSlides,

@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
+import { withTranslation } from "next-i18next";
 
 interface SlideErrorBoundaryProps {
   children: React.ReactNode;
   label?: string;
+  t: (key: string, options?: any) => string;
 }
 
 interface SlideErrorBoundaryState {
@@ -12,7 +14,7 @@ interface SlideErrorBoundaryState {
   errorMessage: string;
 }
 
-export class SlideErrorBoundary extends React.Component<
+class SlideErrorBoundaryComponent extends React.Component<
   SlideErrorBoundaryProps,
   SlideErrorBoundaryState
 > {
@@ -35,11 +37,13 @@ export class SlideErrorBoundary extends React.Component<
   }
 
   render() {
+    const { t, label } = this.props;
+    
     if (this.state.hasError) {
       return (
         <div className="aspect-video w-full h-full bg-red-50 text-red-700 flex flex-col items-start justify-start p-4 space-y-2 rounded-md border border-red-200">
           <div className="text-sm font-semibold">
-            {this.props.label ? `${this.props.label} render error` : "Slide render error"}
+            {label ? t('slide_error_boundary.error_label', { label }) : t('slide_error_boundary.error_default')}
           </div>
           <pre className="text-xs whitespace-pre-wrap break-words max-h-full overflow-auto bg-red-100 rounded-md p-2 border border-red-200">
             {this.state.errorMessage}
@@ -50,6 +54,8 @@ export class SlideErrorBoundary extends React.Component<
     return this.props.children;
   }
 }
+
+const SlideErrorBoundary = withTranslation('component')(SlideErrorBoundaryComponent);
 
 export default SlideErrorBoundary;
 

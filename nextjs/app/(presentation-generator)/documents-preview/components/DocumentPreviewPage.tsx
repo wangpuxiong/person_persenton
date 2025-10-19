@@ -14,6 +14,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OverlayLoader } from "@/components/ui/overlay-loader";
 import { PresentationGenerationApi } from "../../services/api/presentation-generation";
@@ -49,6 +50,7 @@ interface FileItem {
 
 const DocumentsPreviewPage: React.FC = () => {
   // Hooks
+  const { t } = useTranslation('outline');
   const dispatch = useDispatch();
   const router = useRouter();
   const pathname = usePathname();
@@ -206,7 +208,9 @@ const DocumentsPreviewPage: React.FC = () => {
       <div className="h-full mr-4">
         <div className="overflow-y-auto custom_scrollbar h-full">
           <div className="h-full w-full max-w-full flex flex-col mb-5">
-            <h1 className="text-2xl font-medium mb-5">Content:</h1>
+            <h1 className="text-2xl font-medium mb-5">
+              {t('content')}
+            </h1>
             {downloadingDocuments.includes(selectedDocument) ? (
               <Skeleton className="w-full h-full" />
             ) : (
@@ -234,7 +238,9 @@ const DocumentsPreviewPage: React.FC = () => {
 
         {documentKeys.length > 0 && (
           <div className="mt-8">
-            <p className="text-xs mt-2 text-[#2E2E2E] opacity-70">DOCUMENTS</p>
+            <p className="text-xs mt-2 text-[#2E2E2E] opacity-70">
+              {t('documents')}
+            </p>
             <div className="flex flex-col gap-2 mt-6">
               {documentKeys.map((key: string) => (
                 <div
@@ -295,7 +301,9 @@ const DocumentsPreviewPage: React.FC = () => {
             onClick={handleCreatePresentation}
             className="flex items-center gap-2 px-8 py-6 rounded-sm text-md bg-[#5146E5] hover:bg-[#5146E5]/90"
           >
-            <span className="text-white font-semibold">Next</span>
+            <span className="text-white font-semibold">
+              {t('next')}
+            </span>
             <ChevronRight />
           </Button>
         </div>

@@ -1,10 +1,13 @@
+'use client'
 import React from "react";
+import { useTranslation } from "react-i18next"
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/Wrapper";
 import { FileText, Plus, ArrowRight } from "lucide-react";
 
 const EmptyStateView: React.FC = () => {
+    const { t } = useTranslation('outline');
     const router = useRouter();
 
     return (
@@ -26,11 +29,10 @@ const EmptyStateView: React.FC = () => {
                     {/* Content */}
                     <div className="space-y-4">
                         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 font-instrument_sans">
-                            No Presentation Found
+                            {t('noPresentationFound')}
                         </h1>
                         <p className="text-lg text-gray-600 max-w-md mx-auto leading-relaxed">
-                            It looks like the presentation you are looking for is not found.
-                            Let's create a brand new presentation!
+                            {t('createNewPresentation')}
                         </p>
                     </div>
 
@@ -41,7 +43,7 @@ const EmptyStateView: React.FC = () => {
                             className="group bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                         >
                             <Plus className="w-5 h-5 mr-2" />
-                            Create New Presentation
+                            {t('createNewPresentationButton')}
                             <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
                         </Button>
                     </div>

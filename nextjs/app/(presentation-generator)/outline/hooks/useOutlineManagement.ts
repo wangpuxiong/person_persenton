@@ -1,9 +1,12 @@
+'use client'
+import { useTranslation } from "react-i18next";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { arrayMove } from "@dnd-kit/sortable";
 import { setOutlines } from "@/store/slices/presentationGeneration";
 
 export const useOutlineManagement = (outlines: { content: string }[] | null) => {
+  const { t } = useTranslation('outline');
   const dispatch = useDispatch();
 
   const handleDragEnd = useCallback((event: any) => {
@@ -22,7 +25,7 @@ export const useOutlineManagement = (outlines: { content: string }[] | null) => 
   const handleAddSlide = useCallback(() => {
     if (!outlines) return;
 
-    const updatedOutlines = [...outlines, { content: "Outline title" }];
+    const updatedOutlines = [...outlines, { content: t('outline.addSlide') }];
     dispatch(setOutlines(updatedOutlines));
   }, [outlines, dispatch]);
 

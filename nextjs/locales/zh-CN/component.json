@@ -1,0 +1,80 @@
+{
+    "header_nav": {
+        "upload": "创建PPT",
+        "dashboard": "个人空间"
+    },
+    "icons_editor": {
+        "title": "选择图标",
+        "search_placeholder": "搜索图标...",
+        "search_button": "搜索",
+        "no_results": "未找到匹配的图标。",
+        "refine_search": "请尝试修改搜索关键词。"
+    },
+    "image_editor": {
+        "title": "更新图片",
+        "tabs": {
+            "generate": "AI生成",
+            "upload": "上传",
+            "edit": "编辑"
+        },
+        "error": "生成图片失败，请重试。",
+        "get_previous_error": "获取之前生成的图片失败，请重试。",
+        "upload_failed": "上传图片失败，请重试。",
+        "get_images_failed": "获取已上传图片失败，请重试。",
+        "delete_failed": "删除图片失败，请重试。",
+        "generate": {
+            "current_prompt": "当前提示词",
+            "image_description": "图片描述",
+            "description_placeholder": "输入提示词，重新生成图片...",
+            "generate_button": "生成图片",
+            "generating": "生成中...",
+            "previous_images": "之前生成的图片",
+            "enter_prompt": "请输入提示词"
+        },
+        "upload": {
+            "click_to_upload": "点击上传图片",
+            "uploading": "正在上传图片...",
+            "processing": "处理中...",
+            "file_size_limit": "最大文件大小：5MB",
+            "uploaded_preview": "上传图片预览",
+            "click_to_use": "点击使用此图片",
+            "use": "使用",
+            "uploaded_images": "已上传图片：",
+            "file_too_large": "文件大小应小于5MB",
+            "invalid_file_type": "请上传图片文件",
+            "uploaded_image_preview": "上传图片预览"
+        },
+        "edit": {
+            "current_image": "当前图片",
+            "change_focus_point": "点击更改焦点",
+            "set_focus_point": "点击任意位置设置焦点",
+            "done": "完成",
+            "object_fit": "图片格式",
+            "cover": "覆盖",
+            "contain": "包含",
+            "fill": "填充"
+        }
+    },
+    "markdown_editor": {
+        "placeholder": "在此输入markdown内容..."
+    },
+    "new_slide": {
+        "title": "选择幻灯片布局",
+        "error": "添加新幻灯片失败"
+    },
+    "slide_error_boundary": {
+        "error_label": "{label}渲染错误",
+        "error_default": "幻灯片渲染错误"
+    },
+    "tiptap_text": {
+        "placeholder": "输入文本...",
+        "bold": "加粗",
+        "italic": "斜体",
+        "underline": "下划线",
+        "strikethrough": "删除线",
+        "code": "代码"
+    },
+    "tiptap_text_replacer": {
+        "placeholder": "输入文本..."
+    }
+}

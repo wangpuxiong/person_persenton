@@ -1,4 +1,6 @@
+'use client'
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -24,41 +26,42 @@ export const usePresentationGeneration = (
   selectedImageModel: ImageModelType | null,
   setActiveTab: (tab: string) => void
 ) => {
+  const { t } = useTranslation('outline');
   const dispatch = useDispatch();
   const router = useRouter();
   const [loadingState, setLoadingState] = useState<LoadingState>(DEFAULT_LOADING_STATE);
 
   const validateInputs = useCallback(() => {
     if (!outlines || outlines.length === 0) {
-      toast.error("No Outlines", {
-        description: "Please wait for outlines to load before generating presentation",
+      toast.error(t('noOutlines'), {
+        description: t('waitForOutlinesToLoadBeforeGeneratingPresentation'),
       });
       return false;
     }
 
     if (!selectedTemplate) {
-      toast.error("Select Layout Group", {
-        description: "Please select a layout group before generating presentation",
+      toast.error(t('selectLayoutGroup'), {
+        description: t('selectLayoutGroupBeforeGeneratingPresentation'),
       });
       return false;
     }
     if (!selectedTemplate.slides.length) {
-      toast.error("No Slide Schema found", {
-        description: "Please select a Group before generating presentation",
+      toast.error(t('noSlideSchemaFound'), {
+        description: t('selectGroupBeforeGeneratingPresentation'),
       });
       return false;
     }
 
     if (!selectedPptModel) {
-      toast.error("Select AI Model", {
-        description: "Please select a presentation generation model before generating presentation",
+      toast.error(t('selectAIModel'), {
+        description: t('selectAIModelBeforeGeneratingPresentation'),
       });
       return false;
     }
 
     if (!selectedImageModel) {
-      toast.error("Select Image Model", {
-        description: "Please select an image generation model before generating presentation",
+      toast.error(t('selectImageModel'), {
+        description: t('selectImageModelBeforeGeneratingPresentation'),
       });
       return false;
     }
@@ -89,7 +92,7 @@ export const usePresentationGeneration = (
 
 
     setLoadingState({
-      message: "Generating presentation data...",
+      message: t('generatingPresentationData'),
       isLoading: true,
       showProgress: true,
       duration: 30,
@@ -115,8 +118,8 @@ export const usePresentationGeneration = (
       }
     } catch (error: any) {
       console.error('Error In Presentation Generation(prepare).', error);
-      toast.error("Generation Error", {
-        description: error.message || "Error In Presentation Generation(prepare).",
+      toast.error(t('generationError'), {
+        description: error.message || t('errorInPresentationGenerationPrepare'),
       });
     } finally {
       setLoadingState(DEFAULT_LOADING_STATE);

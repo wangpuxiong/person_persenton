@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,11 +15,8 @@ import { useLayout } from "../context/LayoutContext";
 import { useFontLoader } from "../hooks/useFontLoader";
 import { useTemplateLayouts } from "../hooks/useTemplateLayouts";
 
-
-
-
-
 const PresentationPage = ({ presentation_id }: { presentation_id: string }) => {
+  const { t } = useTranslation("presentation");
   const { renderSlideContent, loading } = useTemplateLayouts();
   const pathname = usePathname();
   const [contentLoading, setContentLoading] = useState(true);
@@ -89,10 +87,10 @@ const PresentationPage = ({ presentation_id }: { presentation_id: string }) => {
               className="mt-4 bg-red-500 text-white hover:bg-red-600 focus:ring-4 focus:ring-red-300"
               onClick={() => {
                 trackEvent(MixpanelEvent.PdfMaker_Retry_Button_Clicked, { pathname });
-                window.location.reload();
+                window.location.reload(); 
               }}
             >
-              Retry
+              {t("retry")}
             </Button>
           </div>
         </div>

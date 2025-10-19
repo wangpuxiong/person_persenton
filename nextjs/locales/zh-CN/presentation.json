@@ -1,0 +1,105 @@
+{
+    "no_presentation_id_found": "未找到演示文稿 ID",
+    "please_try_again": "请再次尝试",
+    "go_to_home": "返回首页",
+    "retry": "重试",
+    "refresh_page": "刷新页面",
+    "we_couldnt_load_your_presentation_please_try_again": "无法加载您的演示文稿，请再次尝试。",
+    "something_went_wrong": "发生未知错误",
+    "failed_to_load_presentation": "加载演示文稿失败",
+    "error_in_outline_streaming": "流式传输PPT内容时出现错误",
+    "failed_to_connect_to_server_please_try_again": "连接服务器失败，请稍后重试。",
+    "loading": {
+        "loading_state.1": "AI正在施展它的魔法，为您精心打造PPT内容 ✨",
+        "loading_state.2": "正在深度解析您提供的文本内容，为您量身定制幻灯片 📊",
+        "loading_state.3": "智能重构信息结构，确保每个部分都直击要点 🎯",
+        "loading_state.4": "正在匹配精美设计，让您的演示文稿能够大放异彩 🎨",
+        "loading_state.5": "即将完成！正在进行最后的魔法加持，让作品更加完美 ⚡️",
+        "create_presentation": "正在创建PPT文件"
+    },
+    "sidePanel": {
+        "image_preview": "图像预览",
+        "list_preview": "列表预览",
+        "open_panel": "打开面板",
+        "show_panel": "显示面板"
+    },
+    "slideContent": {
+        "enter_prompt_before_submitting": "请在提交前输入提示内容",
+        "slide_updated_successfully": "幻灯片更新成功",
+        "error_in_slide_editing": "幻灯片编辑错误",
+        "error_deleting_slide": "删除幻灯片错误",
+        "add_new_slide_below": "在下方添加新幻灯片",
+        "delete_slide": "删除幻灯片",
+        "update_slide_using_prompt": "输入prompt，重新生成幻灯片",
+        "enter_your_prompt_here": "在此输入您的提示...",
+        "updating": "更新中...",
+        "update": "更新",
+        "show_speaker_notes": "显示备注",
+        "speaker_notes": "备注"
+    },
+    "help": {
+        "title": "帮助中心",
+        "clear_search": "清除搜索",
+        "no_results": "未找到 \"{{searchQuery}}\" 的结果",
+        "search_placeholder": "搜索主题...",
+        "category": {
+            "All": "All",
+            "Images": "图像",
+            "AI Prompts": "AI",
+            "Text": "文本",
+            "Icons": "图标",
+            "Layout": "布局",
+            "Export": "导出"
+        },
+        "questions": {
+            "1": {
+                "question": "如何更换图片？",
+                "answer": "点击任何图片以显示图片工具栏。您将看到编辑、调整位置和更改图片在容器中显示方式的选项。编辑选项允许您替换或修改当前图片。"
+            },
+            "2": {
+                "question": "我可以使用AI生成新图片吗？",
+                "answer": "是的！点击任何图片并从工具栏中选择编辑选项。在出现的侧边面板中，您会找到AI生成选项卡。输入描述您想要的图片的提示词，我们的AI将根据您的描述生成图片。"
+            },
+            "3": {
+                "question": "如何上传自己的图片？",
+                "answer": "点击任何图片，然后从工具栏中选择编辑。在侧边面板中，点击顶部的上传选项卡。您可以浏览文件以选择一张图片。上传后，您可以将其应用到您的设计中。"
+            },
+            "11": {
+                "question": "可以通过提示词更改幻灯片布局吗？",
+                "answer": "当然可以！点击每张幻灯片左上角的魔法棒图标，它会给您一个提示词输入框。描述您的布局要求，AI将相应地更改幻灯片布局。"
+            },
+            "12": {
+                "question": "可以通过提示词更改幻灯片图片吗？",
+                "answer": "当然可以！点击每张幻灯片左上角的魔法棒图标，它会给您一个提示词输入框。描述您想要的图片，AI将根据您的要求更新幻灯片图片。"
+            },
+            "14": {
+                "question": "可以通过提示词更改内容吗？",
+                "answer": "当然可以！点击每张幻灯片左上角的魔法棒图标，它会给您一个提示词输入框。描述您想要的内容，AI将根据您的描述更新幻灯片的文本和内容。"
+            },
+            "4": {
+                "question": "如何格式化和突出显示文本？",
+                "answer": "选择任何文本以显示格式化工具栏。您将有粗体、斜体、下划线、删除线等选项。"
+            },
+            "5": {
+                "question": "如何更换图标？",
+                "answer": "点击任何现有图标进行修改。在图标选择器面板中，您可以浏览图标或使用搜索功能找到特定图标。我们提供数千种各种风格的图标。"
+            },
+            "16": {
+                "question": "可以更改幻灯片的位置吗？",
+                "answer": "当然可以，在侧边面板中您可以拖动幻灯片并将其放置在任何您想要的位置。"
+            },
+            "15": {
+                "question": "可以在幻灯片之间添加新幻灯片吗？",
+                "answer": "是的，您只需点击每张幻灯片下方的加号图标，然后选择对应的布局即可生成一张新的幻灯片。"
+            },
+            "6": {
+                "question": "可以向幻灯片添加更多部分吗？",
+                "answer": "抱歉，暂时我们只支持使用已上传的模板生成幻灯片，你可以在查看模板的页面手动或使用AI工具修改您的模板布局。"
+            },
+            "8": {
+                "question": "如何下载或导出我的演示文稿？",
+                "answer": "点击右上角菜单中的导出按钮。您可以选择下载为PDF或PowerPoint格式。"
+            }
+        }
+    }
+}

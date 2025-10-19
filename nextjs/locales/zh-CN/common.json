@@ -24,7 +24,15 @@
     "enterText": "输入文本..."
   },
   "header": {
-    "title": "PPT演示文稿 | CompareGPT.io"
+    "title": "PPT演示文稿 | CompareGPT.io",
+    "failedToGetPPT": "获取演示文稿PPTX文件失败",
+    "noPathReturn": "导出文件时未返回路径",
+    "havingTrouble": "导出文件时出现问题！",
+    "havingTroubleDesc": "导出PPT文件时发生异常，请稍后重试。",
+    "failedToExportPDF": "导出PDF文件失败",
+    "clickDownloadLink": "请点击下载链接打开新标签页下载",
+    "downloadReady": "您的文件已准备就绪",
+    "exportingPresentation": "正在导出演示文稿..."
   },
   "layout": {
     "templateLayouts": "模板布局",
@@ -37,8 +45,30 @@
       "noSchemaExportDescription": "请确保布局文件导出一个Schema",
       "noTemplateFound": "没有找到模板",
       "fetchLayoutsFailed": "获取布局失败: {{statusText}}",
-      "loadLayoutsFailed": "加载布局失败"
+      "loadLayoutsFailed": "加载布局失败",
+      "invalidExport": "{{layoutName}} 中的导出无效",
+      "defaultExportNotFound": "未找到默认导出。请导出一个默认的React组件。",
+      "schemaMissing": "{{layoutName}} 中缺少Schema",
+      "schemaExportNotFound": "未找到Schema导出。请将Zod Schema作为'Schema'导出。",
+      "schemaGenerationFailed": "为{{layoutName}}生成Schema失败",
+      "schemaParseFailed": "{{layoutName}}的Schema.parse失败",
+      "compilationError": "{{layoutName}}中的编译错误",
+      "failedToCompile": "编译{{layoutName}}失败",
+      "useLayoutWithinProvider": "useLayout必须在LayoutProvider内使用"
     }
+  },
+  "configuration": {
+    "failedToInitializeApplication": "初始化应用程序失败。请刷新并重试。",
+    "initializingApplication": "初始化应用程序",
+    "loadingConfigurationAndCheckingModelAvailability": "正在加载配置并检查程序可用性..."
+  },
+  "auth": {
+    "pleaseLogInToCompareGPTBeforeOpenThisPage": "请先登录Compare GPT再打开此页面",
+    "authenticationFailed": "认证失败",
+    "failedToConnectToAuthenticationServer": "连接认证服务器失败",
+    "authenticationError": "认证错误",
+    "unknownAuthenticationError": "未知认证错误",
+    "returnToCompareGPT": "返回CompareGPT"
   },
   "description": "CompareGPT.io = 自主执行 + 接近零幻觉 + 所有代理工具（API密钥）",
   "welcome": "欢迎使用PPT生成器",
