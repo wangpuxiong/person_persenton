@@ -64,7 +64,7 @@ const SlideContent = ({ slide, index, presentationId, referenceMarkers, webSearc
 
 		// Filter reference markers for current slide
 		const slideMarkers = markers.filter((marker: any) =>
-			marker && marker.slide_index === slideIndex
+			marker && marker.slide_index === (slideIndex + 1)
 		);
 
 		// Function to filter out garbled text and unwanted characters
