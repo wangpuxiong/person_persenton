@@ -382,40 +382,41 @@ async def prepare_presentation(
 
     return presentation
 
-def add_reference_markers(presentation: PresentationModel, slides):
+async def add_reference_markers(presentation: PresentationModel, slides,api_key: str):
     tavily_search_results_json = presentation.get_tavily_search_results_json()
     search_content_map = tavily_search_results_json
-    source_embeddings,source_ids,source_contents,source_map = citations_instance.get_source_embeddings_map(search_content_map)
+    source_embeddings,source_ids,source_contents,source_map = await citations_instance.get_source_embeddings_map(search_content_map,api_key)
     # source_embeddings=[]  
     reference_markers = []
     slide_index=1
     for  slide in slides:
         slide_content = slide.content
         slide_title = slide_content["title"]  
-        reference_marker_index = get_reference_marker(slide_title, source_embeddings)
+        reference_marker_index = await get_reference_marker(slide_title, source_embeddings,api_key)
         if reference_marker_index != 0:
             reference_markers.append({"slide_index":slide_index,"content":slide_title,"reference_marker_index":reference_marker_index})
-        slide_description = slide_content.get("bulletPoints") if "bulletPoints" in slide_content else slide_content.get("description", "")  
-        reference_marker_index = get_reference_marker(slide_description, source_embeddings)
-        if reference_marker_index != 0:
-            reference_markers.append({"slide_index":slide_index,"content":slide_description,"reference_marker_index":reference_marker_index})
+        slide_description = slide_content.get("bulletPoints") if "bulletPoints" in slide_content else slide_content.get("description", "")
+        if slide_description:
+            reference_marker_index = await get_reference_marker(str(slide_description), source_embeddings,api_key)
+            if reference_marker_index != 0:
+                reference_markers.append({"slide_index":slide_index,"content":str(slide_description),"reference_marker_index":reference_marker_index})
 
         bulletPoints = slide_description if isinstance(slide_description, list) else slide_content.get("bulletPoints", [])
         for bulletPoint in bulletPoints:
             bulletPoint_title = bulletPoint["title"]
-            reference_marker_index = get_reference_marker(bulletPoint_title, source_embeddings)
+            reference_marker_index = await get_reference_marker(bulletPoint_title, source_embeddings,api_key)
             if reference_marker_index!=0:
                 reference_markers.append({"slide_index":slide_index,"content":bulletPoint_title,"reference_marker_index":reference_marker_index})
             bulletPoint_description = bulletPoint.get("description", "")
-            reference_marker_index = get_reference_marker(bulletPoint_description, source_embeddings)
+            reference_marker_index = await get_reference_marker(bulletPoint_description, source_embeddings,api_key)
             if reference_marker_index!=0:
                 reference_markers.append({"slide_index":slide_index,"content":bulletPoint_description,"reference_marker_index":reference_marker_index})
         slide_index+=1
     return reference_markers
 
-def get_reference_marker(content: str,  source_embeddings:[]):
+async def get_reference_marker(content: str,  source_embeddings:[],api_key: str):
     reference_marker_index =0
-    similar_indexes, cosine_similarities, distances = citations_instance.calculate_sentence_similarity(content, source_embeddings)
+    similar_indexes, cosine_similarities, distances = await citations_instance.calculate_sentence_similarity(content, source_embeddings,api_key)
     for i, similarity in enumerate(cosine_similarities):
         if similarity > 0.15:
             reference_marker_index=similar_indexes[i]
@@ -548,7 +549,7 @@ async def stream_presentation(
         sql_session.add_all(generated_assets)
         await sql_session.commit()
         
-        reference_markers = add_reference_markers(presentation, slides)
+        reference_markers = await add_reference_markers(presentation, slides,api_key)
         presentation.set_reference_markers(reference_markers)
         await sql_session.commit()
 
