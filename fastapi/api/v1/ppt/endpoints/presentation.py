@@ -385,8 +385,8 @@ async def prepare_presentation(
 def add_reference_markers(presentation: PresentationModel, slides):
     tavily_search_results_json = presentation.get_tavily_search_results_json()
     search_content_map = tavily_search_results_json
-    # source_embeddings,source_ids,source_contents,source_map = citations_instance.get_source_embeddings_map(search_content_map)
-    source_embeddings=[]  
+    source_embeddings,source_ids,source_contents,source_map = citations_instance.get_source_embeddings_map(search_content_map)
+    # source_embeddings=[]  
     reference_markers = []
     slide_index=1
     for  slide in slides:
@@ -395,7 +395,7 @@ def add_reference_markers(presentation: PresentationModel, slides):
         reference_marker_index = get_reference_marker(slide_title, source_embeddings)
         if reference_marker_index != 0:
             reference_markers.append({"slide_index":slide_index,"content":slide_title,"reference_marker_index":reference_marker_index})
-        slide_description = slide_content.get("bulletPoints") if "bulletPoints" in slide_content else slide_content["description"]  
+        slide_description = slide_content.get("bulletPoints") if "bulletPoints" in slide_content else slide_content.get("description", "")  
         reference_marker_index = get_reference_marker(slide_description, source_embeddings)
         if reference_marker_index != 0:
             reference_markers.append({"slide_index":slide_index,"content":slide_description,"reference_marker_index":reference_marker_index})
@@ -406,7 +406,7 @@ def add_reference_markers(presentation: PresentationModel, slides):
             reference_marker_index = get_reference_marker(bulletPoint_title, source_embeddings)
             if reference_marker_index!=0:
                 reference_markers.append({"slide_index":slide_index,"content":bulletPoint_title,"reference_marker_index":reference_marker_index})
-            bulletPoint_description = bulletPoint["description"]
+            bulletPoint_description = bulletPoint.get("description", "")
             reference_marker_index = get_reference_marker(bulletPoint_description, source_embeddings)
             if reference_marker_index!=0:
                 reference_markers.append({"slide_index":slide_index,"content":bulletPoint_description,"reference_marker_index":reference_marker_index})
@@ -415,11 +415,11 @@ def add_reference_markers(presentation: PresentationModel, slides):
 
 def get_reference_marker(content: str,  source_embeddings:[]):
     reference_marker_index =0
-    # similar_indexes, cosine_similarities, distances = citations_instance.calculate_sentence_similarity(content, source_embeddings)
-    # for i, similarity in enumerate(cosine_similarities):
-    #     if similarity > 0.15:
-    #         reference_marker_index=similar_indexes[i]
-    reference_marker_index=random.randint(1,5)
+    similar_indexes, cosine_similarities, distances = citations_instance.calculate_sentence_similarity(content, source_embeddings)
+    for i, similarity in enumerate(cosine_similarities):
+        if similarity > 0.15:
+            reference_marker_index=similar_indexes[i]
+    # reference_marker_index=random.randint(1,5)
     return reference_marker_index
 
 @PRESENTATION_ROUTER.get("/stream/{id}", response_model=PresentationWithSlides)
