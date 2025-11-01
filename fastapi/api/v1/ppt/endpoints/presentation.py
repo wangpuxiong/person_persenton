@@ -416,11 +416,12 @@ async def add_reference_markers(presentation: PresentationModel, slides,api_key:
 
 async def get_reference_marker(content: str,  source_embeddings:[],api_key: str):
     reference_marker_index =0
-    similar_indexes, cosine_similarities, distances = await citations_instance.calculate_sentence_similarity(content, source_embeddings,api_key)
-    for i, similarity in enumerate(cosine_similarities):
-        if similarity > 0.15:
-            reference_marker_index=similar_indexes[i]
-    # reference_marker_index=random.randint(1,5)
+    if content:
+        similar_indexes, cosine_similarities, distances = await citations_instance.calculate_sentence_similarity(content, source_embeddings,api_key)
+        similarity_score = float(cosine_similarities[similar_indexes.index(similar_indexes[0])])
+        if similarity_score > 0.15:
+                reference_marker_index=similar_indexes[0]
+        # reference_marker_index=random.randint(1,5)
     return reference_marker_index
 
 @PRESENTATION_ROUTER.get("/stream/{id}", response_model=PresentationWithSlides)
