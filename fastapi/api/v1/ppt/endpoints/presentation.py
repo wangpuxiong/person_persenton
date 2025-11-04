@@ -67,9 +67,10 @@ from utils.process_slides import (
     process_slide_and_fetch_assets,
 )
 import uuid
-
 from utils.citations import citations_instance
-from utils.api_embedding import EmbeddingModel
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 # 创建演示文稿相关的API路由器，前缀为/presentation，标签为Presentation
 PRESENTATION_ROUTER = APIRouter(prefix="/presentation", tags=["Presentation"])
 
@@ -391,7 +392,7 @@ async def add_reference_markers(presentation: PresentationModel, slides,api_key:
     slide_index=1
     for  slide in slides:
         slide_content = slide.content
-        slide_title = slide_content["title"]  
+        slide_title = slide_content.get("title", "")  
         reference_marker_index = await get_reference_marker(slide_title, source_embeddings,api_key)
         if reference_marker_index != 0:
             reference_markers.append({"slide_index":slide_index,"content":slide_title,"reference_marker_index":reference_marker_index})
@@ -403,7 +404,7 @@ async def add_reference_markers(presentation: PresentationModel, slides,api_key:
 
         bulletPoints = slide_description if isinstance(slide_description, list) else slide_content.get("bulletPoints", [])
         for bulletPoint in bulletPoints:
-            bulletPoint_title = bulletPoint["title"]
+            bulletPoint_title = bulletPoint.get("title", "")
             reference_marker_index = await get_reference_marker(bulletPoint_title, source_embeddings,api_key)
             if reference_marker_index!=0:
                 reference_markers.append({"slide_index":slide_index,"content":bulletPoint_title,"reference_marker_index":reference_marker_index})
@@ -419,7 +420,7 @@ async def get_reference_marker(content: str,  source_embeddings:[],api_key: str)
     if content:
         similar_indexes, cosine_similarities, distances = await citations_instance.calculate_sentence_similarity(content, source_embeddings,api_key)
         similarity_score = float(cosine_similarities[similar_indexes.index(similar_indexes[0])])
-        if similarity_score > 0.15:
+        if similarity_score > 0.0001:
                 reference_marker_index=similar_indexes[0]
         # reference_marker_index=random.randint(1,5)
     return reference_marker_index
@@ -553,7 +554,7 @@ async def stream_presentation(
         reference_markers = await add_reference_markers(presentation, slides,api_key)
         presentation.set_reference_markers(reference_markers)
         await sql_session.commit()
-
+        logging.info(f"Reference markers: {reference_markers}")
         tavily_search_results_json = presentation.get_tavily_search_results_json()
         response = PresentationWithSlides(
             **presentation.model_dump(exclude={"reference_markers"}),
