@@ -1,4 +1,5 @@
-app_data/
-fastapi/chroma/
-fastapi/presenton_backend.egg-info/*
-.idea/*
+# 忽略所有 .pyc 文件
+*.pyc
+
+# 忽略 __pycache__ 目录
+__pycache__/
