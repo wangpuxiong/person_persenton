@@ -24,6 +24,8 @@ from utils.llm_calls.generate_presentation_outlines import generate_ppt_outline,
 from utils.ppt_utils import get_presentation_title_from_outlines
 from api.v1.auth.router import get_current_user, get_current_api_key
 from utils.web_search import TavilySearchService
+from citation_system.src.citation import build_index_from_search_content
+
 tavily_search_service = TavilySearchService()
 
 # 创建演示文稿大纲相关的路由器
@@ -149,6 +151,8 @@ async def stream_outlines(
         yield SSECompleteResponse(
             key="presentation", value=presentation.model_dump(mode="json")
         ).to_string()
+
+        # await build_index_from_search_content(search_content)
 
     # 返回流式响应，使用text/event-stream媒体类型
     return StreamingResponse(inner(), media_type="text/event-stream")

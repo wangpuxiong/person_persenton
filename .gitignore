@@ -10,10 +10,12 @@ venv/
 .env/
 env/
 ENV/
-
+myenv/
 # 或者使用通配符忽略所有虚拟环境目录
 */venv/
 */.venv/
+
+*/images/
 
 # 其他 Python 相关忽略项
 __pycache__/

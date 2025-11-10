@@ -34,7 +34,26 @@ class citations:
         # 1. 将所有句子转换为向量
         # all_sentences = [query_sentence] + sentences_list
         query_sentence_vectors = await self.embedding_model.get_embedding(query_sentence, api_key)
-        sentence_vectors =[query_sentence_vectors] + sentences_list_v
+
+        # 过滤掉空向量，并构建句子向量列表
+        sentence_vectors = []
+        valid_indices = []  # 记录有效向量的原始索引
+
+        # 添加查询句子向量（如果有效）
+        if query_sentence_vectors and len(query_sentence_vectors) > 0:
+            sentence_vectors.append(query_sentence_vectors)
+            valid_indices.append(-1)  # 查询句子用 -1 表示
+
+        # 添加源句子向量（过滤空向量）
+        for i, vector in enumerate(sentences_list_v):
+            if vector and len(vector) > 0:
+                sentence_vectors.append(vector)
+                valid_indices.append(i)
+
+        # 如果没有有效的向量，返回空结果
+        if not sentence_vectors:
+            logger.warning("No valid vectors found for similarity calculation")
+            return [], [], []
 
         # 2. 获取向量维度 - 将列表转换为numpy数组
         sentence_vectors = np.array(sentence_vectors)
@@ -56,19 +75,45 @@ class citations:
         # 7. 查找最相似的句子
         query_vector = query_sentence_vectors  # 查询句子的向量
 
-        # 使用Annoy查找最相似的句子（排除查询句子本身）
-        similar_indexes, distances = annoy_index.get_nns_by_vector(
-            query_vector, top_k + 1, include_distances=True
-        )
+        # 如果查询向量无效，无法进行相似度计算
+        if not query_vector or len(query_vector) == 0:
+            logger.warning("Query vector is empty, cannot calculate similarity")
+            return [], [], []
 
-        # 过滤掉第一个结果（查询句子本身）
-        similar_indexes = similar_indexes[1:]
-        distances = distances[1:]
+        # 查找查询向量在索引中的位置（如果存在）
+        query_index_in_annoy = None
+        for i, idx in enumerate(valid_indices):
+            if idx == -1:  # 这是查询向量
+                query_index_in_annoy = i
+                break
+
+        # 使用Annoy查找最相似的句子
+        if query_index_in_annoy is not None:
+            # 查询向量在索引中，查找 top_k+1 个结果（包括自己）
+            similar_indexes, distances = annoy_index.get_nns_by_vector(
+                query_vector, top_k + 1, include_distances=True
+            )
+            # 过滤掉查询句子本身
+            similar_indexes = [idx for idx in similar_indexes if idx != query_index_in_annoy][:top_k]
+            distances = distances[1:top_k+1][:top_k]  # 对应的距离
+        else:
+            # 查询向量不在索引中，直接查找 top_k 个最相似的结果
+            similar_indexes, distances = annoy_index.get_nns_by_vector(
+                query_vector, top_k, include_distances=True
+            )
 
         # 将angular距离转换为余弦相似度
         cosine_similarities = [np.cos(distance * np.pi / 2) for distance in distances]
 
-        return similar_indexes, cosine_similarities, distances
+        # 将Annoy索引映射回原始句子索引
+        original_similar_indexes = []
+        for idx in similar_indexes:
+            if idx < len(valid_indices):
+                original_idx = valid_indices[idx]
+                if original_idx >= 0:  # 只返回源句子的索引（排除查询句子）
+                    original_similar_indexes.append(original_idx)
+
+        return original_similar_indexes, cosine_similarities[:len(original_similar_indexes)], distances[:len(original_similar_indexes)]
 
 
     async def calculate_sentence_similarity_with_existing_index(self, query_sentence, sentences_list, api_key: str = None, index_file='sentence_similarity.ann', top_k=5):
@@ -277,9 +322,14 @@ class citations:
 
 
     async def get_source_embeddings_map(self, source_map:{}, api_key: str = None) -> Tuple[List[List[float]], List[int], List[str], Dict[int, Dict]]:
+        # 检查source_map是否为None
+        if source_map is None:
+            logger.warning("source_map is None, returning empty results")
+            return [], [], [], {}
+
         # 创建来源映射字典
         source_map = source_map
-   
+
         # 预处理所有来源的内容，确保UTF-8编码
         source_contents = []
         source_ids = []
